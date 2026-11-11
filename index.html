@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.15 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.16 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -150,7 +150,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       <div class="row"><select id="eMusic"><option value="차분">자동 · 차분</option><option value="밝게">자동 · 밝게</option><option value="어둡게">자동 · 어둡게</option><option value="파일">내 음악 파일</option><option value="없음">없음</option></select></div>
       <input type="file" id="musicIn" accept="audio/*" style="display:none;margin-top:6px">
       <div class="row" style="margin-top:10px"><button class="b" id="btnPreview">미리보기</button><button class="b p" id="btnRender">영상 만들기</button></div>
-      <p class="muted">영상 길이만큼 걸립니다. 그동안 화면을 켜 두세요.</p>
+      <p class="muted">보통 30초~1분이면 끝납니다. 끝날 때까지 이 화면에 있어 주세요.</p>
       <div class="bar"><div id="bar"></div></div>
       <div class="msg" id="renderMsg"></div>
       <canvas id="cv" width="1080" height="1920"></canvas>
@@ -548,7 +548,7 @@ function renderScenes() {
     ta.oninput = () => { s.text = ta.value; saveCur(); };
     bPlay.onclick = async () => { if (!s.audioKey) return; const b = await getBlob(s.audioKey); new Audio(URL.createObjectURL(b)).play(); };
     bFile.onclick = () => fin.click();
-    fin.onchange = async () => { if (fin.files[0]) { await setAudio(s, fin.files[0]); renderScenes(); } };
+    fin.onchange = async () => { if (fin.files[0]) { await setAudio(s, fin.files[0]); s.audioText = s.text; s.audioVoice = 'manual'; await putEp(CUR); renderScenes(); } };
     bRec.onclick = () => recordMic(s, bRec, info);
     box.appendChild(el);
   });
@@ -570,7 +570,7 @@ async function recordMic(s, btn, info) {
     const st = await navigator.mediaDevices.getUserMedia({audio: true});
     const ch = []; micRec = new MediaRecorder(st);
     micRec.ondataavailable = e => ch.push(e.data);
-    micRec.onstop = async () => { st.getTracks().forEach(t => t.stop()); micRec = null; await setAudio(s, new Blob(ch, {type: ch[0]?.type || 'audio/webm'})); renderScenes(); };
+    micRec.onstop = async () => { st.getTracks().forEach(t => t.stop()); micRec = null; await setAudio(s, new Blob(ch, {type: ch[0]?.type || 'audio/webm'})); s.audioText = s.text; s.audioVoice = 'manual'; await putEp(CUR); renderScenes(); };
     micRec.start(); btn.textContent = '■ 정지'; info.textContent = '녹음 중…';
   } catch (e) { info.textContent = '마이크를 쓸 수 없습니다'; }
 }
@@ -631,10 +631,17 @@ async function tts(text, voice) {
 $('#btnTTS').onclick = async () => {
   const b = $('#btnTTS'), m = $('#ttsMsg'); b.disabled = true;
   try {
+    const v = CUR.voice || S.voice;
     const list = CUR.scenes.filter(s => s.text.trim());
-    for (const [i, s] of list.entries()) { m.textContent = `음성 ${i + 1}/${list.length}…`; await setAudio(s, await tts(s.text, CUR.voice || S.voice)); }
-    m.textContent = '음성 완성'; renderScenes();
-  } catch (e) { m.textContent = '오류: ' + e.message; }
+    const todo = list.filter(s => !(s.audioKey && s.audioText === s.text && (s.audioVoice === v || s.audioVoice === 'manual')));
+    if (!todo.length) { m.textContent = '모든 장면에 음성이 있습니다. 목소리나 문장을 바꾸면 그 장면만 다시 만듭니다'; }
+    for (const [i, s] of todo.entries()) {
+      m.textContent = `음성 ${i + 1}/${todo.length}… (중간에 멈춰도 다시 누르면 이어서 만듭니다)`;
+      await setAudio(s, await tts(s.text, v)); s.audioText = s.text; s.audioVoice = v; await putEp(CUR);
+    }
+    if (todo.length) m.textContent = '음성 완성';
+    renderScenes(); syncSoon();
+  } catch (e) { m.textContent = '오류: ' + e.message + ' — 다시 누르면 남은 장면부터 이어서 만듭니다'; renderScenes(); }
   b.disabled = false;
 };
 
@@ -785,6 +792,122 @@ function reverbIR(ac) {
 }
 
 /* 영상 만들기 */
+async function buildAudio(ac, D, T0, out) {
+  const total = D.total;
+  const comp = ac.createDynamicsCompressor(); comp.threshold.value = -6; comp.ratio.value = 4; comp.connect(out);
+  for (const s of D.sc) if (s._buf) { const n = ac.createBufferSource(); n.buffer = s._buf; n.connect(comp); n.start(T0 + s._start + LEAD); }
+  if (CUR.music !== '없음') {
+    let mb = null;
+    if (CUR.music === '파일' && $('#musicIn').files[0]) mb = await AC().decodeAudioData(await $('#musicIn').files[0].arrayBuffer());
+    if (!mb) mb = makeMusic(ac, total, CUR.music === '파일' ? '차분' : CUR.music);
+    const src = ac.createBufferSource(); src.buffer = mb; src.loop = true;
+    const g = ac.createGain(), conv = ac.createConvolver(), wet = ac.createGain();
+    conv.buffer = reverbIR(ac); wet.gain.value = .25;
+    src.connect(g); g.connect(comp); g.connect(conv); conv.connect(wet); wet.connect(comp);
+    const gp = g.gain; gp.setValueAtTime(0, T0); gp.linearRampToValueAtTime(.3, T0 + 1);
+    for (const s of D.sc) if (s._buf) {
+      const a = T0 + s._start + LEAD, b = a + s._buf.duration;
+      gp.setValueAtTime(.3, Math.max(T0 + 1, a - .3)); gp.linearRampToValueAtTime(.12, a); gp.setValueAtTime(.12, b); gp.linearRampToValueAtTime(.3, b + .4);
+    }
+    gp.setValueAtTime(.3, T0 + Math.max(1, total - 2)); gp.linearRampToValueAtTime(0, T0 + total);
+    src.start(T0); src.stop(T0 + total + .2);
+  }
+}
+
+/* MP4 만들기 (H.264 + AAC/Opus) */
+const MP4 = (() => {
+  const enc = new TextEncoder();
+  const cat = parts => { let n = 0; for (const p of parts) n += p.length; const o = new Uint8Array(n); let i = 0; for (const p of parts) { o.set(p, i); i += p.length; } return o; };
+  const u32 = n => { const b = new Uint8Array(4); new DataView(b.buffer).setUint32(0, n >>> 0); return b; };
+  const u16 = n => new Uint8Array([(n >> 8) & 255, n & 255]);
+  const z = n => new Uint8Array(n);
+  const box = (t, ...p) => { const body = cat(p); return cat([u32(body.length + 8), enc.encode(t), body]); };
+  const full = (t, v, f, ...p) => box(t, new Uint8Array([v, (f >> 16) & 255, (f >> 8) & 255, f & 255]), ...p);
+  const matrix = cat([u32(0x10000), u32(0), u32(0), u32(0), u32(0x10000), u32(0), u32(0), u32(0), u32(0x40000000)]);
+  function stts(durs) { const e = []; for (const d of durs) { if (e.length && e[e.length - 1][1] === d) e[e.length - 1][0]++; else e.push([1, d]); } return full('stts', 0, 0, u32(e.length), ...e.map(([c, d]) => cat([u32(c), u32(d)]))); }
+  function desc(tag, body) { return cat([new Uint8Array([tag, body.length]), body]); }
+  function trak(id, tr, offsets, movieDur) {
+    const isV = tr.kind === 'video', dur = tr.durs.reduce((a, b) => a + b, 0);
+    let entry;
+    if (isV) entry = box('avc1', z(6), u16(1), z(16), u16(tr.w), u16(tr.h), u32(0x480000), u32(0x480000), u32(0), u16(1), z(32), u16(24), u16(0xffff), box('avcC', tr.desc));
+    else {
+      const head = cat([z(6), u16(1), z(8), u16(1), u16(16), z(4), u32(tr.sr * 65536)]);
+      if (tr.codec === 'aac') {
+        const dsi = desc(5, tr.desc), dcd = desc(4, cat([new Uint8Array([0x40, 0x15, 0, 0, 0]), u32(128000), u32(128000), dsi]));
+        entry = box('mp4a', head, full('esds', 0, 0, desc(3, cat([u16(1), new Uint8Array([0]), dcd, desc(6, new Uint8Array([2]))]))));
+      } else {
+        let pre = 312; if (tr.desc && tr.desc.length >= 12) pre = tr.desc[10] | (tr.desc[11] << 8);
+        entry = box('Opus', head, box('dOps', new Uint8Array([0, 1]), u16(pre), u32(tr.sr), u16(0), new Uint8Array([0])));
+      }
+    }
+    const stbl = box('stbl', full('stsd', 0, 0, u32(1), entry), stts(tr.durs),
+      ...(isV ? [full('stss', 0, 0, u32(tr.keys.length), ...tr.keys.map(k => u32(k)))] : []),
+      full('stsc', 0, 0, u32(1), u32(1), u32(1), u32(1)),
+      full('stsz', 0, 0, u32(0), u32(tr.sizes.length), ...tr.sizes.map(u32)),
+      full('stco', 0, 0, u32(offsets.length), ...offsets.map(u32)));
+    const minf = box('minf', isV ? full('vmhd', 0, 1, z(8)) : full('smhd', 0, 0, z(4)), box('dinf', full('dref', 0, 0, u32(1), full('url ', 0, 1))), stbl);
+    const mdia = box('mdia', full('mdhd', 0, 0, u32(0), u32(0), u32(tr.ts), u32(dur), u16(0x55c4), u16(0)),
+      full('hdlr', 0, 0, u32(0), enc.encode(isV ? 'vide' : 'soun'), z(12), enc.encode(isV ? 'VideoHandler\0' : 'SoundHandler\0')), minf);
+    return box('trak', full('tkhd', 0, 3, u32(0), u32(0), u32(id), u32(0), u32(movieDur), z(8), u16(0), u16(0), u16(isV ? 0 : 0x100), u16(0), matrix, u32((tr.w || 0) * 65536), u32((tr.h || 0) * 65536)), mdia);
+  }
+  function build(tracks) {
+    const ftyp = box('ftyp', enc.encode('isom'), u32(0x200), enc.encode('isomiso2avc1mp41'));
+    const movieDur = Math.max(...tracks.map(t => Math.round(t.durs.reduce((a, b) => a + b, 0) * 1000 / t.ts)));
+    const moovOf = offs => box('moov', full('mvhd', 0, 0, u32(0), u32(0), u32(1000), u32(movieDur), u32(0x10000), u16(0x100), z(10), matrix, z(24), u32(tracks.length + 1)),
+      ...tracks.map((t, i) => trak(i + 1, t, offs[i], movieDur)));
+    const dummy = tracks.map(t => t.sizes.map(() => 0));
+    const moovLen = moovOf(dummy).length;
+    let pos = ftyp.length + moovLen + 8; const offs = [];
+    for (const t of tracks) { const o = []; for (const sz of t.sizes) { o.push(pos); pos += sz; } offs.push(o); }
+    const moov = moovOf(offs), mdatLen = pos - ftyp.length - moovLen;
+    return new Blob([ftyp, moov, u32(mdatLen), enc.encode('mdat'), ...tracks.flatMap(t => t.data)], {type: 'video/mp4'});
+  }
+  return {build};
+})();
+
+async function fastSupport() {
+  if (!window.VideoEncoder || !window.AudioEncoder || !window.VideoFrame || !window.OfflineAudioContext) return null;
+  let vc = null; for (const c of ['avc1.640028', 'avc1.4d0028', 'avc1.42E028']) { try { if ((await VideoEncoder.isConfigSupported({codec: c, width: W, height: H, bitrate: 6e6, framerate: 30, avc: {format: 'avc'}})).supported) { vc = c; break; } } catch (e) {} }
+  if (!vc) return null;
+  let au = null; for (const [c, k] of [['mp4a.40.2', 'aac'], ['opus', 'opus']]) { try { if ((await AudioEncoder.isConfigSupported({codec: c, sampleRate: 48000, numberOfChannels: 1, bitrate: 128000})).supported) { au = [c, k]; break; } } catch (e) {} }
+  return au ? {vc, ac: au[0], ak: au[1]} : null;
+}
+async function renderFast(D, sup, onProg) {
+  const total = D.total, SRA = 48000;
+  // 소리
+  const oac = new OfflineAudioContext({numberOfChannels: 1, length: Math.ceil((total + .3) * SRA), sampleRate: SRA});
+  await buildAudio(oac, D, 0, oac.destination);
+  const rendered = await oac.startRendering();
+  const aud = {kind: 'audio', codec: sup.ak, sr: SRA, ts: SRA, data: [], sizes: [], durs: [], desc: null};
+  let aErr = null;
+  const aenc = new AudioEncoder({output: (ch, meta) => { const b = new Uint8Array(ch.byteLength); ch.copyTo(b); aud.data.push(b); aud.sizes.push(b.length); aud.durs.push(Math.round((ch.duration || 20000) * SRA / 1e6)); if (meta?.decoderConfig?.description && !aud.desc) aud.desc = new Uint8Array(meta.decoderConfig.description.buffer ? meta.decoderConfig.description.buffer.slice(0) : meta.decoderConfig.description); }, error: e => aErr = e});
+  aenc.configure({codec: sup.ac, sampleRate: SRA, numberOfChannels: 1, bitrate: 128000});
+  const pcm = rendered.getChannelData(0), step = 4800;
+  for (let off = 0; off < pcm.length; off += step) {
+    const n = Math.min(step, pcm.length - off);
+    const ad = new AudioData({format: 'f32-planar', sampleRate: SRA, numberOfFrames: n, numberOfChannels: 1, timestamp: Math.round(off * 1e6 / SRA), data: pcm.slice(off, off + n)});
+    aenc.encode(ad); ad.close();
+  }
+  await aenc.flush(); aenc.close(); if (aErr) throw aErr;
+  if (sup.ak === 'aac' && !aud.desc) aud.desc = new Uint8Array([0x11, 0x88]); // AAC-LC 48kHz mono
+  // 화면
+  const FPS = 30, nF = Math.ceil(total * FPS);
+  const vid = {kind: 'video', w: W, h: H, ts: 90000, data: [], sizes: [], durs: [], keys: [], desc: null};
+  let vErr = null, idx = 0;
+  const venc = new VideoEncoder({output: (ch, meta) => { idx++; const b = new Uint8Array(ch.byteLength); ch.copyTo(b); vid.data.push(b); vid.sizes.push(b.length); vid.durs.push(3000); if (ch.type === 'key') vid.keys.push(idx); if (meta?.decoderConfig?.description && !vid.desc) vid.desc = new Uint8Array(meta.decoderConfig.description.buffer ? meta.decoderConfig.description.buffer.slice(0) : meta.decoderConfig.description); }, error: e => vErr = e});
+  venc.configure({codec: sup.vc, width: W, height: H, bitrate: 6e6, framerate: FPS, avc: {format: 'avc'}});
+  for (let i = 0; i < nF; i++) {
+    frameAt(D, Math.min(i / FPS, total - .01));
+    const fr = new VideoFrame(cv, {timestamp: Math.round(i * 1e6 / FPS), duration: Math.round(1e6 / FPS)});
+    venc.encode(fr, {keyFrame: i % 60 === 0}); fr.close();
+    if (vErr) throw vErr;
+    while (venc.encodeQueueSize > 6) await new Promise(r => setTimeout(r, 5));
+    if (i % 10 === 0) { onProg(i / nF); await new Promise(r => setTimeout(r, 0)); }
+  }
+  await venc.flush(); venc.close(); if (vErr) throw vErr;
+  return MP4.build([vid, aud]);
+}
+
 let busy = false;
 $('#btnRender').onclick = async () => {
   if (busy) return; busy = true; const btn = $('#btnRender'), msg = $('#renderMsg'); btn.disabled = true;
@@ -795,50 +918,46 @@ $('#btnRender').onclick = async () => {
     const D = await prepareAll(true);
     if (D.sc.some(s => s.text && !s._buf) && !confirm('음성이 없는 장면이 있습니다. 그대로 만들까요? (그 장면은 무음)')) throw new Error('취소했습니다');
     const total = D.total;
-    const dest = ac.createMediaStreamDestination();
-    const comp = ac.createDynamicsCompressor(); comp.threshold.value = -6; comp.ratio.value = 4; comp.connect(dest);
-    const T0 = ac.currentTime + .6;
-    const nodes = [];
-    for (const s of D.sc) if (s._buf) { const n = ac.createBufferSource(); n.buffer = s._buf; n.connect(comp); n.start(T0 + s._start + LEAD); nodes.push(n); }
-    if (CUR.music !== '없음') {
-      let mb = null;
-      if (CUR.music === '파일' && $('#musicIn').files[0]) mb = await ac.decodeAudioData(await $('#musicIn').files[0].arrayBuffer());
-      if (!mb) mb = makeMusic(ac, total, CUR.music === '파일' ? '차분' : CUR.music);
-      const src = ac.createBufferSource(); src.buffer = mb; src.loop = true;
-      const g = ac.createGain(), conv = ac.createConvolver(), wet = ac.createGain();
-      conv.buffer = reverbIR(ac); wet.gain.value = .25;
-      src.connect(g); g.connect(comp); g.connect(conv); conv.connect(wet); wet.connect(comp);
-      const gp = g.gain; gp.setValueAtTime(0, T0); gp.linearRampToValueAtTime(.3, T0 + 1);
-      for (const s of D.sc) if (s._buf) {
-        const a = T0 + s._start + LEAD, b = a + s._buf.duration;
-        gp.setValueAtTime(.3, Math.max(T0 + 1, a - .3)); gp.linearRampToValueAtTime(.12, a); gp.setValueAtTime(.12, b); gp.linearRampToValueAtTime(.3, b + .4);
-      }
-      gp.setValueAtTime(.3, T0 + total - 2); gp.linearRampToValueAtTime(0, T0 + total);
-      src.start(T0); src.stop(T0 + total + .2); nodes.push(src);
-    }
-    const stream = cv.captureStream(30); stream.addTrack(dest.stream.getAudioTracks()[0]);
-    const types = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
-    const mime = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || '';
-    const rec = new MediaRecorder(stream, {mimeType: mime || undefined, videoBitsPerSecond: 8e6, audioBitsPerSecond: 160000});
-    const ch = []; rec.ondataavailable = e => e.data.size && ch.push(e.data);
-    const done = new Promise(r => rec.onstop = r);
     try { lock = await navigator.wakeLock?.request('screen'); } catch (e) {}
-    frameAt(D, 0); rec.start(1000);
-    await new Promise(res => {
-      const loop = () => {
-        const t = Math.max(0, ac.currentTime - T0);
-        frameAt(D, Math.min(t, total - .01));
-        $('#bar').style.width = (Math.min(1, t / total) * 100) + '%';
-        msg.textContent = `만드는 중… ${Math.floor(t)} / ${Math.ceil(total)}초 (화면을 켜 두세요)`;
-        if (t < total + .1) requestAnimationFrame(loop); else res();
-      };
-      requestAnimationFrame(loop);
-    });
-    rec.stop(); await done;
-    const blob = new Blob(ch, {type: (mime || 'video/webm').split(';')[0]});
+    let blob = null;
+    const sup = await fastSupport();
+    if (sup) {
+      try {
+        blob = await renderFast(D, sup, p => { $('#bar').style.width = (p * 100) + '%'; msg.textContent = `빠르게 만드는 중… ${Math.round(p * 100)}% (다른 앱으로 가면 잠시 멈췄다가, 돌아오면 이어집니다)`; });
+      } catch (e) { console.log('fast render failed', e); blob = null; }
+    }
+    if (!blob) {
+      const dest = ac.createMediaStreamDestination();
+      const T0 = ac.currentTime + .6;
+      await buildAudio(ac, D, T0, dest);
+      const stream = cv.captureStream(30); stream.addTrack(dest.stream.getAudioTracks()[0]);
+      const types = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
+      const mime = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || '';
+      const rec = new MediaRecorder(stream, {mimeType: mime || undefined, videoBitsPerSecond: 8e6, audioBitsPerSecond: 160000});
+      const ch = []; rec.ondataavailable = e => e.data.size && ch.push(e.data);
+      const done = new Promise(r => rec.onstop = r);
+      let hidden = false; const onVis = () => { if (document.visibilityState === 'hidden') hidden = true; };
+      document.addEventListener('visibilitychange', onVis);
+      frameAt(D, 0); rec.start(1000);
+      await new Promise(res => {
+        const loop = () => {
+          const t = Math.max(0, ac.currentTime - T0);
+          frameAt(D, Math.min(t, total - .01));
+          $('#bar').style.width = (Math.min(1, t / total) * 100) + '%';
+          msg.textContent = `만드는 중… ${Math.floor(t)} / ${Math.ceil(total)}초 (끝날 때까지 이 화면을 켜 두세요)`;
+          if (t < total + .1 && !hidden) requestAnimationFrame(loop); else res();
+        };
+        requestAnimationFrame(loop);
+      });
+      document.removeEventListener('visibilitychange', onVis);
+      rec.stop(); await done;
+      if (hidden) throw new Error('만드는 도중 화면을 벗어나 중단됐습니다. 다시 눌러 주세요');
+      blob = new Blob(ch, {type: (mime || 'video/webm').split(';')[0]});
+    }
     if (CUR.videoKey) await delBlob(CUR.videoKey);
     CUR.videoKey = 'vid-' + uid(); await putBlob(CUR.videoKey, blob); await putEp(CUR); renderPlan();
-    showVideo(blob); msg.textContent = `완성 (${(blob.size / 1048576).toFixed(1)}MB). [공유 / 저장]으로 유튜브·클립에 올리세요.`;
+    $('#bar').style.width = '100%';
+    showVideo(blob); msg.textContent = `완성 (${(blob.size / 1048576).toFixed(1)}MB${sup ? ', 빠른 방식' : ''}). [공유 / 저장]으로 유튜브·클립에 올리세요.`;
   } catch (e) { msg.textContent = '오류: ' + e.message; }
   try { lock && lock.release(); } catch (e) {}
   busy = false; btn.disabled = false;
