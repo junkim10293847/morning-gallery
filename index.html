@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.8 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.9 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -371,11 +371,17 @@ $('#btnSuggest').onclick = async () => {
 };
 
 /* ───────── AI ───────── */
+async function fetchT(url, opt, sec = 120) {
+  const c = new AbortController(); const t = setTimeout(() => c.abort(), sec * 1000);
+  try { return await fetch(url, {...opt, signal: c.signal}); }
+  catch (e) { if (e.name === 'AbortError') throw new Error(`${sec}초 동안 응답이 없습니다. 인터넷 연결을 확인하고 다시 누르세요`); throw new Error('연결 실패: ' + e.message); }
+  finally { clearTimeout(t); }
+}
 async function askAI(prompt) {
   if (!S.textKey) throw new Error('정책서 탭에서 원고 엔진 API 키를 넣으세요');
   let text;
   if (S.engine === 'claude') {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetchT('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {'x-api-key': S.textKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true'},
       body: JSON.stringify({model: S.model || 'claude-sonnet-5-5', max_tokens: 6000, messages: [{role: 'user', content: prompt}]})
@@ -385,7 +391,7 @@ async function askAI(prompt) {
   } else {
     let m = S.model || 'gemini-3.8-flash', r, j;
     for (let tries = 0; tries < 2; tries++) {
-      r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`, {
+      r = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`, {
         method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': S.textKey},
         body: JSON.stringify({contents: [{parts: [{text: prompt}]}], generationConfig: {responseMimeType: 'application/json', temperature: 0.8}})
       });
@@ -556,7 +562,7 @@ async function geminiTTS(text, voice) {
   if (!key) throw new Error('정책서 탭에서 Gemini(AI Studio) 키를 넣으세요');
   const speed = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : '';
   for (let tries = 0; tries < 3; tries++) {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent`, {
+    const r = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent`, {
       method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': key},
       body: JSON.stringify({contents: [{parts: [{text: `아침 교양 방송 나레이터처럼 ${speed}차분하고 따뜻하게 읽어 주세요: ${applyPron(text)}`}]}],
         generationConfig: {responseModalities: ['AUDIO'], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: voice}}}}})
@@ -812,9 +818,10 @@ $('#btnEVoiceTest').onclick = async () => { const m = $('#ttsMsg'); m.textConten
 $('#btnVoiceTest').onclick = async () => { const m = $('#voiceMsg'); m.textContent = '만드는 중…'; try { const b = await tts('1990년 3월, 보스턴의 한 미술관에서 이 바다 그림이 사라졌습니다. 오늘 아침도, 명화 한 점으로 시작하세요.'); new Audio(URL.createObjectURL(b)).play(); m.textContent = ''; } catch (e) { m.textContent = '오류: ' + e.message; } };
 $('#btnKeyCheck').onclick = async () => {
   const m = $('#keyMsg'), b = $('#btnKeyCheck'); b.disabled = true; let out = [];
-  m.textContent = '원고 키 확인 중…';
+  let sec = 0; const tick = setInterval(() => { sec++; if (!out.length) m.textContent = `원고 키 확인 중… ${sec}초 (최대 2분)`; }, 1000);
   try { const j = await askAI('다음 JSON만 출력: {"ok":"모닝 갤러리"}'); out.push(j.ok ? '✅ 원고 키 정상' : '⚠️ 원고 키: 응답이 이상합니다'); }
   catch (e) { out.push('❌ 원고 키: ' + e.message); }
+  clearInterval(tick);
   m.textContent = out.join('\n') + '\n음성 키 확인 중…';
   try { const a = await tts('좋은 아침입니다.', S.voice); new Audio(URL.createObjectURL(a)).play(); out.push('✅ 음성 정상 (지금 들리는 소리)'); }
   catch (e) { out.push('❌ 음성: ' + e.message); }
