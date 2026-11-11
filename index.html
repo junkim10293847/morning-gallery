@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.4 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.5 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -114,7 +114,26 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 
     <div class="card">
       <h2><span class="n">3</span>장면 · 음성</h2>
-      <div class="row"><button class="b p" id="btnTTS">전체 음성 만들기</button></div>
+      <label>이 편 목소리</label>
+      <div class="row"><select id="eVoice">
+      <optgroup label="Gemini 음성 (원고용 AI Studio 키 그대로 사용)">
+      <option value="gemini:Aoede">◆ 여성 아오이드</option>
+      <option value="gemini:Kore">◆ 여성 코레</option>
+      <option value="gemini:Charon">◆ 남성 카론</option>
+      <option value="gemini:Orus">◆ 남성 오루스</option>
+      </optgroup>
+      <optgroup label="Google Cloud 음성 (음성 키 필요)">
+      <option value="ko-KR-Chirp3-HD-Aoede">★ 여성 아오이드 (가장 자연스러움)</option>
+      <option value="ko-KR-Chirp3-HD-Kore">★ 여성 코레</option>
+      <option value="ko-KR-Chirp3-HD-Charon">★ 남성 카론 (낮고 차분)</option>
+      <option value="ko-KR-Chirp3-HD-Orus">★ 남성 오루스</option>
+      <option value="ko-KR-Neural2-A">여성 A (차분)</option>
+      <option value="ko-KR-Neural2-B">여성 B (밝음)</option>
+      <option value="ko-KR-Neural2-C">남성 C</option>
+      <option value="ko-KR-Wavenet-D">남성 D (낮음)</option>
+      </optgroup>
+    </select><button class="b fit" id="btnEVoiceTest">▶ 들어보기</button></div>
+      <div class="row" style="margin-top:8px"><button class="b p" id="btnTTS">전체 음성 만들기</button></div>
       <div class="msg" id="ttsMsg"></div>
       <div id="scenes"></div>
       <button class="b" id="btnAddScene" style="margin-top:10px">+ 장면 추가</button>
@@ -162,7 +181,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   <div class="card">
     <h2>음성</h2>
     <label>Google Cloud 음성(Text-to-Speech) API 키</label><input id="sTtsKey" type="password" autocomplete="off">
-    <label>목소리</label>
+    <label>기본 목소리 (새 편에 처음 들어가는 값, 편마다 바꿀 수 있음)</label>
     <select id="sVoice">
       <optgroup label="Gemini 음성 (원고용 AI Studio 키 그대로 사용)">
       <option value="gemini:Aoede">◆ 여성 아오이드</option>
@@ -376,7 +395,7 @@ async function askAI(prompt) {
 }
 
 /* ───────── 편 편집 ───────── */
-const F = {eDate: 'date', eFormat: 'format', eTopic: 'topic', eTitle: 'title', eHeader: 'header', eDesc: 'desc', eClip: 'clip', eLink: 'link', eMusic: 'music'};
+const F = {eDate: 'date', eFormat: 'format', eTopic: 'topic', eTitle: 'title', eHeader: 'header', eDesc: 'desc', eClip: 'clip', eLink: 'link', eMusic: 'music', eVoice: 'voice'};
 let saveT;
 function saveCur() { clearTimeout(saveT); saveT = setTimeout(() => { putEp(CUR); renderPlan(); }, 400); }
 for (const [id, k] of Object.entries(F)) {
@@ -392,6 +411,7 @@ document.querySelectorAll('[data-copy]').forEach(b => b.onclick = async () => {
 async function openEp(id) {
   CUR = EPS.find(e => e.id === id); if (!CUR) return;
   $('#noEp').style.display = 'none'; $('#editor').style.display = 'block';
+  if (!CUR.voice) CUR.voice = S.voice;
   for (const [i, k] of Object.entries(F)) $('#' + i).value = CUR[k] ?? '';
   $('#eYt').checked = !!CUR.yt; $('#eNv').checked = !!CUR.nv;
   $('#musicIn').style.display = CUR.music === '파일' ? 'block' : 'none';
@@ -542,12 +562,13 @@ async function geminiTTS(text, voice) {
   }
   throw new Error('오늘 무료 사용량을 넘었을 수 있습니다. 잠시 뒤 다시 하세요');
 }
-async function tts(text) {
-  if (S.voice.startsWith('gemini:')) return geminiTTS(text, S.voice.slice(7));
+async function tts(text, voice) {
+  voice = voice || S.voice;
+  if (voice.startsWith('gemini:')) return geminiTTS(text, voice.slice(7));
   if (!S.ttsKey) throw new Error('정책서 탭에서 음성 API 키를 넣으세요');
   const r = await fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key=' + encodeURIComponent(S.ttsKey), {
     method: 'POST', headers: {'content-type': 'application/json'},
-    body: JSON.stringify({input: {text: applyPron(text)}, voice: {languageCode: 'ko-KR', name: S.voice}, audioConfig: Object.assign({audioEncoding: 'MP3'}, (+S.rate && +S.rate !== 1) ? {speakingRate: +S.rate} : {})})
+    body: JSON.stringify({input: {text: applyPron(text)}, voice: {languageCode: 'ko-KR', name: voice}, audioConfig: Object.assign({audioEncoding: 'MP3'}, (+S.rate && +S.rate !== 1) ? {speakingRate: +S.rate} : {})})
   });
   const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(ttsHelp(r.status, j.error?.message || ''));
   const bin = atob(j.audioContent); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
@@ -557,7 +578,7 @@ $('#btnTTS').onclick = async () => {
   const b = $('#btnTTS'), m = $('#ttsMsg'); b.disabled = true;
   try {
     const list = CUR.scenes.filter(s => s.text.trim());
-    for (const [i, s] of list.entries()) { m.textContent = `음성 ${i + 1}/${list.length}…`; await setAudio(s, await tts(s.text)); }
+    for (const [i, s] of list.entries()) { m.textContent = `음성 ${i + 1}/${list.length}…`; await setAudio(s, await tts(s.text, CUR.voice || S.voice)); }
     m.textContent = '음성 완성'; renderScenes();
   } catch (e) { m.textContent = '오류: ' + e.message; }
   b.disabled = false;
@@ -779,6 +800,7 @@ $('#btnShare').onclick = async () => {
 /* ───────── 정책서 · 설정 ───────── */
 const SF = {sPolicy: 'policy', sEngine: 'engine', sTextKey: 'textKey', sModel: 'model', sTtsKey: 'ttsKey', sVoice: 'voice', sRate: 'rate', sPron: 'pron'};
 for (const [id, k] of Object.entries(SF)) { $('#' + id).value = S[k] ?? ''; $('#' + id).addEventListener('input', () => { const v = $('#' + id).value; S[k] = /Key$/.test(k) ? v.replace(/\s+/g, '') : v; saveS(); }); }
+$('#btnEVoiceTest').onclick = async () => { const m = $('#ttsMsg'); m.textContent = '들어보기 만드는 중…'; try { const b = await tts('오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요.', CUR.voice); new Audio(URL.createObjectURL(b)).play(); m.textContent = '목소리를 바꿨다면 [전체 음성 만들기]를 다시 누르세요'; } catch (e) { m.textContent = '오류: ' + e.message; } };
 $('#btnVoiceTest').onclick = async () => { const m = $('#voiceMsg'); m.textContent = '만드는 중…'; try { const b = await tts('1990년 3월, 보스턴의 한 미술관에서 이 바다 그림이 사라졌습니다. 오늘 아침도, 명화 한 점으로 시작하세요.'); new Audio(URL.createObjectURL(b)).play(); m.textContent = ''; } catch (e) { m.textContent = '오류: ' + e.message; } };
 $('#btnPolicyReset').onclick = () => { if (confirm('처음 정책서로 되돌릴까요?')) { S.policy = DEFAULT_POLICY; $('#sPolicy').value = S.policy; saveS(); } };
 $('#btnExport').onclick = () => {
