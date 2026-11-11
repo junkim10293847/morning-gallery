@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F6EFE3">
+<title>모닝 갤러리</title>
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6EFE3;--card:#FFFDF8;--ink:#362A1C;--sub:#8C7452;--gold:#B0843A;--line:#E6DCCB;--ok:#5E8B4E;--warn:#C0563B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Noto Sans KR",system-ui,sans-serif;padding-bottom:76px}
+header{padding:14px 16px 6px;text-align:center}
+header h1{font:600 20px "Noto Serif KR",serif;margin:0}
+header p{margin:0;color:var(--sub);font-size:12px}
+main{max-width:640px;margin:0 auto;padding:0 16px}
+section.tab{display:none}section.tab.on{display:block}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:12px 0;font:500 14px inherit;color:var(--sub)}
+nav button.on{color:var(--gold);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+h2{font-size:16px;margin:0 0 10px}
+h2 .n{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#fff;text-align:center;font-size:13px;line-height:22px;margin-right:6px}
+label{display:block;font-size:12px;color:var(--sub);margin:8px 0 3px}
+input,select,textarea{width:100%;font:inherit;color:inherit;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+textarea{min-height:64px;resize:vertical}
+button.b{border:0;border-radius:10px;padding:10px 14px;font:500 14px inherit;background:#EFE5D3;color:var(--ink)}
+button.p{background:var(--gold);color:#fff}
+button.w{background:none;color:var(--warn);padding:6px}
+button:disabled{opacity:.5}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1}
+.row>.fit{flex:0 0 auto}
+.ep{display:flex;gap:10px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}
+.ep:last-child{border:0}
+.ep .d{width:54px;text-align:center;font-size:12px;color:var(--sub)}
+.ep .d b{display:block;font-size:18px;color:var(--ink)}
+.ep .t{flex:1;min-width:0}
+.ep .t div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:11px;padding:1px 7px;border-radius:9px;background:#EFE5D3;color:var(--sub);margin-right:4px}
+.badge.g{background:#F3E4C4;color:var(--gold)}
+.dots{font-size:11px;color:var(--sub);margin-top:2px}
+.dots i{font-style:normal;margin-right:6px}.dots i.y{color:var(--ok);font-weight:700}
+.today{background:#FFF6E6}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.thumbs div{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#eee}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs span{position:absolute;left:4px;top:4px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;border-radius:6px;padding:0 5px}
+.thumbs button{position:absolute;right:2px;top:2px;border:0;background:rgba(255,255,255,.85);border-radius:6px;font-size:11px}
+.scene{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+.scene .hd{display:flex;align-items:center;gap:8px}
+.scene .hd img{width:44px;height:44px;object-fit:cover;border-radius:6px;background:#eee}
+.scene .hd b{flex:1}
+.aud{display:flex;gap:6px;align-items:center;margin-top:6px;font-size:12px;color:var(--sub)}
+.aud button{padding:6px 10px;font-size:12px}
+.need{font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)}
+.need a{color:var(--gold);margin-left:6px;font-size:12px}
+.muted{color:var(--sub);font-size:12px}
+.msg{font-size:13px;color:var(--sub);margin-top:6px;min-height:1em}
+.bar{height:6px;background:#EFE5D3;border-radius:3px;overflow:hidden;margin-top:8px}
+.bar div{height:100%;width:0;background:var(--gold)}
+canvas#cv{width:100%;max-width:270px;display:block;margin:10px auto;border-radius:10px;border:1px solid var(--line)}
+video{width:100%;max-width:270px;display:block;margin:10px auto;border-radius:10px}
+dialog{border:0;border-radius:16px;padding:16px;width:min(92vw,420px);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+.count{float:right;font-size:11px}
+.empty{text-align:center;color:var(--sub);padding:26px 0}
+</style>
+</head>
+<body>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.4 · 2026-11-11</p></header>
+<main>
+
+<!-- 일정 -->
+<section class="tab on" id="tab-plan">
+  <div class="row" style="margin-top:10px">
+    <button class="b p" id="btnNew">+ 새 편</button>
+    <button class="b" id="btnSuggest">주제 7일 추천</button>
+  </div>
+  <div class="msg" id="planMsg"></div>
+  <div class="card" style="padding:0" id="epList"></div>
+</section>
+
+<!-- 만들기 -->
+<section class="tab" id="tab-make">
+  <div id="noEp" class="empty">일정에서 편을 고르세요</div>
+  <div id="editor" style="display:none">
+    <div class="card">
+      <div class="row"><input type="date" id="eDate" class="fit" style="flex:0 0 150px"><select id="eFormat" class="fit" style="flex:0 0 90px"><option>화가</option><option>그림</option></select></div>
+      <label>주제</label><input id="eTopic" placeholder="예: 젠틸레스키 / 밀레 「만종」">
+      <div class="row" style="margin-top:8px"><span class="muted" id="eNext"></span><button class="w fit" id="btnDel">편 삭제</button></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">1</span>원고</h2>
+      <button class="b p" id="btnWrite">정책서대로 원고 쓰기</button>
+      <div class="msg" id="writeMsg"></div>
+      <label>제목</label><input id="eTitle">
+      <label>머리말</label><input id="eHeader" placeholder="오늘의 화가 · 홍길동">
+      <label>유튜브 설명</label><textarea id="eDesc"></textarea>
+      <label>네이버 클립 설명 <span class="count" id="clipCount"></span></label><textarea id="eClip"></textarea>
+      <div id="needBox" style="display:none"><label>찾을 그림</label><div id="needs"></div></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">2</span>사진</h2>
+      <p class="muted" style="margin:0 0 8px">찾은 그림을 순서대로 올리세요. 번호가 장면과 연결됩니다.</p>
+      <input type="file" id="imgIn" accept="image/*" multiple>
+      <div class="thumbs" id="thumbs" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">3</span>장면 · 음성</h2>
+      <div class="row"><button class="b p" id="btnTTS">전체 음성 만들기</button></div>
+      <div class="msg" id="ttsMsg"></div>
+      <div id="scenes"></div>
+      <button class="b" id="btnAddScene" style="margin-top:10px">+ 장면 추가</button>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">4</span>영상</h2>
+      <label>배경음악</label>
+      <div class="row"><select id="eMusic"><option value="차분">자동 · 차분</option><option value="밝게">자동 · 밝게</option><option value="어둡게">자동 · 어둡게</option><option value="파일">내 음악 파일</option><option value="없음">없음</option></select></div>
+      <input type="file" id="musicIn" accept="audio/*" style="display:none;margin-top:6px">
+      <div class="row" style="margin-top:10px"><button class="b" id="btnPreview">미리보기</button><button class="b p" id="btnRender">영상 만들기</button></div>
+      <p class="muted">영상 길이만큼 걸립니다. 그동안 화면을 켜 두세요.</p>
+      <div class="bar"><div id="bar"></div></div>
+      <div class="msg" id="renderMsg"></div>
+      <canvas id="cv" width="1080" height="1920"></canvas>
+      <video id="vid" controls playsinline style="display:none"></video>
+      <div class="row" id="outBtns" style="display:none"><button class="b p" id="btnShare">공유 / 저장</button></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">5</span>올리기 · 예약</h2>
+      <div class="row"><button class="b" data-copy="eTitle">제목 복사</button><button class="b" data-copy="eDesc">설명 복사</button><button class="b" data-copy="eClip">클립 복사</button></div>
+      <label style="display:flex;gap:8px;align-items:center;margin-top:12px"><input type="checkbox" id="eYt" style="width:auto"> 유튜브 예약 완료</label>
+      <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="eNv" style="width:auto"> 네이버 클립 예약 완료</label>
+      <label>링크 (선택)</label><input id="eLink" placeholder="https://youtube.com/shorts/...">
+    </div>
+  </div>
+</section>
+
+<!-- 정책 -->
+<section class="tab" id="tab-policy">
+  <div class="card">
+    <h2>정책서</h2>
+    <p class="muted" style="margin:0 0 6px">원고 쓰기와 주제 추천에 그대로 쓰입니다. 언제든 고치세요.</p>
+    <textarea id="sPolicy" style="min-height:360px;font-size:13px"></textarea>
+    <div class="row" style="margin-top:8px"><button class="b fit" id="btnPolicyReset">처음 정책서로</button></div>
+  </div>
+  <div class="card">
+    <h2>원고 엔진</h2>
+    <label>사용할 AI</label>
+    <select id="sEngine"><option value="gemini">Google Gemini (무료 키 가능)</option><option value="claude">Anthropic Claude API</option></select>
+    <label>API 키</label><input id="sTextKey" type="password" autocomplete="off">
+    <label>모델 (비우면 기본값)</label><input id="sModel" placeholder="gemini-2.5-flash / claude-sonnet-5-5">
+  </div>
+  <div class="card">
+    <h2>음성</h2>
+    <label>Google Cloud 음성(Text-to-Speech) API 키</label><input id="sTtsKey" type="password" autocomplete="off">
+    <label>목소리</label>
+    <select id="sVoice">
+      <optgroup label="Gemini 음성 (원고용 AI Studio 키 그대로 사용)">
+      <option value="gemini:Aoede">◆ 여성 아오이드</option>
+      <option value="gemini:Kore">◆ 여성 코레</option>
+      <option value="gemini:Charon">◆ 남성 카론</option>
+      <option value="gemini:Orus">◆ 남성 오루스</option>
+      </optgroup>
+      <optgroup label="Google Cloud 음성 (음성 키 필요)">
+      <option value="ko-KR-Chirp3-HD-Aoede">★ 여성 아오이드 (가장 자연스러움)</option>
+      <option value="ko-KR-Chirp3-HD-Kore">★ 여성 코레</option>
+      <option value="ko-KR-Chirp3-HD-Charon">★ 남성 카론 (낮고 차분)</option>
+      <option value="ko-KR-Chirp3-HD-Orus">★ 남성 오루스</option>
+      <option value="ko-KR-Neural2-A">여성 A (차분)</option>
+      <option value="ko-KR-Neural2-B">여성 B (밝음)</option>
+      <option value="ko-KR-Neural2-C">남성 C</option>
+      <option value="ko-KR-Wavenet-D">남성 D (낮음)</option>
+      </optgroup>
+    </select>
+    <button class="b" id="btnVoiceTest" style="margin-top:8px">목소리 들어보기</button> <span class="muted" id="voiceMsg"></span>
+    <label>속도</label><select id="sRate"><option value="0.9">조금 느리게</option><option value="1.0">보통</option><option value="1.08">조금 빠르게</option></select>
+    <label>발음 사전 (한 줄에 하나, 자막=읽기)</label><textarea id="sPron" placeholder="바니시=바니쉬"></textarea>
+  </div>
+  <div class="card">
+    <h2>백업</h2>
+    <p class="muted" style="margin:0 0 8px">정책서와 일정·원고를 파일로 보관하거나 다른 기기로 옮깁니다 (사진·음성 제외).</p>
+    <div class="row"><button class="b" id="btnExport">내보내기</button><button class="b" id="btnImport">가져오기</button></div>
+    <input type="file" id="importIn" accept=".json" style="display:none">
+  </div>
+</section>
+</main>
+
+<nav><button data-tab="plan" class="on">일정</button><button data-tab="make">만들기</button><button data-tab="policy">정책서</button></nav>
+
+<dialog id="dlgNew">
+  <h2>새 편</h2>
+  <label>공개일</label><input type="date" id="nDate">
+  <label>형식</label><select id="nFormat"><option>화가</option><option>그림</option></select>
+  <label>주제</label><input id="nTopic" placeholder="예: 에드가 드가">
+  <div class="row" style="margin-top:14px"><button class="b" id="nCancel">취소</button><button class="b p" id="nOk">추가</button></div>
+</dialog>
+
+<script>
+/* ───────── 기본 정책서 ───────── */
+const DEFAULT_POLICY = `[모닝 갤러리 정책서]
+
+1. 채널
+- 유튜브 @모닝갤러리 · 네이버 클립 @morninggallery_kr
+- 매일 오전 6시 공개, 하루 한 편
+- 시청층: 40~60대 중심, 아침에 가볍게 보는 교양
+
+2. 형식 (하루씩 번갈아)
+- 화가 편: 장면 13~15개, 나레이션 합계 약 80~90초. 대표작 7~10점으로 일생을 따라감
+- 그림 편: 장면 11~14개, 약 60~75초. 한 점을 깊게 (숨은 이야기, 반전)
+
+3. 제목 · 첫 문장
+- 제목은 질문·사건형 + " | 화가 이름" (예: 1990년 사라진 그림, 그 화가는 왜 자기 얼굴만 80번 그렸을까? | 렘브란트)
+- 첫 장면은 질문이나 사건으로 시작해 3초 안에 붙잡기
+- 둘째 장면: "오늘의 화가, ○○입니다" / "오늘의 명화, ○○의 「○○」입니다"
+
+4. 문장
+- 한 장면 1~2문장, 40자 안팎, 쉬운 말, 존댓말(~습니다 / ~죠)
+- 쉼표로 호흡을 끊어 자막 두 줄에 맞게
+- 갈리는 사실은 "~로 알려져 있죠", "~라고 전해집니다". 지어내지 않기
+- 마지막 장면: "오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요."
+- 다음 편이 정해져 있으면 마지막 앞 장면에 한 줄 예고
+
+5. 피할 것
+- 노출이 큰 그림, 참수·피 등 잔혹한 장면 (고디바 편 중단 사례)
+- 화가 사후 70년이 지나지 않은 작품
+- 개인사의 어두운 부분은 사실만 짧게
+
+6. 그림
+- 위키미디어 공용 Google Art Project 판 우선, 긴 쪽 1600px 이상 (그림 편은 3000px 이상)
+- 한국 그림은 국립중앙박물관 e뮤지엄 공공누리 제1유형, 설명에 출처 표기
+- 작품 표기: "작품명 · 연도" (추정이면 "1665년경")
+
+7. 설명 · 해시태그
+- 유튜브 설명 3~4줄 + 해시태그 5개 이내 (#모닝갤러리 포함)
+- 네이버 클립 설명 300자 이내, 첫 줄에 작품명·화가 이름 (검색 유입)
+
+8. 차별화
+- 흔한 소재는 "숨은 것 찾기", "반전", "사건" 각도로
+- 카라바조 → 렘브란트 → 젠틸레스키처럼 이어지는 흐름 만들기
+- 이미 올린 주제: 베르메르, 클림트, 고흐 별이 빛나는 밤, 카라바조, 렘브란트, 김홍도 씨름, 젠틸레스키, 밀레 만종, 드가`;
+
+/* ───────── 저장소 ───────── */
+const $ = s => document.querySelector(s);
+let DB, EPS = [], CUR = null, IMGURL = {};
+const DEF = {policy: DEFAULT_POLICY, engine: 'gemini', textKey: '', model: '', ttsKey: '', voice: 'gemini:Aoede', rate: '1.0', pron: ''};
+let S = {...DEF};
+try { S = {...DEF, ...JSON.parse(localStorage.getItem('mg-settings') || '{}')}; } catch (e) {}
+function saveS() { try { localStorage.setItem('mg-settings', JSON.stringify(S)); } catch (e) {} }
+
+function openDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('morning-gallery', 1);
+    r.onupgradeneeded = () => { const d = r.result; d.createObjectStore('eps', {keyPath: 'id'}); d.createObjectStore('blobs'); };
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+}
+function tx(store, mode, fn) {
+  return new Promise((res, rej) => {
+    const t = DB.transaction(store, mode), q = fn(t.objectStore(store));
+    t.oncomplete = () => res(q ? q.result : undefined); t.onerror = () => rej(t.error);
+  });
+}
+const putEp = e => tx('eps', 'readwrite', s => s.put(e));
+const putBlob = (k, b) => tx('blobs', 'readwrite', s => s.put(b, k));
+const getBlob = k => tx('blobs', 'readonly', s => s.get(k));
+const delBlob = k => tx('blobs', 'readwrite', s => s.delete(k));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* ───────── 날짜 ───────── */
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const todayStr = () => ymd(new Date());
+function nextFreeDate() {
+  const used = new Set(EPS.map(e => e.date)); const d = new Date(); d.setDate(d.getDate() + 1);
+  while (used.has(ymd(d))) d.setDate(d.getDate() + 1);
+  return ymd(d);
+}
+function lastFormat() { const s = [...EPS].sort((a, b) => a.date < b.date ? -1 : 1); return s.length ? s[s.length - 1].format : '그림'; }
+
+/* ───────── 탭 ───────── */
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+function showTab(t) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+  document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
+  scrollTo(0, 0);
+}
+
+/* ───────── 일정 ───────── */
+function status(e) {
+  const sc = e.scenes || [];
+  return {
+    text: sc.length > 0 && sc.every(s => s.text.trim()),
+    img: (e.images || []).length > 0,
+    voice: sc.length > 0 && sc.every(s => s.audioKey),
+    video: !!e.videoKey,
+    post: !!(e.yt && e.nv)
+  };
+}
+function renderPlan() {
+  const box = $('#epList'); box.innerHTML = '';
+  const today = todayStr();
+  const list = [...EPS].sort((a, b) => a.date < b.date ? -1 : 1);
+  if (!list.length) { box.innerHTML = '<div class="empty">아직 일정이 없습니다. [+ 새 편] 또는 [주제 7일 추천]</div>'; return; }
+  for (const e of list) {
+    const d = new Date(e.date + 'T00:00'); const st = status(e);
+    const el = document.createElement('div'); el.className = 'ep' + (e.date === today ? ' today' : '');
+    el.innerHTML = `<div class="d">${d.getMonth() + 1}/${d.getDate()}<b>${WD[d.getDay()]}</b></div>
+      <div class="t"><div><span class="badge ${e.format === '화가' ? 'g' : ''}">${e.format}</span>${esc(e.topic || '(주제 없음)')}</div>
+      <div class="dots">${[['원고', st.text], ['사진', st.img], ['음성', st.voice], ['영상', st.video], ['예약', st.post]].map(([n, y]) => `<i class="${y ? 'y' : ''}">${y ? '●' : '○'} ${n}</i>`).join('')}</div></div>`;
+    el.onclick = () => openEp(e.id);
+    box.appendChild(el);
+  }
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+$('#btnNew').onclick = () => {
+  $('#nDate').value = nextFreeDate(); $('#nFormat').value = lastFormat() === '화가' ? '그림' : '화가'; $('#nTopic').value = '';
+  $('#dlgNew').showModal();
+};
+$('#nCancel').onclick = () => $('#dlgNew').close();
+$('#nOk').onclick = async () => {
+  const e = newEp($('#nDate').value, $('#nFormat').value, $('#nTopic').value.trim());
+  EPS.push(e); await putEp(e); $('#dlgNew').close(); renderPlan(); openEp(e.id);
+};
+function newEp(date, format, topic) {
+  return {id: uid(), date, format, topic, title: '', header: '', desc: '', clip: '', needs: [], images: [], scenes: [], music: '차분', yt: false, nv: false, link: ''};
+}
+
+$('#btnSuggest').onclick = async () => {
+  const msg = $('#planMsg'); msg.textContent = '주제를 고르는 중…';
+  try {
+    const used = EPS.map(e => `${e.format}: ${e.topic}`).join(', ');
+    const prompt = `${S.policy}\n\n[요청] 위 정책서에 맞춰 앞으로 7일 동안 올릴 주제를 추천하라.\n- 형식은 하루씩 번갈아, 첫날은 "${lastFormat() === '화가' ? '그림' : '화가'}" 편\n- 이미 일정에 있는 주제와 겹치지 말 것: ${used || '없음'}\n- 그림 편 주제는 "화가 「작품명」" 형태\n[출력] JSON만: {"items":[{"format":"화가 또는 그림","topic":"..."}]}`;
+    const j = await askAI(prompt);
+    const items = (j.items || []).slice(0, 7);
+    if (!items.length) throw new Error('추천 결과가 비었습니다');
+    if (!confirm('추천 주제를 일정에 넣을까요?\n\n' + items.map((x, i) => `${i + 1}. [${x.format}] ${x.topic}`).join('\n'))) { msg.textContent = ''; return; }
+    for (const it of items) { const e = newEp(nextFreeDate(), it.format === '그림' ? '그림' : '화가', it.topic); EPS.push(e); await putEp(e); }
+    msg.textContent = `${items.length}편을 일정에 넣었습니다.`; renderPlan();
+  } catch (err) { msg.textContent = '오류: ' + err.message; }
+};
+
+/* ───────── AI ───────── */
+async function askAI(prompt) {
+  if (!S.textKey) throw new Error('정책서 탭에서 원고 엔진 API 키를 넣으세요');
+  let text;
+  if (S.engine === 'claude') {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'x-api-key': S.textKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true'},
+      body: JSON.stringify({model: S.model || 'claude-sonnet-5-5', max_tokens: 6000, messages: [{role: 'user', content: prompt}]})
+    });
+    const j = await r.json(); if (!r.ok) throw new Error(j.error?.message || r.status);
+    text = j.content.map(c => c.text || '').join('');
+  } else {
+    const m = S.model || 'gemini-2.5-flash';
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${encodeURIComponent(S.textKey)}`, {
+      method: 'POST', headers: {'content-type': 'application/json'},
+      body: JSON.stringify({contents: [{parts: [{text: prompt}]}], generationConfig: {responseMimeType: 'application/json', temperature: 0.8}})
+    });
+    const j = await r.json(); if (!r.ok) throw new Error(j.error?.message || r.status);
+    text = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+  }
+  const a = text.indexOf('{'), b = text.lastIndexOf('}');
+  if (a < 0) throw new Error('결과를 읽지 못했습니다');
+  return JSON.parse(text.slice(a, b + 1));
+}
+
+/* ───────── 편 편집 ───────── */
+const F = {eDate: 'date', eFormat: 'format', eTopic: 'topic', eTitle: 'title', eHeader: 'header', eDesc: 'desc', eClip: 'clip', eLink: 'link', eMusic: 'music'};
+let saveT;
+function saveCur() { clearTimeout(saveT); saveT = setTimeout(() => { putEp(CUR); renderPlan(); }, 400); }
+for (const [id, k] of Object.entries(F)) {
+  $('#' + id).addEventListener('input', () => { CUR[k] = $('#' + id).value; if (id === 'eClip') clipCount(); if (id === 'eMusic') $('#musicIn').style.display = CUR.music === '파일' ? 'block' : 'none'; saveCur(); });
+}
+$('#eYt').onchange = () => { CUR.yt = $('#eYt').checked; saveCur(); };
+$('#eNv').onchange = () => { CUR.nv = $('#eNv').checked; saveCur(); };
+function clipCount() { const n = $('#eClip').value.length; $('#clipCount').textContent = `${n}/300자`; $('#clipCount').style.color = n > 300 ? 'var(--warn)' : ''; }
+document.querySelectorAll('[data-copy]').forEach(b => b.onclick = async () => {
+  try { await navigator.clipboard.writeText($('#' + b.dataset.copy).value); const t = b.textContent; b.textContent = '복사됨 ✓'; setTimeout(() => b.textContent = t, 1200); } catch (e) {}
+});
+
+async function openEp(id) {
+  CUR = EPS.find(e => e.id === id); if (!CUR) return;
+  $('#noEp').style.display = 'none'; $('#editor').style.display = 'block';
+  for (const [i, k] of Object.entries(F)) $('#' + i).value = CUR[k] ?? '';
+  $('#eYt').checked = !!CUR.yt; $('#eNv').checked = !!CUR.nv;
+  $('#musicIn').style.display = CUR.music === '파일' ? 'block' : 'none';
+  clipCount(); renderNeeds();
+  const nx = nextEpOf(CUR); $('#eNext').textContent = nx ? `다음 편: ${nx.topic}` : '';
+  $('#vid').style.display = 'none'; $('#outBtns').style.display = 'none'; $('#bar').style.width = '0';
+  $('#renderMsg').textContent = CUR.videoKey ? '만든 영상이 있습니다. 아래에서 다시 볼 수 있어요.' : '';
+  await loadThumbs(); renderScenes(); showTab('make');
+  if (CUR.videoKey) { const v = await getBlob(CUR.videoKey); if (v) showVideo(v); }
+}
+function nextEpOf(e) { return [...EPS].filter(x => x.date > e.date).sort((a, b) => a.date < b.date ? -1 : 1)[0]; }
+$('#btnDel').onclick = async () => {
+  if (!confirm('이 편을 삭제할까요? (사진·음성·영상 포함)')) return;
+  for (const k of [...CUR.images.map(i => i.key), ...CUR.scenes.map(s => s.audioKey), CUR.videoKey].filter(Boolean)) await delBlob(k);
+  await tx('eps', 'readwrite', s => s.delete(CUR.id)); EPS = EPS.filter(e => e !== CUR); CUR = null;
+  $('#editor').style.display = 'none'; $('#noEp').style.display = 'block'; renderPlan(); showTab('plan');
+};
+
+/* 원고 쓰기 */
+$('#btnWrite').onclick = async () => {
+  if (!CUR.topic) { $('#writeMsg').textContent = '주제를 먼저 적으세요.'; return; }
+  if (CUR.scenes.some(s => s.text) && !confirm('지금 원고를 새 원고로 바꿀까요?')) return;
+  const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초 안팎)';
+  try {
+    const nx = nextEpOf(CUR);
+    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: ${nx ? nx.topic : '없음 (예고 장면 생략)'}\n- 그림은 사용자가 직접 찾아 올린다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어에서 찾기 쉬운 영어 검색어.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션"}]}`;
+    const j = await askAI(prompt);
+    CUR.title = j.title || ''; CUR.header = j.header || ''; CUR.desc = j.description || ''; CUR.clip = (j.clip || '').slice(0, 300);
+    if (['밝게', '차분', '어둡게'].includes(j.music)) CUR.music = j.music;
+    CUR.needs = j.images || [];
+    for (const s of CUR.scenes) if (s.audioKey) await delBlob(s.audioKey);
+    CUR.scenes = (j.scenes || []).map(s => ({img: +s.image || 1, label: s.label || '', text: s.text || '', audioKey: null, dur: 0}));
+    await putEp(CUR); openEp(CUR.id);
+    $('#writeMsg').textContent = '원고 완성. 사실을 한 번 확인하고 고쳐 쓰세요.';
+  } catch (err) { $('#writeMsg').textContent = '오류: ' + err.message; }
+  b.disabled = false;
+};
+function renderNeeds() {
+  const n = CUR.needs || []; $('#needBox').style.display = n.length ? 'block' : 'none';
+  $('#needs').innerHTML = n.map((x, i) => {
+    const q = encodeURIComponent(x.search || x.work);
+    return `<div class="need"><b>${String(i + 1).padStart(2, '0')}</b> ${esc(x.work)}<br><span class="muted">${esc(x.search || '')}</span>
+      <a href="https://commons.wikimedia.org/w/index.php?search=${q}&title=Special:MediaSearch&type=image" target="_blank">위키미디어</a>
+      <a href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank">구글</a></div>`;
+  }).join('');
+}
+
+/* 사진 */
+$('#imgIn').onchange = async ev => {
+  for (const f of ev.target.files) { const k = 'img-' + uid(); await putBlob(k, f); CUR.images.push({key: k, name: f.name}); }
+  ev.target.value = ''; await putEp(CUR); await loadThumbs(); renderScenes(); renderPlan();
+};
+async function loadThumbs() {
+  const box = $('#thumbs'); box.innerHTML = '';
+  for (const [i, im] of CUR.images.entries()) {
+    if (!IMGURL[im.key]) { const b = await getBlob(im.key); if (b) IMGURL[im.key] = URL.createObjectURL(b); }
+    const d = document.createElement('div');
+    d.innerHTML = `<img src="${IMGURL[im.key] || ''}"><span>${i + 1}</span><button>✕</button>`;
+    d.querySelector('button').onclick = async () => { CUR.images.splice(i, 1); await delBlob(im.key); await putEp(CUR); loadThumbs(); renderScenes(); renderPlan(); };
+    box.appendChild(d);
+  }
+}
+
+/* 장면 */
+function renderScenes() {
+  const box = $('#scenes'); box.innerHTML = '';
+  const opts = n => CUR.images.map((_, i) => `<option value="${i + 1}" ${i + 1 === n ? 'selected' : ''}>그림 ${i + 1}</option>`).join('') || `<option value="${n}">그림 ${n}</option>`;
+  CUR.scenes.forEach((s, i) => {
+    const im = CUR.images[s.img - 1];
+    const el = document.createElement('div'); el.className = 'scene';
+    el.innerHTML = `<div class="hd"><img src="${im ? IMGURL[im.key] || '' : ''}"><b>장면 ${i + 1}</b><select style="width:auto">${opts(s.img)}</select><button class="w">✕</button></div>
+      <label>작품</label><input value="${esc(s.label)}">
+      <label>나레이션</label><textarea>${esc(s.text)}</textarea>
+      <div class="aud"><button class="b">▶</button><button class="b">🎤 녹음</button><button class="b">파일</button><span>${s.audioKey ? '음성 ' + (s.dur || 0).toFixed(1) + '초' : '음성 없음'}</span><input type="file" accept="audio/*" style="display:none"></div>`;
+    const [sel] = el.querySelectorAll('select'), [del] = el.querySelectorAll('.hd button'), [lab] = el.querySelectorAll('input'), [ta] = el.querySelectorAll('textarea');
+    const [bPlay, bRec, bFile] = el.querySelectorAll('.aud button'), fin = el.querySelector('.aud input'), info = el.querySelector('.aud span');
+    sel.onchange = () => { s.img = +sel.value; saveCur(); renderScenes(); };
+    del.onclick = async () => { if (s.audioKey) await delBlob(s.audioKey); CUR.scenes.splice(i, 1); saveCur(); renderScenes(); };
+    lab.oninput = () => { s.label = lab.value; saveCur(); };
+    ta.oninput = () => { s.text = ta.value; saveCur(); };
+    bPlay.onclick = async () => { if (!s.audioKey) return; const b = await getBlob(s.audioKey); new Audio(URL.createObjectURL(b)).play(); };
+    bFile.onclick = () => fin.click();
+    fin.onchange = async () => { if (fin.files[0]) { await setAudio(s, fin.files[0]); renderScenes(); } };
+    bRec.onclick = () => recordMic(s, bRec, info);
+    box.appendChild(el);
+  });
+}
+$('#btnAddScene').onclick = () => { const last = CUR.scenes[CUR.scenes.length - 1]; CUR.scenes.push({img: last ? last.img : 1, label: last ? last.label : '', text: '', audioKey: null, dur: 0}); saveCur(); renderScenes(); };
+
+let actx;
+function AC() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
+async function setAudio(s, blob) {
+  if (s.audioKey) await delBlob(s.audioKey);
+  const k = 'aud-' + uid(); await putBlob(k, blob); s.audioKey = k;
+  try { const buf = await AC().decodeAudioData(await blob.arrayBuffer()); s.dur = buf.duration; } catch (e) { s.dur = 0; }
+  await putEp(CUR); renderPlan();
+}
+let micRec = null;
+async function recordMic(s, btn, info) {
+  if (micRec) { micRec.stop(); return; }
+  try {
+    const st = await navigator.mediaDevices.getUserMedia({audio: true});
+    const ch = []; micRec = new MediaRecorder(st);
+    micRec.ondataavailable = e => ch.push(e.data);
+    micRec.onstop = async () => { st.getTracks().forEach(t => t.stop()); micRec = null; await setAudio(s, new Blob(ch, {type: ch[0]?.type || 'audio/webm'})); renderScenes(); };
+    micRec.start(); btn.textContent = '■ 정지'; info.textContent = '녹음 중…';
+  } catch (e) { info.textContent = '마이크를 쓸 수 없습니다'; }
+}
+
+/* 음성 만들기 (Google TTS) */
+function applyPron(t) {
+  let x = t.replace(/[「」『』“”"]/g, '');
+  for (const line of (S.pron || '').split('\n')) { const [a, b] = line.split('='); if (a && b) x = x.split(a.trim()).join(b.trim()); }
+  return x;
+}
+function ttsHelp(code, m) {
+  if (/not been used|disabled|SERVICE_DISABLED/i.test(m)) return 'Text-to-Speech API가 꺼져 있습니다. 구글 클라우드에서 "사용 설정"을 누르세요';
+  if (/billing/i.test(m)) return '결제 계정이 연결되지 않았습니다. 구글 클라우드 → 결제에서 연결하세요';
+  if (/API key not valid|API_KEY_INVALID/i.test(m)) return '키가 틀렸습니다. 앞뒤 빠진 글자 없이 다시 붙여 넣으세요';
+  if (/referer|referrer|blocked/i.test(m)) return '키 제한 때문에 막혔습니다. 키 설정의 "웹사이트 제한"에 앱 주소를 넣거나 제한을 없애세요';
+  if (/voice|does not exist/i.test(m)) return '이 목소리를 쓸 수 없습니다. 다른 목소리로 바꿔 보세요';
+  return `(${code}) ${m}`;
+}
+function pcmToWav(b64, rate = 24000) {
+  const bin = atob(b64), n = bin.length, buf = new ArrayBuffer(44 + n), v = new DataView(buf);
+  const w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n, true);
+  for (let i = 0; i < n; i++) v.setUint8(44 + i, bin.charCodeAt(i));
+  return new Blob([buf], {type: 'audio/wav'});
+}
+async function geminiTTS(text, voice) {
+  const key = S.engine === 'gemini' && S.textKey ? S.textKey : S.ttsKey;
+  if (!key) throw new Error('정책서 탭에서 Gemini(AI Studio) 키를 넣으세요');
+  const speed = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : '';
+  for (let tries = 0; tries < 3; tries++) {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${encodeURIComponent(key)}`, {
+      method: 'POST', headers: {'content-type': 'application/json'},
+      body: JSON.stringify({contents: [{parts: [{text: `아침 교양 방송 나레이터처럼 ${speed}차분하고 따뜻하게 읽어 주세요: ${applyPron(text)}`}]}],
+        generationConfig: {responseModalities: ['AUDIO'], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: voice}}}}})
+    });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 429) { await new Promise(res => setTimeout(res, 20000)); continue; }
+    if (!r.ok) throw new Error(ttsHelp(r.status, j.error?.message || ''));
+    const d = j.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+    if (!d) throw new Error('음성을 받지 못했습니다. 다시 눌러 보세요');
+    const m = /rate=(\d+)/.exec(d.mimeType || ''); return pcmToWav(d.data, m ? +m[1] : 24000);
+  }
+  throw new Error('오늘 무료 사용량을 넘었을 수 있습니다. 잠시 뒤 다시 하세요');
+}
+async function tts(text) {
+  if (S.voice.startsWith('gemini:')) return geminiTTS(text, S.voice.slice(7));
+  if (!S.ttsKey) throw new Error('정책서 탭에서 음성 API 키를 넣으세요');
+  const r = await fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key=' + encodeURIComponent(S.ttsKey), {
+    method: 'POST', headers: {'content-type': 'application/json'},
+    body: JSON.stringify({input: {text: applyPron(text)}, voice: {languageCode: 'ko-KR', name: S.voice}, audioConfig: Object.assign({audioEncoding: 'MP3'}, (+S.rate && +S.rate !== 1) ? {speakingRate: +S.rate} : {})})
+  });
+  const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(ttsHelp(r.status, j.error?.message || ''));
+  const bin = atob(j.audioContent); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return new Blob([u], {type: 'audio/mpeg'});
+}
+$('#btnTTS').onclick = async () => {
+  const b = $('#btnTTS'), m = $('#ttsMsg'); b.disabled = true;
+  try {
+    const list = CUR.scenes.filter(s => s.text.trim());
+    for (const [i, s] of list.entries()) { m.textContent = `음성 ${i + 1}/${list.length}…`; await setAudio(s, await tts(s.text)); }
+    m.textContent = '음성 완성'; renderScenes();
+  } catch (e) { m.textContent = '오류: ' + e.message; }
+  b.disabled = false;
+};
+
+/* ───────── 화면 그리기 ───────── */
+const W = 1080, H = 1920, BOX = [60, 290, 1020, 1330], LABEL_Y = 1388, SUB_Y = [1470, 1546];
+const FADE = .5, LEAD = .3, TAIL = .7, ZOOM = .05;
+const INK = '#362A1C', GOLD = '#B0843A', SUBINK = '#8C7452';
+const SANS = '"Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif', SERIF = '"Noto Serif KR", "Nanum Myeongjo", serif';
+
+function tintOf(img) {
+  const c = document.createElement('canvas'); c.width = c.height = 40; const x = c.getContext('2d'); x.drawImage(img, 0, 0, 40, 40);
+  const d = x.getImageData(0, 0, 40, 40).data; let r = 0, g = 0, b = 0, w = 0;
+  for (let i = 0; i < d.length; i += 4) { const ww = Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) + 10; r += d[i] * ww; g += d[i + 1] * ww; b += d[i + 2] * ww; w += ww; }
+  return [r / w, g / w, b / w];
+}
+function wall(tint, head) {
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const base = [246, 239, 227].map((v, i) => Math.round(v * .92 + tint[i] * .08));
+  x.fillStyle = `rgb(${base})`; x.fillRect(0, 0, W, H);
+  let g = x.createRadialGradient(W / 2, 0, 0, W / 2, 0, 900); g.addColorStop(0, 'rgba(255,224,182,.55)'); g.addColorStop(1, 'rgba(255,224,182,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, 'rgba(60,40,20,0)'); g.addColorStop(1, 'rgba(60,40,20,.06)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  // 해돋이 마크
+  const cx = W / 2, cy = 120, r = 22; x.strokeStyle = x.fillStyle = GOLD; x.lineWidth = 3;
+  for (let i = 1; i < 8; i++) { const a = Math.PI + i * Math.PI / 8; x.beginPath(); x.moveTo(cx + (r + 6) * Math.cos(a), cy + (r + 6) * Math.sin(a)); x.lineTo(cx + (r + 16) * Math.cos(a), cy + (r + 16) * Math.sin(a)); x.stroke(); }
+  x.beginPath(); x.arc(cx, cy, r, Math.PI, 2 * Math.PI); x.fill();
+  x.beginPath(); x.moveTo(cx - r - 22, cy); x.lineTo(cx + r + 22, cy); x.stroke();
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = INK; x.font = `600 46px ${SERIF}`; x.fillText('Morning Gallery', W / 2, 176);
+  if (head) { x.fillStyle = SUBINK; x.font = `400 28px ${SANS}`; x.fillText(head, W / 2, 232); }
+  return c;
+}
+function wrapLines(x, text, maxw = 940) {
+  const clauses = text.match(/[^,，]+[,，]?\s*/g) || [text]; const lines = []; let cur = '';
+  const fits = t => x.measureText(t).width <= maxw;
+  for (let cl of clauses) {
+    cl = cl.trim(); if (!cl) continue;
+    const trial = (cur + ' ' + cl).trim();
+    if (fits(trial)) { cur = trial; continue; }
+    if (cur) { lines.push(cur); cur = ''; }
+    if (fits(cl)) { cur = cl; continue; }
+    for (const w of cl.split(' ')) { const t = (cur + ' ' + w).trim(); if (fits(t)) cur = t; else { if (cur) lines.push(cur); cur = w; } }
+  }
+  if (cur) lines.push(cur);
+  const out = []; for (let i = 0; i < lines.length; i += 2) out.push(lines.slice(i, i + 2)); return out;
+}
+function prepScene(s, img, bgBase) {
+  const bw = BOX[2] - BOX[0], bh = BOX[3] - BOX[1];
+  const r = Math.min(bw / img.width, bh / img.height) / (1 + ZOOM);
+  const fw = img.width * r, fh = img.height * r, cx = (BOX[0] + BOX[2]) / 2, cy = (BOX[1] + BOX[3]) / 2;
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  x.drawImage(bgBase, 0, 0);
+  x.save(); x.shadowColor = 'rgba(60,40,20,.42)'; x.shadowBlur = 48; x.shadowOffsetY = 16; x.fillStyle = '#5a4630';
+  x.fillRect(cx - fw / 2, cy - fh / 2, fw, fh); x.restore();
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  if (s.label) { x.fillStyle = GOLD; x.font = `500 32px ${SANS}`; x.fillText(s.label, W / 2, LABEL_Y); }
+  x.font = `700 50px ${SANS}`;
+  const sents = (s.text.match(/[^.?!。]+[.?!。]*[」”"]?/g) || []).map(t => t.trim()).filter(Boolean);
+  let chunks = []; for (const t of sents) chunks = chunks.concat(wrapLines(x, t));
+  const wts = chunks.map(c => c.join('').length); const tot = wts.reduce((a, b) => a + b, 0) || 1;
+  return {s, img, bg: c, fw, fh, cx, cy, chunks, wts: wts.map(v => v / tot)};
+}
+function drawScene(x, P, t) {
+  const d = P.s._dur; const z = 1 + ZOOM * Math.min(1, Math.max(0, t / d));
+  x.drawImage(P.bg, 0, 0);
+  const w = P.fw * z, h = P.fh * z; x.drawImage(P.img, P.cx - w / 2, P.cy - h / 2, w, h);
+  if (P.chunks.length) {
+    const p = P.s._narr > 0 ? (t - LEAD) / P.s._narr : 0; let acc = 0, idx = P.chunks.length - 1;
+    for (let i = 0; i < P.wts.length; i++) { acc += P.wts[i]; if (p < acc) { idx = i; break; } }
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = INK; x.font = `700 50px ${SANS}`;
+    P.chunks[idx].forEach((ln, i) => x.fillText(ln, W / 2, SUB_Y[i]));
+  }
+}
+function plan(scenes) {
+  let t = 0;
+  for (const s of scenes) {
+    s._narr = s._buf ? s._buf.duration : (s.text ? Math.max(1.5, s.text.replace(/\s/g, '').length * .16) : 0);
+    s._dur = Math.max(3.5, LEAD + s._narr + TAIL + FADE); s._start = t; t += s._dur - FADE;
+  }
+  return t + FADE;
+}
+async function loadImages() {
+  const out = [];
+  for (const im of CUR.images) { const b = await getBlob(im.key); out.push(await createImageBitmap(b)); }
+  return out;
+}
+async function prepareAll(withAudio) {
+  if (!CUR.scenes.length) throw new Error('장면이 없습니다');
+  if (!CUR.images.length) throw new Error('사진을 올리세요');
+  await document.fonts.load(`700 50px "Noto Sans KR"`).catch(() => {}); await document.fonts.load(`600 46px "Noto Serif KR"`).catch(() => {});
+  const imgs = await loadImages();
+  const sc = CUR.scenes.map(s => ({...s}));
+  if (withAudio) for (const s of sc) { s._buf = null; if (s.audioKey) { const b = await getBlob(s.audioKey); if (b) try { s._buf = await AC().decodeAudioData(await b.arrayBuffer()); } catch (e) {} } }
+  const total = plan(sc);
+  const firstImg = imgs[(sc[0].img || 1) - 1] || imgs[0];
+  const bgBase = wall(tintOf(firstImg), CUR.header);
+  const P = sc.map(s => prepScene(s, imgs[(s.img || 1) - 1] || imgs[imgs.length - 1], bgBase));
+  return {sc, P, total};
+}
+const cv = $('#cv'), cx = cv.getContext('2d'); const tmp = document.createElement('canvas'); tmp.width = W; tmp.height = H; const tx2 = tmp.getContext('2d');
+function frameAt(D, t) {
+  const live = D.sc.map((s, i) => i).filter(i => t >= D.sc[i]._start && t < D.sc[i]._start + D.sc[i]._dur);
+  const a = live.length ? live[0] : D.sc.length - 1;
+  drawScene(cx, D.P[a], t - D.sc[a]._start);
+  if (live.length > 1) { const b = live[1]; drawScene(tx2, D.P[b], t - D.sc[b]._start); cx.globalAlpha = Math.min(1, (t - D.sc[b]._start) / FADE); cx.drawImage(tmp, 0, 0); cx.globalAlpha = 1; }
+}
+let pvIdx = 0;
+$('#btnPreview').onclick = async () => {
+  try { const D = await prepareAll(false); pvIdx = pvIdx % D.sc.length; const s = D.sc[pvIdx]; frameAt(D, s._start + s._dur * .45);
+    $('#renderMsg').textContent = `장면 ${pvIdx + 1}/${D.sc.length} 미리보기 (다시 누르면 다음 장면)`; pvIdx++; $('#vid').style.display = 'none';
+  } catch (e) { $('#renderMsg').textContent = '오류: ' + e.message; }
+};
+
+/* 배경음악 생성 */
+const MOODS = {'밝게': [[60, 64, 67, 71], [57, 60, 64, 67], [53, 57, 60, 64], [55, 59, 62, 67]], '차분': [[53, 57, 60, 64], [52, 55, 59, 62], [50, 53, 57, 60], [48, 52, 55, 59]], '어둡게': [[57, 60, 64, 67], [53, 57, 60, 65], [48, 52, 55, 60], [52, 56, 59, 64]]};
+function makeMusic(ac, sec, mood) {
+  const sr = ac.sampleRate, n = Math.ceil((sec + 1) * sr), out = new Float32Array(n), prog = MOODS[mood] || MOODS['차분'];
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12); let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const CL = 4;
+  for (let k = 0; k * CL < sec + 1; k++) {
+    const ch = prog[k % prog.length], st = Math.floor(k * CL * sr), len = Math.floor(CL * 1.6 * sr);
+    const f = ch.map(m => 2 * Math.PI * hz(m - 12) / sr);
+    for (let i = 0; i < len && st + i < n; i++) {
+      const t = i / sr, env = Math.min(1, t / 1.2) * Math.exp(-Math.max(0, t - CL) / .8);
+      let v = 0; for (let j = 0; j < 4; j++) v += Math.sin(f[j] * i) * (j ? .5 : .8);
+      out[st + i] += v * env * .05;
+    }
+    for (let b = 0; b < 8; b++) {
+      if (rnd() > .55) continue;
+      const m = ch[Math.floor(rnd() * 4)] + (rnd() < .5 ? 0 : 12), w = 2 * Math.PI * hz(m) / sr, s0 = st + Math.floor(b * .5 * sr), L = Math.floor(2.5 * sr);
+      for (let i = 0; i < L && s0 + i < n; i++) { const t = i / sr; out[s0 + i] += (Math.sin(w * i) + .35 * Math.sin(2 * w * i) + .1 * Math.sin(3 * w * i)) * Math.exp(-t / .9) * Math.min(1, t / .01) * .06; }
+    }
+  }
+  let mx = 0; for (let i = 0; i < n; i++) mx = Math.max(mx, Math.abs(out[i]));
+  for (let i = 0; i < n; i++) out[i] = out[i] / (mx || 1) * .5;
+  const buf = ac.createBuffer(1, n, sr); buf.copyToChannel(out, 0); return buf;
+}
+function reverbIR(ac) {
+  const sr = ac.sampleRate, L = Math.floor(1.8 * sr), b = ac.createBuffer(2, L, sr);
+  for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < L; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (.45 * sr)); }
+  return b;
+}
+
+/* 영상 만들기 */
+let busy = false;
+$('#btnRender').onclick = async () => {
+  if (busy) return; busy = true; const btn = $('#btnRender'), msg = $('#renderMsg'); btn.disabled = true;
+  let lock = null;
+  try {
+    msg.textContent = '준비 중…'; $('#vid').style.display = 'none'; $('#outBtns').style.display = 'none';
+    const ac = AC(); await ac.resume();
+    const D = await prepareAll(true);
+    if (D.sc.some(s => s.text && !s._buf) && !confirm('음성이 없는 장면이 있습니다. 그대로 만들까요? (그 장면은 무음)')) throw new Error('취소했습니다');
+    const total = D.total;
+    const dest = ac.createMediaStreamDestination();
+    const comp = ac.createDynamicsCompressor(); comp.threshold.value = -6; comp.ratio.value = 4; comp.connect(dest);
+    const T0 = ac.currentTime + .6;
+    const nodes = [];
+    for (const s of D.sc) if (s._buf) { const n = ac.createBufferSource(); n.buffer = s._buf; n.connect(comp); n.start(T0 + s._start + LEAD); nodes.push(n); }
+    if (CUR.music !== '없음') {
+      let mb = null;
+      if (CUR.music === '파일' && $('#musicIn').files[0]) mb = await ac.decodeAudioData(await $('#musicIn').files[0].arrayBuffer());
+      if (!mb) mb = makeMusic(ac, total, CUR.music === '파일' ? '차분' : CUR.music);
+      const src = ac.createBufferSource(); src.buffer = mb; src.loop = true;
+      const g = ac.createGain(), conv = ac.createConvolver(), wet = ac.createGain();
+      conv.buffer = reverbIR(ac); wet.gain.value = .25;
+      src.connect(g); g.connect(comp); g.connect(conv); conv.connect(wet); wet.connect(comp);
+      const gp = g.gain; gp.setValueAtTime(0, T0); gp.linearRampToValueAtTime(.3, T0 + 1);
+      for (const s of D.sc) if (s._buf) {
+        const a = T0 + s._start + LEAD, b = a + s._buf.duration;
+        gp.setValueAtTime(.3, Math.max(T0 + 1, a - .3)); gp.linearRampToValueAtTime(.12, a); gp.setValueAtTime(.12, b); gp.linearRampToValueAtTime(.3, b + .4);
+      }
+      gp.setValueAtTime(.3, T0 + total - 2); gp.linearRampToValueAtTime(0, T0 + total);
+      src.start(T0); src.stop(T0 + total + .2); nodes.push(src);
+    }
+    const stream = cv.captureStream(30); stream.addTrack(dest.stream.getAudioTracks()[0]);
+    const types = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
+    const mime = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || '';
+    const rec = new MediaRecorder(stream, {mimeType: mime || undefined, videoBitsPerSecond: 8e6, audioBitsPerSecond: 160000});
+    const ch = []; rec.ondataavailable = e => e.data.size && ch.push(e.data);
+    const done = new Promise(r => rec.onstop = r);
+    try { lock = await navigator.wakeLock?.request('screen'); } catch (e) {}
+    frameAt(D, 0); rec.start(1000);
+    await new Promise(res => {
+      const loop = () => {
+        const t = Math.max(0, ac.currentTime - T0);
+        frameAt(D, Math.min(t, total - .01));
+        $('#bar').style.width = (Math.min(1, t / total) * 100) + '%';
+        msg.textContent = `만드는 중… ${Math.floor(t)} / ${Math.ceil(total)}초 (화면을 켜 두세요)`;
+        if (t < total + .1) requestAnimationFrame(loop); else res();
+      };
+      requestAnimationFrame(loop);
+    });
+    rec.stop(); await done;
+    const blob = new Blob(ch, {type: (mime || 'video/webm').split(';')[0]});
+    if (CUR.videoKey) await delBlob(CUR.videoKey);
+    CUR.videoKey = 'vid-' + uid(); await putBlob(CUR.videoKey, blob); await putEp(CUR); renderPlan();
+    showVideo(blob); msg.textContent = `완성 (${(blob.size / 1048576).toFixed(1)}MB). [공유 / 저장]으로 유튜브·클립에 올리세요.`;
+  } catch (e) { msg.textContent = '오류: ' + e.message; }
+  try { lock && lock.release(); } catch (e) {}
+  busy = false; btn.disabled = false;
+};
+let lastVideo = null;
+function showVideo(blob) {
+  lastVideo = blob; const v = $('#vid'); v.src = URL.createObjectURL(blob); v.style.display = 'block'; $('#outBtns').style.display = 'flex';
+}
+$('#btnShare').onclick = async () => {
+  if (!lastVideo) return;
+  const ext = lastVideo.type.includes('mp4') ? 'mp4' : 'webm';
+  const name = `${CUR.date}_${(CUR.topic || 'morning-gallery').replace(/[\\/:*?"<>|\s]+/g, '_')}.${ext}`;
+  const file = new File([lastVideo], name, {type: lastVideo.type});
+  if (navigator.canShare && navigator.canShare({files: [file]})) { try { await navigator.share({files: [file], title: CUR.title}); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = name; a.click();
+};
+
+/* ───────── 정책서 · 설정 ───────── */
+const SF = {sPolicy: 'policy', sEngine: 'engine', sTextKey: 'textKey', sModel: 'model', sTtsKey: 'ttsKey', sVoice: 'voice', sRate: 'rate', sPron: 'pron'};
+for (const [id, k] of Object.entries(SF)) { $('#' + id).value = S[k] ?? ''; $('#' + id).addEventListener('input', () => { const v = $('#' + id).value; S[k] = /Key$/.test(k) ? v.replace(/\s+/g, '') : v; saveS(); }); }
+$('#btnVoiceTest').onclick = async () => { const m = $('#voiceMsg'); m.textContent = '만드는 중…'; try { const b = await tts('1990년 3월, 보스턴의 한 미술관에서 이 바다 그림이 사라졌습니다. 오늘 아침도, 명화 한 점으로 시작하세요.'); new Audio(URL.createObjectURL(b)).play(); m.textContent = ''; } catch (e) { m.textContent = '오류: ' + e.message; } };
+$('#btnPolicyReset').onclick = () => { if (confirm('처음 정책서로 되돌릴까요?')) { S.policy = DEFAULT_POLICY; $('#sPolicy').value = S.policy; saveS(); } };
+$('#btnExport').onclick = () => {
+  const data = {settings: {...S, textKey: '', ttsKey: ''}, eps: EPS.map(e => ({...e, images: [], videoKey: null, scenes: e.scenes.map(s => ({...s, audioKey: null}))}))};
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 1)], {type: 'application/json'}));
+  a.download = `모닝갤러리_백업_${todayStr()}.json`; a.click();
+};
+$('#btnImport').onclick = () => $('#importIn').click();
+$('#importIn').onchange = async ev => {
+  try {
+    const d = JSON.parse(await ev.target.files[0].text());
+    if (d.settings) { S = {...S, ...d.settings, textKey: S.textKey, ttsKey: S.ttsKey}; saveS(); for (const [id, k] of Object.entries(SF)) $('#' + id).value = S[k] ?? ''; }
+    for (const e of d.eps || []) { if (!EPS.find(x => x.id === e.id)) { EPS.push(e); await putEp(e); } }
+    renderPlan(); alert('가져왔습니다');
+  } catch (e) { alert('파일을 읽지 못했습니다'); }
+};
+
+/* ───────── 시작 ───────── */
+(async () => {
+  try { DB = await openDB(); EPS = await tx('eps', 'readonly', s => s.getAll()) || []; }
+  catch (e) { $('#planMsg').textContent = '이 브라우저에서는 저장이 안 됩니다. 크롬이나 사파리로 여세요.'; }
+  renderPlan();
+})();
+</script>
+</body>
+</html>
