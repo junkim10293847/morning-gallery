@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -56,6 +56,10 @@ button:disabled{opacity:.5}
 .scene .hd b{flex:1}
 .aud{display:flex;gap:6px;align-items:center;margin-top:6px;font-size:12px;color:var(--sub)}
 .aud button{padding:6px 10px;font-size:12px}
+.focus{position:relative;margin-top:6px;display:inline-block;max-width:100%}
+.focus img{display:block;max-width:100%;max-height:200px;border-radius:8px}
+.focus i{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 2px #B0843A;pointer-events:none}
+.focus b{position:absolute;border:2px dashed #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4);pointer-events:none}
 .need{font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)}
 .need a{color:var(--gold);margin-left:6px;font-size:12px}
 .muted{color:var(--sub);font-size:12px}
@@ -71,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.11 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.12 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -473,13 +477,13 @@ $('#btnWrite').onclick = async () => {
   const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초 안팎)';
   try {
     const nx = nextEpOf(CUR);
-    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: ${nx ? nx.topic : '없음 (예고 장면 생략)'}\n- 그림은 사용자가 직접 찾아 올린다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어에서 찾기 쉬운 영어 검색어.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션"}]}`;
+    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: ${nx ? nx.topic : '없음 (예고 장면 생략)'}\n- 그림은 사용자가 직접 찾아 올린다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어에서 찾기 쉬운 영어 검색어.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.`;
     const j = await askAI(prompt);
     CUR.title = j.title || ''; CUR.header = j.header || ''; CUR.desc = j.description || ''; CUR.clip = (j.clip || '').slice(0, 300);
     if (['밝게', '차분', '어둡게'].includes(j.music)) CUR.music = j.music;
     CUR.needs = j.images || [];
     for (const s of CUR.scenes) if (s.audioKey) await delBlob(s.audioKey);
-    CUR.scenes = (j.scenes || []).map(s => ({img: +s.image || 1, label: s.label || '', text: s.text || '', audioKey: null, dur: 0}));
+    CUR.scenes = (j.scenes || []).map(s => ({img: +s.image || 1, label: s.label || '', text: s.text || '', audioKey: null, dur: 0, zoom: [1, 1.5, 2, 3].includes(+s.zoom) ? +s.zoom : 1, fx: Math.min(1, Math.max(0, +s.fx || .5)), fy: Math.min(1, Math.max(0, +s.fy || .5))}));
     await putEp(CUR); openEp(CUR.id); syncSoon();
     $('#writeMsg').textContent = '원고 완성. 사실을 한 번 확인하고 고쳐 쓰세요.';
   } catch (err) { $('#writeMsg').textContent = '오류: ' + err.message; }
@@ -519,12 +523,25 @@ function renderScenes() {
     const im = CUR.images[s.img - 1];
     const el = document.createElement('div'); el.className = 'scene';
     el.innerHTML = `<div class="hd"><img src="${im ? IMGURL[im.key] || '' : ''}"><b>장면 ${i + 1}</b><select style="width:auto">${opts(s.img)}</select><button class="w">✕</button></div>
+      <div class="row" style="margin-top:6px"><span class="muted fit">크게 보기</span><select class="zsel" style="flex:0 0 120px">${[1, 1.5, 2, 3].map(z => `<option value="${z}" ${(+s.zoom || 1) === z ? 'selected' : ''}>${z === 1 ? '전체' : z + '배'}</option>`).join('')}</select></div>
+      ${(+s.zoom || 1) > 1 && im ? `<div class="focus"><img src="${IMGURL[im.key] || ''}"><b></b><i></i></div><div class="muted">사진을 눌러 크게 볼 곳을 고르세요</div>` : ''}
       <label>작품</label><input value="${esc(s.label)}">
       <label>나레이션</label><textarea>${esc(s.text)}</textarea>
       <div class="aud"><button class="b">▶</button><button class="b">🎤 녹음</button><button class="b">파일</button><span>${s.audioKey ? '음성 ' + (s.dur || 0).toFixed(1) + '초' : '음성 없음'}</span><input type="file" accept="audio/*" style="display:none"></div>`;
     const [sel] = el.querySelectorAll('select'), [del] = el.querySelectorAll('.hd button'), [lab] = el.querySelectorAll('input'), [ta] = el.querySelectorAll('textarea');
     const [bPlay, bRec, bFile] = el.querySelectorAll('.aud button'), fin = el.querySelector('.aud input'), info = el.querySelector('.aud span');
     sel.onchange = () => { s.img = +sel.value; saveCur(); renderScenes(); };
+    const zs = el.querySelector('.zsel'); zs.onchange = () => { s.zoom = +zs.value; if (s.fx == null) { s.fx = .5; s.fy = .4; } saveCur(); renderScenes(); };
+    const fo = el.querySelector('.focus');
+    if (fo) {
+      const fimg = fo.querySelector('img'), dot = fo.querySelector('i'), box = fo.querySelector('b');
+      const place = () => { const w = fimg.clientWidth, h = fimg.clientHeight, z = +s.zoom || 1;
+        const fx = Math.min(1 - .5 / z, Math.max(.5 / z, s.fx ?? .5)), fy = Math.min(1 - .5 / z, Math.max(.5 / z, s.fy ?? .4));
+        dot.style.left = (fx * w) + 'px'; dot.style.top = (fy * h) + 'px';
+        Object.assign(box.style, {left: ((fx - .5 / z) * w) + 'px', top: ((fy - .5 / z) * h) + 'px', width: (w / z) + 'px', height: (h / z) + 'px'}); };
+      fimg.onload = place; if (fimg.complete) setTimeout(place, 0);
+      fimg.onclick = ev => { const r = fimg.getBoundingClientRect(); s.fx = (ev.clientX - r.left) / r.width; s.fy = (ev.clientY - r.top) / r.height; place(); saveCur(); };
+    }
     del.onclick = async () => { if (s.audioKey) await delBlob(s.audioKey); CUR.scenes.splice(i, 1); saveCur(); renderScenes(); };
     lab.oninput = () => { s.label = lab.value; saveCur(); };
     ta.oninput = () => { s.text = ta.value; saveCur(); };
@@ -535,7 +552,7 @@ function renderScenes() {
     box.appendChild(el);
   });
 }
-$('#btnAddScene').onclick = () => { const last = CUR.scenes[CUR.scenes.length - 1]; CUR.scenes.push({img: last ? last.img : 1, label: last ? last.label : '', text: '', audioKey: null, dur: 0}); saveCur(); renderScenes(); };
+$('#btnAddScene').onclick = () => { const last = CUR.scenes[CUR.scenes.length - 1]; CUR.scenes.push({img: last ? last.img : 1, label: last ? last.label : '', text: '', audioKey: null, dur: 0, zoom: 1}); saveCur(); renderScenes(); };
 
 let actx;
 function AC() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
@@ -683,7 +700,12 @@ function prepScene(s, img, bgBase) {
 function drawScene(x, P, t) {
   const d = P.s._dur; const z = 1 + ZOOM * Math.min(1, Math.max(0, t / d));
   x.drawImage(P.bg, 0, 0);
-  const w = P.fw * z, h = P.fh * z; x.drawImage(P.img, P.cx - w / 2, P.cy - h / 2, w, h);
+  const zz = +P.s.zoom || 1;
+  if (zz > 1) {
+    const iw = P.img.width, ih = P.img.height, k = zz * z, sw = iw / k, sh = ih / k;
+    const sx = Math.min(iw - sw, Math.max(0, (P.s.fx ?? .5) * iw - sw / 2)), sy = Math.min(ih - sh, Math.max(0, (P.s.fy ?? .4) * ih - sh / 2));
+    const w = P.fw * (1 + ZOOM), h = P.fh * (1 + ZOOM); x.drawImage(P.img, sx, sy, sw, sh, P.cx - w / 2, P.cy - h / 2, w, h);
+  } else { const w = P.fw * z, h = P.fh * z; x.drawImage(P.img, P.cx - w / 2, P.cy - h / 2, w, h); }
   if (P.chunks.length) {
     const p = P.s._narr > 0 ? (t - LEAD) / P.s._narr : 0; let acc = 0, idx = P.chunks.length - 1;
     for (let i = 0; i < P.wts.length; i++) { acc += P.wts[i]; if (p < acc) { idx = i; break; } }
