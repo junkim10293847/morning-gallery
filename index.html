@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.21 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.22 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -650,24 +650,59 @@ function pcmToWav(b64, rate = 24000) {
   for (let i = 0; i < n; i++) v.setUint8(44 + i, bin.charCodeAt(i));
   return new Blob([buf], {type: 'audio/wav'});
 }
-async function geminiTTS(text, voice) {
+async function geminiRaw(prompt, voice) {
   const key = S.engine === 'gemini' && S.textKey ? S.textKey : S.ttsKey;
   if (!key) throw new Error('정책서 탭에서 Gemini(AI Studio) 키를 넣으세요');
-  const speed = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : '';
-  for (let tries = 0; tries < 3; tries++) {
-    const r = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent`, {
-      method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': key},
-      body: JSON.stringify({contents: [{parts: [{text: `아침 교양 방송 나레이터처럼 ${speed}차분하고 따뜻하게 읽어 주세요: ${applyPron(text)}`}]}],
-        generationConfig: {responseModalities: ['AUDIO'], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: voice}}}}})
-    });
-    const j = await r.json().catch(() => ({}));
-    if (r.status === 429) { await new Promise(res => setTimeout(res, 20000)); continue; }
-    if (!r.ok) throw new Error(ttsHelp(r.status, j.error?.message || ''));
-    const d = j.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
-    if (!d) throw new Error('음성을 받지 못했습니다. 다시 눌러 보세요');
-    const m = /rate=(\d+)/.exec(d.mimeType || ''); return pcmToWav(d.data, m ? +m[1] : 24000);
+  let lastMsg = '';
+  for (const model of ['gemini-2.5-flash-preview-tts', 'gemini-2.5-pro-preview-tts']) {
+    for (let tries = 0; tries < 2; tries++) {
+      const r = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': key},
+        body: JSON.stringify({contents: [{parts: [{text: prompt}]}],
+          generationConfig: {responseModalities: ['AUDIO'], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: voice}}}}})
+      }, 180);
+      const j = await r.json().catch(() => ({}));
+      if (r.status === 429) {
+        lastMsg = j.error?.message || '';
+        if (/per ?day|PerDay|daily/i.test(lastMsg)) break;           // 하루 한도 → 다음 모델
+        const w = /retry in ([\d.]+)s/i.exec(lastMsg); await new Promise(res => setTimeout(res, Math.min(65, w ? +w[1] + 1 : 25) * 1000)); continue;
+      }
+      if (r.status === 404) break;
+      if (!r.ok) throw new Error(ttsHelp(r.status, j.error?.message || ''));
+      const d = j.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+      if (!d) throw new Error('음성을 받지 못했습니다. 다시 눌러 보세요');
+      const m = /rate=(\d+)/.exec(d.mimeType || ''); return {b64: d.data, rate: m ? +m[1] : 24000};
+    }
   }
-  throw new Error('오늘 무료 사용량을 넘었을 수 있습니다. 잠시 뒤 다시 하세요');
+  throw new Error('Gemini 음성 무료 한도를 다 썼습니다 (오후 5시쯤 초기화). 지금 급하면 장면별 🎤 녹음을 쓰세요');
+}
+function gStyle() { const sp = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : ''; return `아침 교양 방송 나레이터처럼 ${sp}차분하고 따뜻하게 읽어 주세요`; }
+async function geminiTTS(text, voice) {
+  const o = await geminiRaw(`${gStyle()}: ${applyPron(text)}`, voice); return pcmToWav(o.b64, o.rate);
+}
+// 여러 장면을 한 번에 읽게 한 뒤, 긴 쉼표에서 잘라 장면별로 나눔 (요청 1회)
+async function geminiBatch(texts, voice) {
+  const body = texts.map((t, i) => `[${i + 1}] ${applyPron(t)}`).join('\n\n');
+  const o = await geminiRaw(`${gStyle()}. 대괄호 번호는 읽지 말고, 번호가 바뀔 때마다 2초 동안 조용히 쉬어 주세요:\n\n${body}`, voice);
+  const bin = atob(o.b64), n = bin.length >> 1, pcm = new Int16Array(n);
+  for (let i = 0; i < n; i++) pcm[i] = (bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8)) << 16 >> 16;
+  const F = Math.round(o.rate * .02), nf = Math.floor(n / F), rms = new Float32Array(nf);
+  for (let f = 0; f < nf; f++) { let s2 = 0; for (let i = f * F; i < (f + 1) * F; i++) s2 += pcm[i] * pcm[i]; rms[f] = Math.sqrt(s2 / F); }
+  const sorted = [...rms].sort((a, b) => a - b), loud = sorted[Math.floor(nf * .9)] || 1, thr = loud * .06;
+  const runs = []; let st = -1;
+  for (let f = 0; f <= nf; f++) { const q = f < nf && rms[f] < thr; if (q && st < 0) st = f; if (!q && st >= 0) { if (st > 0 && f < nf && f - st >= 12) runs.push([st, f]); st = -1; } }
+  const need = texts.length - 1;
+  if (runs.length < need) throw new Error('나누기 실패');
+  const cuts = runs.sort((a, b) => (b[1] - b[0]) - (a[1] - a[0])).slice(0, need).sort((a, b) => a[0] - b[0]);
+  const bounds = [[0, cuts.length ? cuts[0][0] : nf]];
+  for (let i = 0; i < cuts.length; i++) bounds.push([cuts[i][1], i + 1 < cuts.length ? cuts[i + 1][0] : nf]);
+  return bounds.map(([f0, f1]) => {
+    let a = f0, b = f1; while (a < b && rms[a] < thr) a++; while (b > a && rms[b - 1] < thr) b--;
+    a = Math.max(0, a - 4); b = Math.min(nf, b + 6);
+    const seg = pcm.subarray(a * F, b * F); let s = ''; const u8 = new Uint8Array(seg.buffer, seg.byteOffset, seg.byteLength);
+    for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+    return pcmToWav(btoa(s), o.rate);
+  });
 }
 async function tts(text, voice) {
   voice = voice || S.voice;
@@ -688,7 +723,16 @@ async function makeVoices() {
     const list = CUR.scenes.filter(s => s.text.trim());
     const todo = list.filter(s => !(s.audioKey && s.audioText === s.text && (s.audioVoice === v || s.audioVoice === 'manual')));
     if (!todo.length) { m.textContent = '모든 장면에 음성이 있습니다. 목소리나 문장을 바꾸면 그 장면만 다시 만듭니다'; }
-    for (const [i, s] of todo.entries()) {
+    let batched = false;
+    if (v.startsWith('gemini:') && todo.length >= 2) {
+      m.textContent = `음성 ${todo.length}개를 한 번에 만드는 중… (30초~1분)`;
+      try {
+        const blobs = await geminiBatch(todo.map(s => s.text), v.slice(7));
+        for (const [i, s] of todo.entries()) { await setAudio(s, blobs[i]); s.audioText = s.text; s.audioVoice = v; }
+        await putEp(CUR); batched = true;
+      } catch (e) { if (!/나누기 실패/.test(e.message)) throw e; }
+    }
+    if (!batched) for (const [i, s] of todo.entries()) {
       m.textContent = `음성 ${i + 1}/${todo.length}… (중간에 멈춰도 다시 누르면 이어서 만듭니다)`;
       await setAudio(s, await tts(s.text, v)); s.audioText = s.text; s.audioVoice = v; await putEp(CUR);
     }
