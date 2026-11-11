@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.20 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.21 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -1072,7 +1072,8 @@ async function importData(d) {
   if (d.settings) { S = {...S, ...d.settings, textKey: S.textKey, ttsKey: S.ttsKey, ghToken: S.ghToken}; saveS(); for (const [id, k] of Object.entries(SF)) $('#' + id).value = S[k] ?? ''; }
   let n = 0;
   for (const e of d.eps || []) {
-    const ex = EPS.find(x => x.id === e.id);
+    const key = (e.topic || '').split(/[ 「—]/)[0];
+    const ex = EPS.find(x => x.id === e.id) || (e.scenes?.length ? EPS.find(x => x.date === e.date && key && (x.topic || '').startsWith(key)) : null);
     if (!ex) { EPS.push(e); await putEp(e); n++; }
     else {
       for (const k of ['date', 'format', 'topic']) if (e[k]) ex[k] = e[k];
@@ -1085,6 +1086,7 @@ async function importData(d) {
       await putEp(ex); n++;
     }
   }
+  if (d.rev) { S.planRev = d.rev; saveS(); }
   renderPlan(); syncNow(); return n;
 }
 $('#importIn').onchange = async ev => {
@@ -1169,6 +1171,10 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
   try { DB = await openDB(); EPS = await tx('eps', 'readonly', s => s.getAll()) || []; }
   catch (e) { $('#planMsg').textContent = '이 브라우저에서는 저장이 안 됩니다. 크롬이나 사파리로 여세요.'; }
   renderPlan(); syncNow();
+  try {
+    const r = await fetch('plans/latest.json?t=' + Date.now());
+    if (r.ok) { const d = await r.json(); if (d.rev && d.rev > (S.planRev || 0)) { const n = await importData(d); $('#planMsg').textContent = `✅ 보내 드린 수정 사항을 자동으로 반영했습니다 (${n}편${d.settings?.policy ? ', 정책서' : ''}). ${d.note || ''}`; if (CUR) openEp(CUR.id, true); } }
+  } catch (e) {}
 })();
 </script>
 </body>
