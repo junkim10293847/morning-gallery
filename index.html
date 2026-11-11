@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.16 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.17 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -97,6 +97,9 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       <div class="row"><input type="date" id="eDate" class="fit" style="flex:0 0 150px"><select id="eFormat" class="fit" style="flex:0 0 90px"><option>화가</option><option>그림</option></select></div>
       <label>주제</label><input id="eTopic" placeholder="예: 젠틸레스키 / 밀레 「만종」">
       <div class="row" style="margin-top:8px"><span class="muted" id="eNext"></span><button class="w fit" id="btnDel">편 삭제</button></div>
+      <button class="b p" id="btnAll" style="width:100%;margin-top:10px;padding:14px;font-size:16px">✨ 한 번에 만들기</button>
+      <p class="muted" style="margin:6px 0 0">원고 → 그림 찾기 → 음성 → 영상까지 자동으로. 끝난 단계는 건너뜁니다.</p>
+      <div class="msg" id="allMsg"></div>
     </div>
 
     <div class="card">
@@ -112,8 +115,10 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 
     <div class="card">
       <h2><span class="n">2</span>사진</h2>
-      <p class="muted" style="margin:0 0 8px">찾은 그림을 순서대로 올리세요. 번호가 장면과 연결됩니다.</p>
-      <input type="file" id="imgIn" accept="image/*" multiple>
+      <p class="muted" style="margin:0 0 8px">원고의 "찾을 그림"을 위키미디어에서 자동으로 받습니다. 직접 올려도 됩니다(순서 = 번호).</p>
+      <div class="row"><button class="b p" id="btnAutoImg">그림 자동 찾기</button></div>
+      <div class="msg" id="imgMsg"></div>
+      <input type="file" id="imgIn" accept="image/*" multiple style="margin-top:6px">
       <div class="thumbs" id="thumbs" style="margin-top:8px"></div>
     </div>
 
@@ -472,13 +477,14 @@ $('#btnDel').onclick = async () => {
 };
 
 /* 원고 쓰기 */
-$('#btnWrite').onclick = async () => {
-  if (!CUR.topic) { $('#writeMsg').textContent = '주제를 먼저 적으세요.'; return; }
-  if (CUR.scenes.some(s => s.text) && !confirm('지금 원고를 새 원고로 바꿀까요?')) return;
-  const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초 안팎)';
+async function writeScript(auto) {
+  if (!CUR.topic) { $('#writeMsg').textContent = '주제를 먼저 적으세요.'; return false; }
+  if (!auto && CUR.scenes.some(s => s.text) && !confirm('지금 원고를 새 원고로 바꿀까요?')) return false;
+  let ok = false;
+  const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초~1분)';
   try {
     const nx = nextEpOf(CUR);
-    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: ${nx ? nx.topic : '없음 (예고 장면 생략)'}\n- 그림은 사용자가 직접 찾아 올린다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어에서 찾기 쉬운 영어 검색어.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.`;
+    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: ${nx ? nx.topic : '없음 (예고 장면 생략)'}\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.`;
     const j = await askAI(prompt);
     CUR.title = j.title || ''; CUR.header = j.header || ''; CUR.desc = j.description || ''; CUR.clip = (j.clip || '').slice(0, 300);
     if (['밝게', '차분', '어둡게'].includes(j.music)) CUR.music = j.music;
@@ -486,10 +492,11 @@ $('#btnWrite').onclick = async () => {
     for (const s of CUR.scenes) if (s.audioKey) await delBlob(s.audioKey);
     CUR.scenes = (j.scenes || []).map(s => ({img: +s.image || 1, label: s.label || '', text: s.text || '', audioKey: null, dur: 0, zoom: [1, 1.5, 2, 3].includes(+s.zoom) ? +s.zoom : 1, fx: Math.min(1, Math.max(0, +s.fx || .5)), fy: Math.min(1, Math.max(0, +s.fy || .5))}));
     await putEp(CUR); openEp(CUR.id); syncSoon();
-    $('#writeMsg').textContent = '원고 완성. 사실을 한 번 확인하고 고쳐 쓰세요.';
+    $('#writeMsg').textContent = '원고 완성. 사실을 한 번 확인하고 고쳐 쓰세요.'; ok = true;
   } catch (err) { $('#writeMsg').textContent = '오류: ' + err.message; }
-  b.disabled = false;
-};
+  b.disabled = false; return ok;
+}
+$('#btnWrite').onclick = () => writeScript(false);
 function renderNeeds() {
   const n = CUR.needs || []; $('#needBox').style.display = n.length ? 'block' : 'none';
   $('#needs').innerHTML = n.map((x, i) => {
@@ -501,6 +508,50 @@ function renderNeeds() {
 }
 
 /* 사진 */
+async function wikiFind(q) {
+  const u = 'https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|size|mime&iiurlwidth=2000&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap');
+  const r = await fetchT(u, {}, 30); const j = await r.json();
+  const pages = Object.values(j.query?.pages || {}).sort((a, b) => a.index - b.index);
+  const score = p => { const t = p.title.toLowerCase(), ii = p.imageinfo?.[0] || {}; let sc = 0;
+    if (/google art project/.test(t)) sc += 5; if (/\b(frame|framed|museum|exhibit|room|gallery view|detail|copy|after|photo|wall)\b/.test(t)) sc -= 4;
+    if ((ii.width || 0) >= 1500 || (ii.height || 0) >= 1500) sc += 2; if (!/jpe?g|png/.test(ii.mime || '')) sc -= 10; return sc - p.index * .1; };
+  return pages.filter(p => p.imageinfo?.[0]).sort((a, b) => score(b) - score(a)).map(p => ({url: p.imageinfo[0].thumburl || p.imageinfo[0].url, title: p.title.replace(/^File:/, '')}));
+}
+async function autoImages(force) {
+  const m = $('#imgMsg'), needs = CUR.needs || [];
+  if (!needs.length) { m.textContent = '원고를 먼저 쓰면 필요한 그림을 자동으로 찾습니다'; return false; }
+  let ok = true;
+  for (let i = 0; i < needs.length; i++) {
+    if (!force && CUR.images[i]) continue;
+    m.textContent = `그림 찾는 중 ${i + 1}/${needs.length}: ${needs[i].work}`;
+    try {
+      const cands = await wikiFind(needs[i].search || needs[i].work);
+      let got = null, ci = 0;
+      for (; ci < Math.min(cands.length, 4) && !got; ci++) { try { const r = await fetchT(cands[ci].url, {}, 40); if (r.ok) got = await r.blob(); } catch (e) {} }
+      if (!got) { ok = false; continue; }
+      const k = 'img-' + uid(); await putBlob(k, got);
+      const old = CUR.images[i]; if (old) await delBlob(old.key);
+      CUR.images[i] = {key: k, name: cands[ci - 1].title, cands: cands.slice(0, 8).map(c => c.url), ci: ci - 1, q: needs[i].search || needs[i].work};
+      for (let j = 0; j < i; j++) if (!CUR.images[j]) CUR.images[j] = CUR.images[i];
+      await putEp(CUR);
+    } catch (e) { ok = false; }
+  }
+  CUR.images = CUR.images.filter(Boolean); await putEp(CUR); await loadThumbs(); renderScenes(); renderPlan();
+  m.textContent = ok ? '그림을 모두 찾았습니다. 틀린 그림은 ↻로 다른 후보로 바꾸거나 ✕ 후 직접 올리세요' : '일부 그림을 못 찾았습니다. 그 그림은 직접 올려 주세요';
+  return ok;
+}
+async function swapImage(i) {
+  const im = CUR.images[i]; if (!im || !im.cands) return;
+  const m = $('#imgMsg'); m.textContent = '다른 후보를 받는 중…';
+  for (let t = 1; t <= im.cands.length; t++) {
+    const ci = (im.ci + t) % im.cands.length;
+    try { const r = await fetchT(im.cands[ci], {}, 40); if (!r.ok) continue; const b = await r.blob();
+      await delBlob(im.key); delete IMGURL[im.key]; im.key = 'img-' + uid(); im.ci = ci; await putBlob(im.key, b); await putEp(CUR); await loadThumbs(); renderScenes();
+      m.textContent = `후보 ${ci + 1}/${im.cands.length}`; return; } catch (e) {}
+  }
+  m.textContent = '다른 후보가 없습니다. 직접 올려 주세요';
+}
+$('#btnAutoImg').onclick = () => autoImages(false);
 $('#imgIn').onchange = async ev => {
   for (const f of ev.target.files) { const k = 'img-' + uid(); await putBlob(k, f); CUR.images.push({key: k, name: f.name}); }
   ev.target.value = ''; await putEp(CUR); await loadThumbs(); renderScenes(); renderPlan();
@@ -510,8 +561,9 @@ async function loadThumbs() {
   for (const [i, im] of CUR.images.entries()) {
     if (!IMGURL[im.key]) { const b = await getBlob(im.key); if (b) IMGURL[im.key] = URL.createObjectURL(b); }
     const d = document.createElement('div');
-    d.innerHTML = `<img src="${IMGURL[im.key] || ''}"><span>${i + 1}</span><button>✕</button>`;
-    d.querySelector('button').onclick = async () => { CUR.images.splice(i, 1); await delBlob(im.key); await putEp(CUR); loadThumbs(); renderScenes(); renderPlan(); };
+    d.innerHTML = `<img src="${IMGURL[im.key] || ''}"><span>${i + 1}</span><button>✕</button>${im.cands ? '<button style="top:auto;bottom:2px">↻</button>' : ''}`;
+    const bs = d.querySelectorAll('button'); if (bs[1]) bs[1].onclick = () => swapImage(i);
+    bs[0].onclick = async () => { CUR.images.splice(i, 1); await delBlob(im.key); await putEp(CUR); loadThumbs(); renderScenes(); renderPlan(); };
     box.appendChild(d);
   }
 }
@@ -628,8 +680,8 @@ async function tts(text, voice) {
   const bin = atob(j.audioContent); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
   return new Blob([u], {type: 'audio/mpeg'});
 }
-$('#btnTTS').onclick = async () => {
-  const b = $('#btnTTS'), m = $('#ttsMsg'); b.disabled = true;
+async function makeVoices() {
+  const b = $('#btnTTS'), m = $('#ttsMsg'); b.disabled = true; let ok = false;
   try {
     const v = CUR.voice || S.voice;
     const list = CUR.scenes.filter(s => s.text.trim());
@@ -640,10 +692,11 @@ $('#btnTTS').onclick = async () => {
       await setAudio(s, await tts(s.text, v)); s.audioText = s.text; s.audioVoice = v; await putEp(CUR);
     }
     if (todo.length) m.textContent = '음성 완성';
-    renderScenes(); syncSoon();
+    renderScenes(); syncSoon(); ok = true;
   } catch (e) { m.textContent = '오류: ' + e.message + ' — 다시 누르면 남은 장면부터 이어서 만듭니다'; renderScenes(); }
-  b.disabled = false;
-};
+  b.disabled = false; return ok;
+}
+$('#btnTTS').onclick = () => makeVoices();
 
 /* ───────── 화면 그리기 ───────── */
 const W = 1080, H = 1920, BOX = [60, 290, 1020, 1330], LABEL_Y = 1388, SUB_Y = [1470, 1546];
@@ -909,14 +962,14 @@ async function renderFast(D, sup, onProg) {
 }
 
 let busy = false;
-$('#btnRender').onclick = async () => {
-  if (busy) return; busy = true; const btn = $('#btnRender'), msg = $('#renderMsg'); btn.disabled = true;
-  let lock = null;
+async function renderVideo(auto) {
+  if (busy) return false; busy = true; const btn = $('#btnRender'), msg = $('#renderMsg'); btn.disabled = true;
+  let lock = null, ok = false;
   try {
     msg.textContent = '준비 중…'; $('#vid').style.display = 'none'; $('#outBtns').style.display = 'none';
     const ac = AC(); await ac.resume();
     const D = await prepareAll(true);
-    if (D.sc.some(s => s.text && !s._buf) && !confirm('음성이 없는 장면이 있습니다. 그대로 만들까요? (그 장면은 무음)')) throw new Error('취소했습니다');
+    if (!auto && D.sc.some(s => s.text && !s._buf) && !confirm('음성이 없는 장면이 있습니다. 그대로 만들까요? (그 장면은 무음)')) throw new Error('취소했습니다');
     const total = D.total;
     try { lock = await navigator.wakeLock?.request('screen'); } catch (e) {}
     let blob = null;
@@ -957,10 +1010,26 @@ $('#btnRender').onclick = async () => {
     if (CUR.videoKey) await delBlob(CUR.videoKey);
     CUR.videoKey = 'vid-' + uid(); await putBlob(CUR.videoKey, blob); await putEp(CUR); renderPlan();
     $('#bar').style.width = '100%';
-    showVideo(blob); msg.textContent = `완성 (${(blob.size / 1048576).toFixed(1)}MB${sup ? ', 빠른 방식' : ''}). [공유 / 저장]으로 유튜브·클립에 올리세요.`;
+    showVideo(blob); msg.textContent = `완성 (${(blob.size / 1048576).toFixed(1)}MB${sup ? ', 빠른 방식' : ''}). [공유 / 저장]으로 유튜브·클립에 올리세요.`; ok = true;
   } catch (e) { msg.textContent = '오류: ' + e.message; }
   try { lock && lock.release(); } catch (e) {}
-  busy = false; btn.disabled = false;
+  busy = false; btn.disabled = false; return ok;
+}
+$('#btnRender').onclick = () => renderVideo(false);
+
+/* 한 번에 만들기 */
+$('#btnAll').onclick = async () => {
+  const b = $('#btnAll'), m = $('#allMsg'); b.disabled = true;
+  const step = t => { m.textContent = t; };
+  try {
+    if (!CUR.scenes.length || !CUR.scenes.some(s => s.text)) { step('1/4 원고 쓰는 중… (20초~1분)'); if (!await writeScript(true)) throw new Error($('#writeMsg').textContent); }
+    if (CUR.images.length < (CUR.needs || []).length || !CUR.images.length) { step('2/4 그림 찾는 중…'); await autoImages(false); if (!CUR.images.length) throw new Error('그림을 찾지 못했습니다. 직접 올린 뒤 다시 누르세요'); }
+    step('3/4 음성 만드는 중… (장면당 몇 초)'); if (!await makeVoices()) throw new Error($('#ttsMsg').textContent);
+    step('4/4 영상 만드는 중…'); if (!await renderVideo(true)) throw new Error($('#renderMsg').textContent);
+    step('✅ 완성! 아래 4번에서 영상을 확인하고 [공유 / 저장]으로 올리세요. 원고·그림은 한 번 훑어보세요');
+    $('#vid').scrollIntoView({behavior: 'smooth', block: 'center'});
+  } catch (e) { step('멈춤: ' + e.message + ' — 고친 뒤 다시 누르면 끝난 단계는 건너뜁니다'); }
+  b.disabled = false;
 };
 let lastVideo = null;
 function showVideo(blob) {
