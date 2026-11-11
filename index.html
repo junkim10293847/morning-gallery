@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.5 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.6 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -177,6 +177,8 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
     <select id="sEngine"><option value="gemini">Google Gemini (무료 키 가능)</option><option value="claude">Anthropic Claude API</option></select>
     <label>API 키</label><input id="sTextKey" type="password" autocomplete="off">
     <label>모델 (비우면 기본값)</label><input id="sModel" placeholder="gemini-2.5-flash / claude-sonnet-5-5">
+    <button class="b p" id="btnKeyCheck" style="margin-top:10px;width:100%">키 확인 (원고 · 음성)</button>
+    <div class="msg" id="keyMsg"></div>
   </div>
   <div class="card">
     <h2>음성</h2>
@@ -802,6 +804,16 @@ const SF = {sPolicy: 'policy', sEngine: 'engine', sTextKey: 'textKey', sModel: '
 for (const [id, k] of Object.entries(SF)) { $('#' + id).value = S[k] ?? ''; $('#' + id).addEventListener('input', () => { const v = $('#' + id).value; S[k] = /Key$/.test(k) ? v.replace(/\s+/g, '') : v; saveS(); }); }
 $('#btnEVoiceTest').onclick = async () => { const m = $('#ttsMsg'); m.textContent = '들어보기 만드는 중…'; try { const b = await tts('오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요.', CUR.voice); new Audio(URL.createObjectURL(b)).play(); m.textContent = '목소리를 바꿨다면 [전체 음성 만들기]를 다시 누르세요'; } catch (e) { m.textContent = '오류: ' + e.message; } };
 $('#btnVoiceTest').onclick = async () => { const m = $('#voiceMsg'); m.textContent = '만드는 중…'; try { const b = await tts('1990년 3월, 보스턴의 한 미술관에서 이 바다 그림이 사라졌습니다. 오늘 아침도, 명화 한 점으로 시작하세요.'); new Audio(URL.createObjectURL(b)).play(); m.textContent = ''; } catch (e) { m.textContent = '오류: ' + e.message; } };
+$('#btnKeyCheck').onclick = async () => {
+  const m = $('#keyMsg'), b = $('#btnKeyCheck'); b.disabled = true; let out = [];
+  m.textContent = '원고 키 확인 중…';
+  try { const j = await askAI('다음 JSON만 출력: {"ok":"모닝 갤러리"}'); out.push(j.ok ? '✅ 원고 키 정상' : '⚠️ 원고 키: 응답이 이상합니다'); }
+  catch (e) { out.push('❌ 원고 키: ' + e.message); }
+  m.textContent = out.join('\n') + '\n음성 키 확인 중…';
+  try { const a = await tts('좋은 아침입니다.', S.voice); new Audio(URL.createObjectURL(a)).play(); out.push('✅ 음성 정상 (지금 들리는 소리)'); }
+  catch (e) { out.push('❌ 음성: ' + e.message); }
+  m.innerText = out.join('\n'); b.disabled = false;
+};
 $('#btnPolicyReset').onclick = () => { if (confirm('처음 정책서로 되돌릴까요?')) { S.policy = DEFAULT_POLICY; $('#sPolicy').value = S.policy; saveS(); } };
 $('#btnExport').onclick = () => {
   const data = {settings: {...S, textKey: '', ttsKey: ''}, eps: EPS.map(e => ({...e, images: [], videoKey: null, scenes: e.scenes.map(s => ({...s, audioKey: null}))}))};
