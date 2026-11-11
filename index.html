@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.19 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.20 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -83,7 +83,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   <div class="row" style="margin-top:10px">
     <button class="b p" id="btnNew">+ 새 편</button>
     <button class="b" id="btnSuggest">주제 7일 추천</button>
-    <button class="b" id="btnPlanFetch">받은 일정 넣기</button>
+    <button class="b" id="btnPlanFetch">받은 일정·원고 넣기</button>
   </div>
   <div class="msg" id="planMsg"></div>
   <div class="card" style="padding:0" id="epList"></div>
@@ -1074,7 +1074,16 @@ async function importData(d) {
   for (const e of d.eps || []) {
     const ex = EPS.find(x => x.id === e.id);
     if (!ex) { EPS.push(e); await putEp(e); n++; }
-    else { for (const k of ['date', 'format', 'topic']) if (e[k]) ex[k] = e[k]; await putEp(ex); n++; }
+    else {
+      for (const k of ['date', 'format', 'topic']) if (e[k]) ex[k] = e[k];
+      if (e.scenes && e.scenes.length) {
+        for (const k of ['title', 'header', 'desc', 'clip', 'needs', 'music']) if (e[k] != null) ex[k] = e[k];
+        for (const sc of ex.scenes || []) if (sc.audioKey) await delBlob(sc.audioKey);
+        ex.scenes = e.scenes.map(x => ({...x, audioKey: null, dur: 0}));
+        if (e.resetImages) { for (const im of ex.images || []) await delBlob(im.key); ex.images = []; ex.videoKey && await delBlob(ex.videoKey); ex.videoKey = null; }
+      }
+      await putEp(ex); n++;
+    }
   }
   renderPlan(); syncNow(); return n;
 }
@@ -1086,8 +1095,8 @@ $('#btnPlanFetch').onclick = async () => {
   const m = $('#planMsg'); m.textContent = '받은 일정을 확인하는 중…';
   try {
     const r = await fetch('plans/latest.json?t=' + Date.now()); if (!r.ok) throw new Error('받은 일정이 없습니다');
-    const d = await r.json(); const list = (d.eps || []).map(e => `${e.date.slice(5)} [${e.format}] ${e.topic.split(' — ')[0]}`).join('\n');
-    if (!confirm('이 일정을 넣을까요? (이미 만든 원고는 그대로, 날짜만 맞춤)\n\n' + list)) { m.textContent = ''; return; }
+    const d = await r.json(); const list = (d.settings?.policy ? '· 정책서 새로 받기\n' : '') + (d.eps || []).map(e => `${e.date.slice(5)} [${e.format}] ${e.topic.split(' — ')[0]}${e.scenes?.length ? ' (원고 포함)' : ''}`).join('\n');
+    if (!confirm('받은 내용을 넣을까요?\n(원고가 포함된 편은 원고를 새로 바꾸고, 나머지는 날짜만 맞춤)\n\n' + list)) { m.textContent = ''; return; }
     const n = await importData(d); m.textContent = `${n}편을 일정에 맞췄습니다.`;
   } catch (e) { m.textContent = '오류: ' + e.message; }
 };
