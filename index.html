@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.13 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.14 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -882,7 +882,11 @@ $('#importIn').onchange = async ev => {
   try {
     const d = JSON.parse(await ev.target.files[0].text());
     if (d.settings) { S = {...S, ...d.settings, textKey: S.textKey, ttsKey: S.ttsKey}; saveS(); for (const [id, k] of Object.entries(SF)) $('#' + id).value = S[k] ?? ''; }
-    for (const e of d.eps || []) { if (!EPS.find(x => x.id === e.id)) { EPS.push(e); await putEp(e); } }
+    for (const e of d.eps || []) {
+      const ex = EPS.find(x => x.id === e.id);
+      if (!ex) { EPS.push(e); await putEp(e); }
+      else { for (const k of ['date', 'format', 'topic']) if (e[k]) ex[k] = e[k]; await putEp(ex); }
+    }
     renderPlan(); syncNow(); alert('가져왔습니다');
   } catch (e) { alert('파일을 읽지 못했습니다'); }
 };
