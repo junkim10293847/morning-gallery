@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.18 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.19 · 2026-11-11</p></header>
 <main>
 
 <!-- 일정 -->
@@ -265,7 +265,7 @@ const DEFAULT_POLICY = `[모닝 갤러리 정책서]
 - 쉼표로 호흡을 끊어 자막 두 줄에 맞게
 - 갈리는 사실은 "~로 알려져 있죠", "~라고 전해집니다". 지어내지 않기
 - 마지막 장면: "오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요."
-- 다음 편이 정해져 있으면 마지막 앞 장면에 한 줄 예고
+- 마지막 앞 장면: 다음 편 주제는 밝히지 말고 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧은 인사 (다음 편 그림은 넣지 않음)
 
 5. 피할 것
 - 노출이 큰 그림, 참수·피 등 잔혹한 장면 (고디바 편 중단 사례)
@@ -292,6 +292,7 @@ let DB, EPS = [], CUR = null, IMGURL = {};
 const DEF = {policy: DEFAULT_POLICY, engine: 'gemini', textKey: '', model: '', ttsKey: '', voice: 'gemini:Aoede', rate: '1.0', pron: ''};
 let S = {...DEF};
 try { S = {...DEF, ...JSON.parse(localStorage.getItem('mg-settings') || '{}')}; } catch (e) {}
+function migratePolicy() { if (S.policy && S.policy.includes('- 다음 편이 정해져 있으면 마지막 앞 장면에 한 줄 예고')) { S.policy = S.policy.replace('- 다음 편이 정해져 있으면 마지막 앞 장면에 한 줄 예고', '- 마지막 앞 장면: 다음 편 주제는 밝히지 말고 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧은 인사 (다음 편 그림은 넣지 않음)'); S.setAt = Date.now(); saveS(); } }
 function saveS() { try { localStorage.setItem('mg-settings', JSON.stringify(S)); } catch (e) {} }
 
 function openDB() {
@@ -484,7 +485,7 @@ async function writeScript(auto) {
   const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초~1분)';
   try {
     const nx = nextEpOf(CUR);
-    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: ${nx ? nx.topic.split(' — ')[0] + ' (마지막 앞 장면에 말로만 한 줄 예고. 그 장면의 그림은 이 편의 그림을 다시 쓰고, 다음 편 그림은 images에 넣지 말 것)' : '없음 (예고 장면 생략)'}\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.`;
+    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: 주제를 밝히지 말고 마지막 앞 장면에 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧게. 다음 편 그림은 images에 넣지 말 것\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.`;
     const j = await askAI(prompt);
     CUR.title = j.title || ''; CUR.header = j.header || ''; CUR.desc = j.description || ''; CUR.clip = (j.clip || '').slice(0, 300);
     if (['밝게', '차분', '어둡게'].includes(j.music)) CUR.music = j.music;
@@ -1155,6 +1156,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 
 /* ───────── 시작 ───────── */
 (async () => {
+  migratePolicy(); try { $('#sPolicy').value = S.policy; } catch (e) {}
   try { DB = await openDB(); EPS = await tx('eps', 'readonly', s => s.getAll()) || []; }
   catch (e) { $('#planMsg').textContent = '이 브라우저에서는 저장이 안 됩니다. 크롬이나 사파리로 여세요.'; }
   renderPlan(); syncNow();
