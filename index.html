@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 / v1.25 영어판(K-Art): 언어 선택, 영어 정책서·채널 이름·목소리 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.24 · 2026-11-12</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.25 · 2026-11-12</p></header>
 <main>
 
 <!-- 일정 -->
@@ -182,6 +182,12 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
     <div class="row" style="margin-top:8px"><button class="b fit" id="btnPolicyReset">처음 정책서로</button></div>
   </div>
   <div class="card">
+    <h2>영어판 (K-Art)</h2>
+    <label>영어 채널 이름 (영상 위에 표시)</label><input id="sBrandEn">
+    <label>영어판 기본 목소리</label><select id="sVoiceEn"><option value="gemini:Charon">◆ Male · Charon (calm)</option><option value="gemini:Orus">◆ Male · Orus</option><option value="gemini:Aoede">◆ Female · Aoede</option><option value="gemini:Kore">◆ Female · Kore</option></select>
+    <label>영어 정책서</label><textarea id="sPolicyEn" style="min-height:280px;font-size:13px"></textarea>
+  </div>
+  <div class="card">
     <h2>원고 엔진</h2>
     <label>사용할 AI</label>
     <select id="sEngine"><option value="gemini">Google Gemini (무료 키 가능)</option><option value="claude">Anthropic Claude API</option></select>
@@ -237,6 +243,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 <dialog id="dlgNew">
   <h2>새 편</h2>
   <label>공개일</label><input type="date" id="nDate">
+  <label>언어</label><select id="nLang"><option value="ko">한국어 (모닝 갤러리, 아침 6시)</option><option value="en">English (K-Art, 저녁 8시)</option></select>
   <label>형식</label><select id="nFormat"><option>화가</option><option>그림</option></select>
   <label>주제</label><input id="nTopic" placeholder="예: 에드가 드가">
   <div class="row" style="margin-top:14px"><button class="b" id="nCancel">취소</button><button class="b p" id="nOk">추가</button></div>
@@ -244,6 +251,51 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 
 <script>
 /* ───────── 기본 정책서 ───────── */
+const DEFAULT_POLICY_EN = `[K-Art Stories — English policy]
+
+1. Channel
+- English Shorts about Korean art for a global audience (YouTube, later TikTok / Instagram)
+- One video a day, published 8 pm Korea time (6 am US Eastern)
+- Viewers know little about Korea: curious, K-culture fans, art lovers
+
+2. Formats (alternate daily)
+- Artist: 13-15 scenes, 80-90 seconds of narration
+- Painting: 11-14 scenes, 60-75 seconds, one work in depth (hidden details, twists)
+
+3. Topics
+- Korean art up to the Joseon dynasty: Kim Hong-do, Sin Yun-bok, Jeong Seon, An Gyeon, Sin Saimdang, Kim Jeong-hui, Jang Seung-eop, minhwa folk painting, chaekgeori, Irworobongdo, Goryeo Buddhist painting, celadon, white porcelain, royal court records
+- Never modern artists still under copyright (Lee Jung-seop, Park Soo-keun, Kim Whanki, etc.)
+
+4. Title and first line
+- Title: a question or incident + " | Korean Art" (e.g. "Can you spot the mistake in this 200-year-old painting? | Korean Art")
+- Scene 1: a question or surprising fact that hooks in 3 seconds
+- Scene 2: "Today's painter is ..." / "This is ... by ..."
+
+5. Writing
+- Simple, warm spoken English, 1-2 sentences per scene, under 18 words each, commas for breathing
+- Explain Korean ideas in a few words the first time (e.g. "seonbi, Korea's scholar-gentlemen", "jingyeong, true-view landscape")
+- Names: museum romanization (Kim Hong-do, also known as Danwon). Korean word first, then the meaning
+- Compare to something global only when it truly helps (e.g. "painted 100 years before Hokusai")
+- Uncertain facts: "it is said", "according to legend", "historians believe". Never invent
+- Second-to-last scene: "See you tomorrow with another Korean masterpiece." (no topic)
+- Last scene: "Start your day with a little Korean art. Have a beautiful day."
+
+6. Keep them watching
+- Save the answer to the opening question for the last 2-3 scenes
+- No lists of dates. Link scenes with "But", "So", "Then"
+- One concrete detail per scene (a number, an object, a gesture)
+- At least one twist or surprising fact
+- Birth and schooling: one scene at most
+
+7. Avoid
+- Nudity, gore, political arguments about Korea-Japan history (state facts calmly)
+
+8. Images
+- Wikimedia Commons, National Museum of Korea public-domain images; label "Title · year" (e.g. "Ssireum · late 18th century")
+
+9. Description
+- 2-3 lines + up to 5 hashtags (#KoreanArt #Joseon #ArtHistory ...)
+- "clip" field = TikTok / Instagram caption (under 300 characters)`;
 const DEFAULT_POLICY = `[모닝 갤러리 정책서]
 
 1. 채널
@@ -297,7 +349,7 @@ const DEFAULT_POLICY = `[모닝 갤러리 정책서]
 /* ───────── 저장소 ───────── */
 const $ = s => document.querySelector(s);
 let DB, EPS = [], CUR = null, IMGURL = {};
-const DEF = {policy: DEFAULT_POLICY, engine: 'gemini', textKey: '', model: '', ttsKey: '', voice: 'gemini:Aoede', rate: '1.0', pron: ''};
+const DEF = {policyEn: DEFAULT_POLICY_EN, brandEn: 'K-Art Stories', voiceEn: 'gemini:Charon', policy: DEFAULT_POLICY, engine: 'gemini', textKey: '', model: '', ttsKey: '', voice: 'gemini:Aoede', rate: '1.0', pron: ''};
 let S = {...DEF};
 try { S = {...DEF, ...JSON.parse(localStorage.getItem('mg-settings') || '{}')}; } catch (e) {}
 function migratePolicy() { if (S.policy && S.policy.includes('- 다음 편이 정해져 있으면 마지막 앞 장면에 한 줄 예고')) { S.policy = S.policy.replace('- 다음 편이 정해져 있으면 마지막 앞 장면에 한 줄 예고', '- 마지막 앞 장면: 다음 편 주제는 밝히지 말고 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧은 인사 (다음 편 그림은 넣지 않음)'); S.setAt = Date.now(); saveS(); } }
@@ -326,8 +378,8 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 
 const WD = ['일', '월', '화', '수', '목', '금', '토'];
 const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const todayStr = () => ymd(new Date());
-function nextFreeDate() {
-  const used = new Set(EPS.map(e => e.date)); const d = new Date(); d.setDate(d.getDate() + 1);
+function nextFreeDate(lang = 'ko') {
+  const used = new Set(EPS.filter(e => (e.lang || 'ko') === lang).map(e => e.date)); const d = new Date(); d.setDate(d.getDate() + 1);
   while (used.has(ymd(d))) d.setDate(d.getDate() + 1);
   return ymd(d);
 }
@@ -361,7 +413,7 @@ function renderPlan() {
     const d = new Date(e.date + 'T00:00'); const st = status(e);
     const el = document.createElement('div'); el.className = 'ep' + (e.date === today ? ' today' : '');
     el.innerHTML = `<div class="d">${d.getMonth() + 1}/${d.getDate()}<b>${WD[d.getDay()]}</b></div>
-      <div class="t"><div><span class="badge ${e.format === '화가' ? 'g' : ''}">${e.format}</span>${esc(e.topic || '(주제 없음)')}</div>
+      <div class="t"><div>${e.lang === 'en' ? '<span class="badge" style="background:#DDE7F3;color:#35557A">EN</span>' : ''}<span class="badge ${e.format === '화가' ? 'g' : ''}">${e.format}</span>${esc(e.topic || '(주제 없음)')}</div>
       <div class="dots">${[['원고', st.text], ['사진', st.img], ['음성', st.voice], ['영상', st.video], ['예약', st.post]].map(([n, y]) => `<i class="${y ? 'y' : ''}">${y ? '●' : '○'} ${n}</i>`).join('')}</div></div>`;
     el.onclick = () => openEp(e.id);
     box.appendChild(el);
@@ -370,16 +422,17 @@ function renderPlan() {
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
 $('#btnNew').onclick = () => {
-  $('#nDate').value = nextFreeDate(); $('#nFormat').value = lastFormat() === '화가' ? '그림' : '화가'; $('#nTopic').value = '';
+  $('#nLang').value = 'ko'; $('#nDate').value = nextFreeDate(); $('#nFormat').value = lastFormat() === '화가' ? '그림' : '화가'; $('#nTopic').value = '';
   $('#dlgNew').showModal();
 };
+$('#nLang').onchange = () => { $('#nDate').value = nextFreeDate($('#nLang').value); };
 $('#nCancel').onclick = () => $('#dlgNew').close();
 $('#nOk').onclick = async () => {
-  const e = newEp($('#nDate').value, $('#nFormat').value, $('#nTopic').value.trim());
+  const e = newEp($('#nDate').value, $('#nFormat').value, $('#nTopic').value.trim(), $('#nLang').value);
   EPS.push(e); await putEp(e); $('#dlgNew').close(); renderPlan(); openEp(e.id); syncSoon();
 };
-function newEp(date, format, topic) {
-  return {id: uid(), date, format, topic, title: '', header: '', desc: '', clip: '', needs: [], images: [], scenes: [], music: '차분', yt: false, nv: false, link: ''};
+function newEp(date, format, topic, lang = 'ko') {
+  return {id: uid(), date, format, topic, lang, voice: lang === 'en' ? S.voiceEn : S.voice, title: '', header: '', desc: '', clip: '', needs: [], images: [], scenes: [], music: '차분', yt: false, nv: false, link: ''};
 }
 
 $('#btnSuggest').onclick = async () => {
@@ -488,7 +541,7 @@ document.querySelectorAll('[data-copy]').forEach(b => b.onclick = async () => {
 async function openEp(id, silent) {
   CUR = EPS.find(e => e.id === id); if (!CUR) return;
   $('#noEp').style.display = 'none'; $('#editor').style.display = 'block';
-  if (!CUR.voice) CUR.voice = S.voice;
+  if (!CUR.voice) CUR.voice = CUR.lang === 'en' ? (S.voiceEn || 'gemini:Charon') : S.voice;
   for (const [i, k] of Object.entries(F)) $('#' + i).value = CUR[k] ?? '';
   $('#eYt').checked = !!CUR.yt; $('#eNv').checked = !!CUR.nv;
   $('#musicIn').style.display = CUR.music === '파일' ? 'block' : 'none';
@@ -508,6 +561,9 @@ $('#btnDel').onclick = async () => {
 };
 
 /* 원고 쓰기 */
+function promptEn() {
+  return `${S.policyEn}\n\n[Task] Following the policy above, write an English Shorts script for the channel "${S.brandEn}".\n- Format: ${CUR.format === '화가' ? 'Artist' : 'Painting'}\n- Topic: ${CUR.topic}\n- Images are fetched automatically from Wikimedia Commons. List the needed images in order (images) and give each scene an image number (image, from 1). Reuse images freely. Painting format: 1-3 images.\n- search: English words that find the original artwork file on Wikimedia Commons. title_en: the artwork's English Wikipedia/Wikidata title. artist_en: the artist's English name.\n[Output] JSON only:\n{"title":"","header":"Today's painter · Name  or  Today's masterpiece · Artist","description":"YouTube description with hashtags (use \\n)","clip":"TikTok / Instagram caption under 300 chars","music":"밝게|차분|어둡게","images":[{"work":"Title · year","search":"","title_en":"","artist_en":""}],"scenes":[{"image":1,"label":"Title · year","text":"narration","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 1.5-3 when the scene talks about a specific detail (face, hand, hidden thing), else 1. fx, fy: rough position 0-1 from top-left. Painting format: about half the scenes zoomed.\n- Before answering, check and fix: does scene 1 hook in 3 seconds? Is the answer saved for the end? Any boring date lists? Anything not factual?`;
+}
 async function writeScript(auto) {
   if (!CUR.topic) { $('#writeMsg').textContent = '주제를 먼저 적으세요.'; return false; }
   if (!auto && CUR.scenes.some(s => s.text) && !confirm('지금 원고를 새 원고로 바꿀까요?')) return false;
@@ -515,7 +571,7 @@ async function writeScript(auto) {
   const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초~1분)';
   try {
     const nx = nextEpOf(CUR);
-    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: 주제를 밝히지 말고 마지막 앞 장면에 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧게. 다음 편 그림은 images에 넣지 말 것\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words","title_en":"영어 작품 제목 (위키백과 표제)","artist_en":"영어 화가 이름"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.\n- 다 쓴 뒤 스스로 점검하고 고쳐서 내라: 첫 장면이 3초 안에 궁금증을 만드는가? 답을 끝까지 아꼈는가? 연도 나열처럼 지루한 장면은 없는가? 사실이 아닌 내용은 없는가?`;
+    const prompt = CUR.lang === 'en' ? promptEn() : `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: 주제를 밝히지 말고 마지막 앞 장면에 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧게. 다음 편 그림은 images에 넣지 말 것\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words","title_en":"영어 작품 제목 (위키백과 표제)","artist_en":"영어 화가 이름"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.\n- 다 쓴 뒤 스스로 점검하고 고쳐서 내라: 첫 장면이 3초 안에 궁금증을 만드는가? 답을 끝까지 아꼈는가? 연도 나열처럼 지루한 장면은 없는가? 사실이 아닌 내용은 없는가?`;
     const j = await askAI(prompt);
     CUR.title = j.title || ''; CUR.header = j.header || ''; CUR.desc = j.description || ''; CUR.clip = (j.clip || '').slice(0, 300);
     if (['밝게', '차분', '어둡게'].includes(j.music)) CUR.music = j.music;
@@ -679,6 +735,7 @@ async function recordMic(s, btn, info) {
 
 /* 음성 만들기 (Google TTS) */
 function applyPron(t) {
+  if (CUR && CUR.lang === 'en') return t.replace(/[「」『』“”"]/g, '');
   let x = t.replace(/[「」『』“”"]/g, '');
   for (const line of (S.pron || '').split('\n')) { const [a, b] = line.split('='); if (a && b) x = x.split(a.trim()).join(b.trim()); }
   return x;
@@ -727,14 +784,16 @@ async function geminiRaw(prompt, voice) {
   }
   markOut('tts', lastMsg); throw new Error(`음성 무료 한도를 다 썼습니다. ${resetText()}에 다시 됩니다. 급하면 장면별 🎤 녹음을 쓰세요`);
 }
-function gStyle() { const sp = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : ''; return `아침 교양 방송 나레이터처럼 ${sp}차분하고 따뜻하게 읽어 주세요`; }
+function gStyle() {
+  if (CUR && CUR.lang === 'en') { const sp = +S.rate > 1 ? 'a little faster, ' : +S.rate < 1 ? 'a little slower, ' : ''; return `Read like a warm, calm documentary narrator, ${sp}in natural American English`; } const sp = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : ''; return `아침 교양 방송 나레이터처럼 ${sp}차분하고 따뜻하게 읽어 주세요`; }
 async function geminiTTS(text, voice) {
   const o = await geminiRaw(`${gStyle()}: ${applyPron(text)}`, voice); return pcmToWav(o.b64, o.rate);
 }
 // 여러 장면을 한 번에 읽게 한 뒤, 긴 쉼표에서 잘라 장면별로 나눔 (요청 1회)
 async function geminiBatch(texts, voice) {
   const body = texts.map((t, i) => `[${i + 1}] ${applyPron(t)}`).join('\n\n');
-  const o = await geminiRaw(`${gStyle()}. 대괄호 번호는 읽지 말고, 번호가 바뀔 때마다 2초 동안 조용히 쉬어 주세요:\n\n${body}`, voice);
+  const en = CUR && CUR.lang === 'en';
+  const o = await geminiRaw(en ? `${gStyle()}. Do not read the numbers in brackets. Pause silently for 2 seconds whenever the number changes:\n\n${body}` : `${gStyle()}. 대괄호 번호는 읽지 말고, 번호가 바뀔 때마다 2초 동안 조용히 쉬어 주세요:\n\n${body}`, voice);
   const bin = atob(o.b64), n = bin.length >> 1, pcm = new Int16Array(n);
   for (let i = 0; i < n; i++) pcm[i] = (bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8)) << 16 >> 16;
   const F = Math.round(o.rate * .02), nf = Math.floor(n / F), rms = new Float32Array(nf);
@@ -806,7 +865,7 @@ function tintOf(img) {
   for (let i = 0; i < d.length; i += 4) { const ww = Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) + 10; r += d[i] * ww; g += d[i + 1] * ww; b += d[i + 2] * ww; w += ww; }
   return [r / w, g / w, b / w];
 }
-function wall(tint, head) {
+function wall(tint, head, brand = 'Morning Gallery') {
   const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
   const base = [246, 239, 227].map((v, i) => Math.round(v * .92 + tint[i] * .08));
   x.fillStyle = `rgb(${base})`; x.fillRect(0, 0, W, H);
@@ -820,7 +879,7 @@ function wall(tint, head) {
   x.beginPath(); x.arc(cx, cy, r, Math.PI, 2 * Math.PI); x.fill();
   x.beginPath(); x.moveTo(cx - r - 22, cy); x.lineTo(cx + r + 22, cy); x.stroke();
   x.textAlign = 'center'; x.textBaseline = 'middle';
-  x.fillStyle = INK; x.font = `600 46px ${SERIF}`; x.fillText('Morning Gallery', W / 2, 176);
+  x.fillStyle = INK; x.font = `600 46px ${SERIF}`; x.fillText(brand, W / 2, 176);
   if (head) { x.fillStyle = SUBINK; x.font = `400 28px ${SANS}`; x.fillText(head, W / 2, 232); }
   return c;
 }
@@ -892,7 +951,7 @@ async function prepareAll(withAudio) {
   if (withAudio) for (const s of sc) { s._buf = null; if (s.audioKey) { const b = await getBlob(s.audioKey); if (b) try { s._buf = await AC().decodeAudioData(await b.arrayBuffer()); } catch (e) {} } }
   const total = plan(sc);
   const firstImg = imgs[(sc[0].img || 1) - 1] || imgs[0];
-  const bgBase = wall(tintOf(firstImg), CUR.header);
+  const bgBase = wall(tintOf(firstImg), CUR.header, CUR.lang === 'en' ? (S.brandEn || 'K-Art Stories') : 'Morning Gallery');
   const P = sc.map(s => prepScene(s, imgs[(s.img || 1) - 1] || imgs[imgs.length - 1], bgBase));
   return {sc, P, total};
 }
@@ -1144,7 +1203,7 @@ $('#btnShare').onclick = async () => {
 };
 
 /* ───────── 정책서 · 설정 ───────── */
-const SF = {sGhToken: 'ghToken', sPolicy: 'policy', sEngine: 'engine', sTextKey: 'textKey', sModel: 'model', sTtsKey: 'ttsKey', sVoice: 'voice', sRate: 'rate', sPron: 'pron'};
+const SF = {sBrandEn: 'brandEn', sVoiceEn: 'voiceEn', sPolicyEn: 'policyEn', sGhToken: 'ghToken', sPolicy: 'policy', sEngine: 'engine', sTextKey: 'textKey', sModel: 'model', sTtsKey: 'ttsKey', sVoice: 'voice', sRate: 'rate', sPron: 'pron'};
 for (const [id, k] of Object.entries(SF)) { $('#' + id).value = S[k] ?? ''; $('#' + id).addEventListener('input', () => { const v = $('#' + id).value; S[k] = /Key$|Token$/.test(k) ? v.replace(/\s+/g, '') : v; if (!/Key$|Token$/.test(k)) S.setAt = Date.now(); saveS(); syncSoon(); }); }
 $('#btnEVoiceTest').onclick = async () => { const m = $('#ttsMsg'); m.textContent = '들어보기 준비 중…'; try { const b = await sampleVoice(CUR.voice || S.voice); new Audio(URL.createObjectURL(b)).play(); m.textContent = '목소리를 바꿨다면 [전체 음성 만들기]를 다시 누르세요'; } catch (e) { m.textContent = '오류: ' + e.message; } };
 async function sampleVoice(v) { const k = 'sample-' + v; let b = await getBlob(k); if (!b) { b = await tts('오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요.', v); await putBlob(k, b); } return b; }
@@ -1219,7 +1278,7 @@ function mergeEp(loc, rem) {
   out.scenes = (rem.scenes || []).map((s, i) => { const l = loc && loc.scenes[i]; const same = l && l.text === s.text; return {...s, audioKey: same ? l.audioKey : null, dur: same ? l.dur : 0}; });
   return out;
 }
-const SYNC_KEYS = ['policy', 'pron', 'voice', 'rate', 'engine', 'model'];
+const SYNC_KEYS = ['policyEn', 'brandEn', 'voiceEn', 'policy', 'pron', 'voice', 'rate', 'engine', 'model'];
 function mergeUsage(ru) { const u = U(); if (!ru || ru.day !== u.day) return; for (const k of ['text', 'tts']) { u[k] = Math.max(u[k], ru[k] || 0); u[k + 'Out'] = u[k + 'Out'] || ru[k + 'Out']; u[k + 'Lim'] = Math.min(u[k + 'Lim'], ru[k + 'Lim'] || 99); } saveS(); showUsage(); }
 async function syncNow() {
   if (!S.ghToken || syncing) return; syncing = true; const m = $('#syncMsg');

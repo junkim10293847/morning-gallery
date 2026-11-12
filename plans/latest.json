@@ -1,188 +1,12 @@
 {
- "rev": 1794459352,
- "note": "정책서에 \"끝까지 보게 하는 장치\"를 넣고, 다빈치 원고를 다듬었습니다.",
+ "rev": 1794460236,
+ "note": "영어판(K-Art) 2주 일정 10편을 넣었습니다. 정책서 탭에서 영어 채널 이름을 확인하세요.",
  "eps": [
   {
    "id": "plan20261113",
    "date": "2026-11-13",
    "format": "화가",
-   "topic": "레오나르도 다빈치 — 왜 그는 그림을 거의 끝내지 못했을까 (미완성 각도)",
-   "needs": [
-    {
-     "work": "모나리자 · 1503~1519년경",
-     "search": "Mona Lisa Leonardo da Vinci C2RMF retouched",
-     "title_en": "Mona Lisa",
-     "artist_en": "Leonardo da Vinci"
-    },
-    {
-     "work": "그리스도의 세례 · 1475년경",
-     "search": "Verrocchio Leonardo Baptism of Christ Uffizi",
-     "title_en": "The Baptism of Christ",
-     "artist_en": "Verrocchio"
-    },
-    {
-     "work": "동방박사의 경배 · 1481",
-     "search": "Leonardo da Vinci Adoration of the Magi Uffizi",
-     "title_en": "Adoration of the Magi (Leonardo)",
-     "artist_en": "Leonardo da Vinci"
-    },
-    {
-     "work": "흰 담비를 안은 여인 · 1490년경",
-     "search": "Lady with an Ermine Leonardo da Vinci",
-     "title_en": "Lady with an Ermine",
-     "artist_en": "Leonardo da Vinci"
-    },
-    {
-     "work": "최후의 만찬 · 1495~1498",
-     "search": "Leonardo da Vinci The Last Supper high resolution",
-     "title_en": "The Last Supper (Leonardo)",
-     "artist_en": "Leonardo da Vinci"
-    },
-    {
-     "work": "비트루비우스적 인간 · 1490년경",
-     "search": "Vitruvian Man Leonardo da Vinci",
-     "title_en": "Vitruvian Man",
-     "artist_en": "Leonardo da Vinci"
-    },
-    {
-     "work": "자화상(추정) · 1512년경",
-     "search": "Leonardo da Vinci self-portrait red chalk Turin",
-     "title_en": "Portrait of a Man in Red Chalk",
-     "artist_en": "Leonardo da Vinci"
-    }
-   ],
-   "scenes": [
-    {
-     "img": 1,
-     "label": "모나리자 · 1503~1519년경",
-     "text": "완성한 그림이 스무 점 남짓뿐인 화가가, 세상에서 가장 유명한 화가가 됐습니다.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 7,
-     "label": "자화상(추정) · 1512년경",
-     "text": "오늘의 화가, 레오나르도 다빈치입니다. 그는 왜, 그림을 끝내지 못했을까요?",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 7,
-     "label": "자화상(추정) · 1512년경",
-     "text": "빈치 마을의 소년은 십 대에, 피렌체 최고의 공방인 베로키오의 제자가 됩니다.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 2,
-     "label": "그리스도의 세례 · 1475년경",
-     "text": "그리고 스승의 그림 한쪽 구석에, 천사 하나를 그려 넣었죠.",
-     "zoom": 2,
-     "fx": 0.22,
-     "fy": 0.6
-    },
-    {
-     "img": 2,
-     "label": "그리스도의 세례 · 1475년경",
-     "text": "그 천사를 본 스승이 붓을 내려놓았다는 이야기가 전해집니다. 그런데 이 천재에게는, 이상한 버릇이 있었습니다.",
-     "zoom": 2,
-     "fx": 0.22,
-     "fy": 0.6
-    },
-    {
-     "img": 3,
-     "label": "동방박사의 경배 · 1481",
-     "text": "스물아홉 살에 맡은 첫 대작 「동방박사의 경배」. 밑그림만 남긴 채, 그는 밀라노로 떠나 버립니다.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 4,
-     "label": "흰 담비를 안은 여인 · 1490년경",
-     "text": "밀라노에서 그린 「흰 담비를 안은 여인」. 그는 손가락 하나, 털 한 올까지 오래 들여다봤습니다.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 5,
-     "label": "최후의 만찬 · 1495~1498",
-     "text": "그리고 「최후의 만찬」. 천천히 고쳐 가며 그리려고, 벽화에 새로운 방법을 썼죠.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 5,
-     "label": "최후의 만찬 · 1495~1498",
-     "text": "하지만 그 실험 탓에, 그림은 완성된 지 얼마 안 돼 벗겨지기 시작했다고 알려져 있습니다.",
-     "zoom": 1.5,
-     "fx": 0.5,
-     "fy": 0.45
-    },
-    {
-     "img": 6,
-     "label": "비트루비우스적 인간 · 1490년경",
-     "text": "그는 그림보다 궁금한 게 더 많았습니다. 사람의 몸, 새의 날개, 물의 흐름까지.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 6,
-     "label": "비트루비우스적 인간 · 1490년경",
-     "text": "그렇게 적은 노트가, 지금 남은 것만 칠천 쪽이 넘는다고 합니다.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 1,
-     "label": "모나리자 · 1503~1519년경",
-     "text": "1503년에 그리기 시작한 「모나리자」. 그는 이 그림을, 주문한 사람에게 끝내 건네지 않았습니다.",
-     "zoom": 2,
-     "fx": 0.5,
-     "fy": 0.3
-    },
-    {
-     "img": 1,
-     "label": "모나리자 · 1503~1519년경",
-     "text": "프랑스까지 들고 가, 세상을 떠날 때까지 붓을 댔다고 전해지죠.",
-     "zoom": 1.5,
-     "fx": 0.5,
-     "fy": 0.35
-    },
-    {
-     "img": 7,
-     "label": "자화상(추정) · 1512년경",
-     "text": "1519년, 그는 프랑스에서 숨을 거둡니다. 그에게 그림은 끝내는 것이 아니라, 계속 들여다보는 것이었는지도 모릅니다.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 1,
-     "label": "모나리자 · 1503~1519년경",
-     "text": "내일도 좋은 명화 이야기로 찾아오겠습니다.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    },
-    {
-     "img": 1,
-     "label": "모나리자 · 1503~1519년경",
-     "text": "오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요.",
-     "zoom": 1,
-     "fx": 0.5,
-     "fy": 0.5
-    }
-   ],
-   "title": "완성한 그림은 스무 점 남짓, 그는 왜 그림을 끝내지 못했을까? | 다빈치",
-   "header": "오늘의 화가 · 레오나르도 다빈치"
+   "topic": "레오나르도 다빈치 — 왜 그는 그림을 거의 끝내지 못했을까 (미완성 각도)"
   },
   {
    "id": "plan20261112",
@@ -225,10 +49,196 @@
    "date": "2026-11-20",
    "format": "그림",
    "topic": "호쿠사이 「가나가와 해변의 큰 파도」 — 파도 속에 숨은 후지산 찾기 (숨은 것 찾기 각도)"
+  },
+  {
+   "id": "en20261116",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-16",
+   "format": "그림",
+   "topic": "Kim Hong-do 「Ssireum (Wrestling)」 — Can you spot the mistake in this 200-year-old painting? (swapped hands, who will win)",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261117",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-17",
+   "format": "화가",
+   "topic": "Sin Saimdang — The woman on Korea's 50,000-won bill was a painter (insects and flowers, mother of Yulgok)",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261118",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-18",
+   "format": "그림",
+   "topic": "An Gyeon 「Dream Journey to the Peach Blossom Land」 — A prince's dream painted in 3 days, now in Japan",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261119",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-19",
+   "format": "화가",
+   "topic": "Jeong Seon — The painter who walked the mountains to paint Korea as it really looked (true-view landscape)",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261120",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-20",
+   "format": "그림",
+   "topic": "Chaekgeori (Korean bookshelf paintings) — Why a Joseon king put books behind his throne",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261123",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-23",
+   "format": "그림",
+   "topic": "Irworobongdo (Sun, Moon and Five Peaks) — The painting behind every Joseon king",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261124",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-24",
+   "format": "화가",
+   "topic": "Jang Seung-eop — Joseon's last wild genius painter who simply vanished",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261125",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-25",
+   "format": "그림",
+   "topic": "Kim Jeong-hui 「Sehando (Winter Scene)」 — A painting of loyalty from exile, rescued from Tokyo during WWII air raids",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261126",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-26",
+   "format": "화가",
+   "topic": "Sin Yun-bok — The rival of Kim Hong-do, the painter a TV drama claimed was a woman (use clothed works like Portrait of a Beauty)",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
+  },
+  {
+   "id": "en20261127",
+   "lang": "en",
+   "voice": "gemini:Charon",
+   "date": "2026-11-27",
+   "format": "그림",
+   "topic": "Magpie and Tiger (Kkachi Horangi) folk painting — Why does this tiger look so silly?",
+   "title": "",
+   "header": "",
+   "desc": "",
+   "clip": "",
+   "needs": [],
+   "images": [],
+   "scenes": [],
+   "music": "차분",
+   "yt": false,
+   "nv": false,
+   "link": ""
   }
- ],
- "settings": {
-  "policy": "[모닝 갤러리 정책서]\n\n1. 채널\n- 유튜브 @모닝갤러리 · 네이버 클립 @morninggallery_kr\n- 매일 오전 6시 공개, 하루 한 편\n- 시청층: 40~60대 중심, 아침에 가볍게 보는 교양\n\n2. 형식 (하루씩 번갈아)\n- 화가 편: 장면 13~15개, 나레이션 합계 약 80~90초. 대표작 7~10점으로 일생을 따라감\n- 그림 편: 장면 11~14개, 약 60~75초. 한 점을 깊게 (숨은 이야기, 반전)\n\n3. 제목 · 첫 문장\n- 제목은 질문·사건형 + \" | 화가 이름\" (예: 1990년 사라진 그림, 그 화가는 왜 자기 얼굴만 80번 그렸을까? | 렘브란트)\n- 첫 장면은 질문이나 사건으로 시작해 3초 안에 붙잡기\n- 둘째 장면: \"오늘의 화가, ○○입니다\" / \"오늘의 명화, ○○의 「○○」입니다\"\n\n4. 문장\n- 한 장면 1~2문장, 40자 안팎, 쉬운 말, 존댓말(~습니다 / ~죠)\n- 쉼표로 호흡을 끊어 자막 두 줄에 맞게\n- 갈리는 사실은 \"~로 알려져 있죠\", \"~라고 전해집니다\". 지어내지 않기\n- 마지막 장면: \"오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요.\"\n- 마지막 앞 장면: 다음 편 주제는 밝히지 말고 \"내일도 좋은 명화 이야기로 찾아오겠습니다\"처럼 짧은 인사 (다음 편 그림은 넣지 않음)\n\n5. 피할 것\n- 노출이 큰 그림, 참수·피 등 잔혹한 장면 (고디바 편 중단 사례)\n- 화가 사후 70년이 지나지 않은 작품\n- 개인사의 어두운 부분은 사실만 짧게\n\n6. 그림\n- 위키미디어 공용 Google Art Project 판 우선, 긴 쪽 1600px 이상 (그림 편은 3000px 이상)\n- 한국 그림은 국립중앙박물관 e뮤지엄 공공누리 제1유형, 설명에 출처 표기\n- 작품 표기: \"작품명 · 연도\" (추정이면 \"1665년경\")\n\n7. 설명 · 해시태그\n- 유튜브 설명 3~4줄 + 해시태그 5개 이내 (#모닝갤러리 포함)\n- 네이버 클립 설명 300자 이내, 첫 줄에 작품명·화가 이름 (검색 유입)\n\n8. 차별화\n- 흔한 소재는 \"숨은 것 찾기\", \"반전\", \"사건\" 각도로\n- 카라바조 → 렘브란트 → 젠틸레스키처럼 이어지는 흐름 만들기\n- 이미 올린 주제: 베르메르, 클림트, 고흐 별이 빛나는 밤, 카라바조, 렘브란트, 김홍도 씨름, 젠틸레스키, 밀레 만종, 드가\n\n9. 끝까지 보게 하는 장치 (구독자용)\n- 첫 장면 질문의 답은 끝에서 2~3번째 장면에서 공개 (열린 고리). 중간에 미리 말하지 않기\n- 연도·사건 나열 금지. 장면마다 \"그런데 / 하지만 / 그래서\"로 다음 장면이 궁금하게 잇기\n- 장면마다 구체적인 것 하나 (숫자, 사물, 손짓, 표정)\n- 반전이나 의외의 사실 1개 이상\n- 출생·학력 같은 평범한 정보는 한 장면 이하로\n- 마지막은 첫 질문에 대한 답 + 여운 한 문장",
-  "setAt": 1794459352733
- }
+ ]
 }
