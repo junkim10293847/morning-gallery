@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 / v1.25 영어판(K-Art): 언어 선택, 영어 정책서·채널 이름·목소리 / v1.26 검증 보완(음성 나누기 예비 방식, 동기화 순서) / v1.27 구글 서버 혼잡 시 기다렸다 재시도·다른 모델로 전환 / v1.28 그림 칸 번호 고정(못 찾아도 밀리지 않음), 칸별 📷 올리기·↻ 다시 찾기, 작품명 표시 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 / v1.25 영어판(K-Art): 언어 선택, 영어 정책서·채널 이름·목소리 / v1.26 검증 보완(음성 나누기 예비 방식, 동기화 순서) / v1.27 구글 서버 혼잡 시 기다렸다 재시도·다른 모델로 전환 / v1.28 그림 칸 번호 고정(못 찾아도 밀리지 않음), 칸별 📷 올리기·↻ 다시 찾기, 작품명 표시 / v1.29 자동 점검(그림 AI 확인·음성 길이), 음성 나누기 개선, 장면별 🔁 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.28 · 2026-11-12</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.29 · 2026-11-12</p></header>
 <main>
 
 <!-- 일정 -->
@@ -100,6 +100,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       <button class="b p" id="btnAll" style="width:100%;margin-top:10px;padding:14px;font-size:16px">✨ 한 번에 만들기</button>
       <p class="muted" style="margin:6px 0 0">원고 → 그림 찾기 → 음성 → 영상까지 자동으로. 끝난 단계는 건너뜁니다.</p>
       <div class="msg" id="allMsg"></div>
+      <div id="qaBox" class="card" style="display:none;margin:10px 0 0;font-size:13px;background:#FFFBF2"></div>
     </div>
 
     <div class="card">
@@ -636,7 +637,7 @@ async function findSlot(i) {
     try { const r = await fetchT(cands[ci].url, {}, 40); if (!r.ok) continue; const b = await r.blob(); if (!/^image\//.test(b.type) && b.size < 5000) continue;
       const old = CUR.images[i]; if (old && old.key) { await delBlob(old.key); delete IMGURL[old.key]; }
       const k = 'img-' + uid(); await putBlob(k, b);
-      CUR.images[i] = {key: k, name: cands[ci].title, cands: cands.slice(0, 8).map(c => c.url), ci, q, work: need.work};
+      CUR.imgChecked = false; CUR.images[i] = {key: k, name: cands[ci].title, cands: cands.slice(0, 8).map(c => c.url), ci, q, work: need.work};
       return true; } catch (e) {}
   }
   const old = CUR.images[i]; if (!(old && old.key)) CUR.images[i] = {key: null, fail: true, q, work: need.work, cands: cands.map(c => c.url), ci: -1};
@@ -664,7 +665,7 @@ async function swapImage(i) {
   for (let t = 1; t <= im.cands.length; t++) {
     const ci = ((im.ci ?? -1) + t) % im.cands.length;
     try { const r = await fetchT(im.cands[ci], {}, 40); if (!r.ok) continue; const b = await r.blob();
-      if (im.key) { await delBlob(im.key); delete IMGURL[im.key]; } im.key = 'img-' + uid(); im.ci = ci; im.fail = false; await putBlob(im.key, b); CUR.images[i] = im; await putEp(CUR); await loadThumbs(); renderScenes();
+      if (im.key) { await delBlob(im.key); delete IMGURL[im.key]; } im.key = 'img-' + uid(); im.ci = ci; im.fail = false; CUR.imgChecked = false; await putBlob(im.key, b); CUR.images[i] = im; await putEp(CUR); await loadThumbs(); renderScenes();
       m.textContent = `${i + 1}번: 후보 ${ci + 1}/${im.cands.length}`; return; } catch (e) {}
   }
   m.textContent = '다른 후보가 없습니다. 📷로 직접 올려 주세요';
@@ -675,7 +676,7 @@ const slotIn = document.createElement('input'); slotIn.type = 'file'; slotIn.acc
 slotIn.onchange = async () => {
   const f = slotIn.files[0]; if (!f || slotTarget < 0) return; const i = slotTarget;
   const old = CUR.images[i]; if (old && old.key) { await delBlob(old.key); delete IMGURL[old.key]; }
-  const k = 'img-' + uid(); await putBlob(k, f); CUR.images[i] = {key: k, name: f.name, work: (CUR.needs[i] || {}).work};
+  const k = 'img-' + uid(); await putBlob(k, f); CUR.imgChecked = false; CUR.images[i] = {key: k, name: f.name, work: (CUR.needs[i] || {}).work};
   slotIn.value = ''; await putEp(CUR); await loadThumbs(); renderScenes(); renderPlan();
 };
 $('#imgIn').onchange = async ev => {
@@ -716,9 +717,9 @@ function renderScenes() {
       ${(+s.zoom || 1) > 1 && im && im.key ? `<div class="focus"><img src="${IMGURL[im.key] || ''}"><b></b><i></i></div><div class="muted">사진을 눌러 크게 볼 곳을 고르세요</div>` : ''}
       <label>작품</label><input value="${esc(s.label)}">
       <label>나레이션</label><textarea>${esc(s.text)}</textarea>
-      <div class="aud"><button class="b">▶</button><button class="b">🎤 녹음</button><button class="b">파일</button><span>${s.audioKey ? '음성 ' + (s.dur || 0).toFixed(1) + '초' : '음성 없음'}</span><input type="file" accept="audio/*" style="display:none"></div>`;
+      <div class="aud"><button class="b">▶</button><button class="b">🔁</button><button class="b">🎤</button><button class="b">파일</button><span>${s.audioKey ? '음성 ' + (s.dur || 0).toFixed(1) + '초' : '음성 없음'}</span><input type="file" accept="audio/*" style="display:none"></div>`;
     const [sel] = el.querySelectorAll('select'), [del] = el.querySelectorAll('.hd button'), [lab] = el.querySelectorAll('input'), [ta] = el.querySelectorAll('textarea');
-    const [bPlay, bRec, bFile] = el.querySelectorAll('.aud button'), fin = el.querySelector('.aud input'), info = el.querySelector('.aud span');
+    const [bPlay, bRedo, bRec, bFile] = el.querySelectorAll('.aud button'), fin = el.querySelector('.aud input'), info = el.querySelector('.aud span');
     sel.onchange = () => { s.img = +sel.value; saveCur(); renderScenes(); };
     const zs = el.querySelector('.zsel'); zs.onchange = () => { s.zoom = +zs.value; if (s.fx == null) { s.fx = .5; s.fy = .4; } saveCur(); renderScenes(); };
     const fo = el.querySelector('.focus');
@@ -736,6 +737,7 @@ function renderScenes() {
     ta.oninput = () => { s.text = ta.value; saveCur(); };
     bPlay.onclick = async () => { if (!s.audioKey) return; const b = await getBlob(s.audioKey); new Audio(URL.createObjectURL(b)).play(); };
     bFile.onclick = () => fin.click();
+    bRedo.onclick = async () => { if (!s.text.trim()) return; const v = CUR.voice || S.voice; info.textContent = '이 장면 음성 다시 만드는 중… (사용량 1회)'; try { await setAudio(s, await tts(s.text, v)); s.audioText = s.text; s.audioVoice = v; await putEp(CUR); renderScenes(); } catch (e) { info.textContent = '오류: ' + e.message; } };
     fin.onchange = async () => { if (fin.files[0]) { await setAudio(s, fin.files[0]); s.audioText = s.text; s.audioVoice = 'manual'; await putEp(CUR); renderScenes(); } };
     bRec.onclick = () => recordMic(s, bRec, info);
     box.appendChild(el);
@@ -746,6 +748,7 @@ $('#btnAddScene').onclick = () => { const last = CUR.scenes[CUR.scenes.length - 
 let actx;
 function AC() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
 async function setAudio(s, blob) {
+  if (CUR) CUR.audioOk = false;
   if (s.audioKey) await delBlob(s.audioKey);
   const k = 'aud-' + uid(); await putBlob(k, blob); s.audioKey = k;
   try { const buf = await AC().decodeAudioData(await blob.arrayBuffer()); s.dur = buf.duration; } catch (e) { s.dur = 0; }
@@ -831,25 +834,34 @@ async function geminiBatch(texts, voice) {
   const F = Math.round(o.rate * .02), nf = Math.floor(n / F), rms = new Float32Array(nf);
   for (let f = 0; f < nf; f++) { let s2 = 0; for (let i = f * F; i < (f + 1) * F; i++) s2 += pcm[i] * pcm[i]; rms[f] = Math.sqrt(s2 / F); }
   const sorted = [...rms].sort((a, b) => a - b), loud = sorted[Math.floor(nf * .9)] || 1, thr = loud * .06;
+  // 쉼(무음) 구간 모으기
   const runs = []; let st = -1;
-  for (let f = 0; f <= nf; f++) { const q = f < nf && rms[f] < thr; if (q && st < 0) st = f; if (!q && st >= 0) { if (st > 0 && f < nf && f - st >= 12) runs.push([st, f]); st = -1; } }
+  for (let f = 0; f <= nf; f++) { const q = f < nf && rms[f] < thr; if (q && st < 0) st = f; if (!q && st >= 0) { if (st > 0 && f < nf && f - st >= 4) runs.push([st, f]); st = -1; } }
   const need = texts.length - 1;
+  if (runs.length < need) throw new Error('나누기 실패');
+  // 소리 나는 구간 기준으로 글자 수 비율 → 장면 경계 예상 위치
+  const voiced = []; let vacc = 0; for (let f = 0; f < nf; f++) { if (rms[f] >= thr) vacc++; voiced.push(vacc); }
+  const vAt = f => voiced[Math.min(nf - 1, Math.max(0, Math.round(f)))];
+  const lens = texts.map(t => t.replace(/\s/g, '').length), tot = lens.reduce((a, b) => a + b, 0);
   let cuts;
-  if (runs.length >= need) cuts = runs.sort((a, b) => (b[1] - b[0]) - (a[1] - a[0])).slice(0, need).sort((a, b) => a[0] - b[0]);
-  else {
-    // 긴 쉼이 모자라면: 글자 수 비율로 예상 위치를 잡고 가장 가까운 짧은 쉼에 맞춤
-    const small = []; st = -1;
-    for (let f = 0; f <= nf; f++) { const q = f < nf && rms[f] < thr; if (q && st < 0) st = f; if (!q && st >= 0) { if (st > 0 && f < nf && f - st >= 4) small.push([st, f]); st = -1; } }
-    if (small.length < need) throw new Error('나누기 실패');
-    const lens = texts.map(t => t.replace(/\s/g, '').length), tot = lens.reduce((a, b) => a + b, 0); let acc = 0; cuts = []; let from = 0;
-    for (let k = 0; k < need; k++) {
-      acc += lens[k]; const exp = nf * acc / tot;
-      let best = -1, bd = 1e9;
-      for (let i = from; i < small.length; i++) { const c = (small[i][0] + small[i][1]) / 2, d = Math.abs(c - exp) - (small[i][1] - small[i][0]) * 2; if (d < bd) { bd = d; best = i; } }
-      if (best < 0) throw new Error('나누기 실패');
-      cuts.push(small[best]); from = best + 1;
-      if (small.length - from < need - k - 1) throw new Error('나누기 실패');
+  const byLen = runs.map(r => r[1] - r[0]).sort((a, b) => b - a);
+  if (byLen[need - 1] >= 35 && (byLen[need] === undefined || byLen[need] < byLen[need - 1] * .6)) {
+    // 장면 사이 쉼이 뚜렷하게 길면: 가장 긴 쉼들을 그대로 사용
+    cuts = runs.slice().sort((a, b) => (b[1] - b[0]) - (a[1] - a[0])).slice(0, need).sort((a, b) => a[0] - b[0]);
+  } else {
+    // 아니면: 장면별 예상 길이(글자 수 비율)와 쉼 길이를 함께 보는 동적 계획법 (앞 경계 기준이라 오차가 쌓이지 않음)
+    const R = runs.length, c = runs.map(r => vAt((r[0] + r[1]) / 2)), L = runs.map(r => Math.min(r[1] - r[0], 100));
+    const seg = k => vacc * lens[k] / tot, W = .5;
+    const D = Array.from({length: need}, () => new Float64Array(R).fill(-1e18)), B = Array.from({length: need}, () => new Int32Array(R).fill(-1));
+    for (let r = 0; r < R; r++) D[0][r] = L[r] - Math.abs(c[r] - seg(0)) * W;
+    for (let k = 1; k < need; k++) for (let r = k; r < R; r++) for (let q = k - 1; q < r; q++) {
+      if (D[k - 1][q] < -1e17) continue; const v = D[k - 1][q] + L[r] - Math.abs((c[r] - c[q]) - seg(k)) * W;
+      if (v > D[k][r]) { D[k][r] = v; B[k][r] = q; }
     }
+    let end = -1, bv = -1e18; for (let r = 0; r < R; r++) { const v = D[need - 1][r] - Math.abs((vacc - c[r]) - seg(need)) * W; if (D[need - 1][r] > -1e17 && v > bv) { bv = v; end = r; } }
+    if (end < 0) throw new Error('나누기 실패');
+    const pick = []; for (let k = need - 1, r = end; k >= 0; k--) { pick.unshift(r); r = B[k][r]; }
+    cuts = pick.map(r => runs[r]);
   }
   const bounds = [[0, cuts.length ? cuts[0][0] : nf]];
   for (let i = 0; i < cuts.length; i++) bounds.push([cuts[i][1], i + 1 < cuts.length ? cuts[i + 1][0] : nf]);
@@ -1222,6 +1234,48 @@ async function renderVideo(auto) {
 }
 $('#btnRender').onclick = () => renderVideo(false);
 
+/* 자동 점검 */
+function audioIssues() {
+  const sc = CUR.scenes.filter(s => s.text.trim() && s.audioKey && s.dur);
+  if (sc.length < 3) return [];
+  const rates = sc.map(s => s.dur / s.text.replace(/\s/g, '').length).sort((a, b) => a - b), med = rates[rates.length >> 1];
+  const out = [];
+  CUR.scenes.forEach((s, i) => {
+    if (!s.text.trim()) return;
+    if (!s.audioKey) { out.push(`장면 ${i + 1}: 음성 없음`); return; }
+    const r = s.dur / s.text.replace(/\s/g, '').length;
+    if (r > med * 1.7) out.push(`장면 ${i + 1}: 음성이 글보다 깁니다 → 다음 장면 말이 섞였을 수 있음 (▶로 듣고 🔁)`);
+    else if (r < med * .55) out.push(`장면 ${i + 1}: 음성이 글보다 짧습니다 → 말이 잘렸을 수 있음 (▶로 듣고 🔁)`);
+  });
+  return out;
+}
+async function imageIssues() {
+  const out = [], needs = CUR.needs || [];
+  needs.forEach((n, i) => { if (!(CUR.images[i] && CUR.images[i].key)) out.push(`그림 ${i + 1} (${n.work}): 비어 있음`); });
+  if (out.length || S.engine !== 'gemini' || !S.textKey || left('text') < 2 || !needs.length) return out;
+  try {
+    const parts = [{text: `You check artwork images for a video. For each numbered image, answer whether it really shows the expected artwork (the painting itself, not a museum photo, frame, copy or a different work). Expected:\n${needs.map((n, i) => `${i + 1}. ${n.title_en || n.work} by ${n.artist_en || ''} (${n.work})`).join('\n')}\nReturn JSON only: {"items":[{"n":1,"ok":true,"seen":"short description"}]}`}];
+    for (let i = 0; i < needs.length; i++) {
+      const b = await getBlob(CUR.images[i].key); const bm = await createImageBitmap(b); const c = document.createElement('canvas'); const k = 384 / Math.max(bm.width, bm.height);
+      c.width = Math.round(bm.width * k); c.height = Math.round(bm.height * k); c.getContext('2d').drawImage(bm, 0, 0, c.width, c.height);
+      parts.push({text: `Image ${i + 1}:`}, {inline_data: {mime_type: 'image/jpeg', data: c.toDataURL('image/jpeg', .7).split(',')[1]}});
+    }
+    const ms = S.lastModel ? [S.lastModel] : await geminiModels();
+    useCount('text');
+    const r = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models/${ms[0]}:generateContent`, {method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': S.textKey},
+      body: JSON.stringify({contents: [{parts}], generationConfig: {responseMimeType: 'application/json', temperature: 0}})}, 90);
+    const j = await r.json(); if (!r.ok) return out;
+    const t = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join(''); const res = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1));
+    for (const it of res.items || []) if (it.ok === false) out.push(`그림 ${it.n} (${(needs[it.n - 1] || {}).work}): 다른 그림으로 보입니다 — "${it.seen}" → ↻ 또는 📷`);
+  } catch (e) {}
+  return out;
+}
+function showQA(list, where) {
+  const box = $('#qaBox'); if (!box) return;
+  box.style.display = 'block';
+  box.innerHTML = list.length ? `<b style="color:#C0563B">⚠ 자동 점검 (${where}): ${list.length}건</b><ul style="margin:6px 0 0 18px;padding:0">${list.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : `<b style="color:#5E8B4E">✅ 자동 점검 (${where}): 이상 없음</b>`;
+}
+
 /* 한 번에 만들기 */
 $('#btnAll').onclick = async () => {
   const b = $('#btnAll'), m = $('#allMsg'); b.disabled = true;
@@ -1233,9 +1287,11 @@ $('#btnAll').onclick = async () => {
     if (needText) { step('1/4 원고 쓰는 중… (20초~1분)'); if (!await writeScript(true)) throw new Error($('#writeMsg').textContent); }
     const needImg = (CUR.needs || []).some((_, i) => !(CUR.images[i] && CUR.images[i].key)) || !CUR.images.some(x => x && x.key);
     if (needImg) { step('2/4 그림 찾는 중…'); const okImg = await autoImages(false); if (!CUR.images.some(x => x && x.key)) throw new Error('그림을 찾지 못했습니다. ② 사진에서 📷로 직접 올린 뒤 다시 누르세요'); if (!okImg) throw new Error('일부 그림을 못 찾았습니다. ② 사진의 빨간 칸에 📷로 올리고 다시 누르세요'); }
+    if (!CUR.imgChecked || needImg) { step('그림 자동 점검 중… (그림이 맞는지 확인)'); const ii = await imageIssues(); showQA(ii, '그림'); if (ii.length) throw new Error('그림 점검에서 문제가 있습니다. 아래 목록을 고친 뒤 다시 누르세요'); CUR.imgChecked = true; await putEp(CUR); }
     step('3/4 음성 만드는 중… (장면당 몇 초)'); if (!await makeVoices()) throw new Error($('#ttsMsg').textContent);
+    { const ai = audioIssues(); showQA(ai, '음성'); if (ai.length && !CUR.audioOk) { CUR.audioOk = true; await putEp(CUR); throw new Error('음성 점검에서 의심되는 장면이 있습니다. ▶로 들어 보고 🔁로 고친 뒤 다시 누르세요 (그대로 괜찮으면 다시 누르면 넘어갑니다)'); } }
     step('4/4 영상 만드는 중…'); if (!await renderVideo(true)) throw new Error($('#renderMsg').textContent);
-    step('✅ 완성! 아래 4번에서 영상을 확인하고 [공유 / 저장]으로 올리세요. 원고·그림은 한 번 훑어보세요');
+    showQA([...audioIssues()], '최종'); step('✅ 완성! 아래 4번에서 영상을 확인하고 [공유 / 저장]으로 올리세요');
     $('#vid').scrollIntoView({behavior: 'smooth', block: 'center'});
   } catch (e) { step('멈춤: ' + e.message + ' — 고친 뒤 다시 누르면 끝난 단계는 건너뜁니다'); }
   b.disabled = false;
