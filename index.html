@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.23 · 2026-11-12</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.24 · 2026-11-12</p></header>
 <main>
 
 <!-- 일정 -->
@@ -284,7 +284,15 @@ const DEFAULT_POLICY = `[모닝 갤러리 정책서]
 8. 차별화
 - 흔한 소재는 "숨은 것 찾기", "반전", "사건" 각도로
 - 카라바조 → 렘브란트 → 젠틸레스키처럼 이어지는 흐름 만들기
-- 이미 올린 주제: 베르메르, 클림트, 고흐 별이 빛나는 밤, 카라바조, 렘브란트, 김홍도 씨름, 젠틸레스키, 밀레 만종, 드가`;
+- 이미 올린 주제: 베르메르, 클림트, 고흐 별이 빛나는 밤, 카라바조, 렘브란트, 김홍도 씨름, 젠틸레스키, 밀레 만종, 드가
+
+9. 끝까지 보게 하는 장치 (구독자용)
+- 첫 장면 질문의 답은 끝에서 2~3번째 장면에서 공개 (열린 고리). 중간에 미리 말하지 않기
+- 연도·사건 나열 금지. 장면마다 "그런데 / 하지만 / 그래서"로 다음 장면이 궁금하게 잇기
+- 장면마다 구체적인 것 하나 (숫자, 사물, 손짓, 표정)
+- 반전이나 의외의 사실 1개 이상
+- 출생·학력 같은 평범한 정보는 한 장면 이하로
+- 마지막은 첫 질문에 대한 답 + 여운 한 문장`;
 
 /* ───────── 저장소 ───────── */
 const $ = s => document.querySelector(s);
@@ -507,7 +515,7 @@ async function writeScript(auto) {
   const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초~1분)';
   try {
     const nx = nextEpOf(CUR);
-    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: 주제를 밝히지 말고 마지막 앞 장면에 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧게. 다음 편 그림은 images에 넣지 말 것\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.`;
+    const prompt = `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: 주제를 밝히지 말고 마지막 앞 장면에 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧게. 다음 편 그림은 images에 넣지 말 것\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words","title_en":"영어 작품 제목 (위키백과 표제)","artist_en":"영어 화가 이름"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.\n- 다 쓴 뒤 스스로 점검하고 고쳐서 내라: 첫 장면이 3초 안에 궁금증을 만드는가? 답을 끝까지 아꼈는가? 연도 나열처럼 지루한 장면은 없는가? 사실이 아닌 내용은 없는가?`;
     const j = await askAI(prompt);
     CUR.title = j.title || ''; CUR.header = j.header || ''; CUR.desc = j.description || ''; CUR.clip = (j.clip || '').slice(0, 300);
     if (['밝게', '차분', '어둡게'].includes(j.music)) CUR.music = j.music;
@@ -540,6 +548,21 @@ async function wikiFind(q) {
     if ((ii.width || 0) >= 1500 || (ii.height || 0) >= 1500) sc += 2; if (!/jpe?g|png/.test(ii.mime || '')) sc -= 10; return sc - p.index * .1; };
   return pages.filter(p => p.imageinfo?.[0]).sort((a, b) => score(b) - score(a)).map(p => ({url: p.imageinfo[0].thumburl || p.imageinfo[0].url, title: p.title.replace(/^File:/, '')}));
 }
+async function wikiPrecise(title, artist) {
+  if (!title) return null;
+  try {
+    const r = await fetchT('https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&origin=*&language=en&type=item&limit=7&search=' + encodeURIComponent(title), {}, 20);
+    const j = await r.json(); const last = (artist || '').split(' ').pop().toLowerCase();
+    const hits = (j.search || []).filter(h => /painting|fresco|drawing|mural|portrait|artwork|scroll|print|woodblock/i.test(h.description || '') && (!last || (h.description || '').toLowerCase().includes(last)));
+    for (const h of hits.slice(0, 3)) {
+      const e = await (await fetchT(`https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&origin=*&props=claims&ids=${h.id}`, {}, 20)).json();
+      const file = e.entities?.[h.id]?.claims?.P18?.[0]?.mainsnak?.datavalue?.value; if (!file) continue;
+      const ii = await (await fetchT('https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url&iiurlwidth=2000&titles=' + encodeURIComponent('File:' + file), {}, 20)).json();
+      const pg = Object.values(ii.query?.pages || {})[0]; const u = pg?.imageinfo?.[0]; if (u) return {url: u.thumburl || u.url, title: file};
+    }
+  } catch (e) {}
+  return null;
+}
 async function autoImages(force) {
   const m = $('#imgMsg'), needs = CUR.needs || [];
   if (!needs.length) { m.textContent = '원고를 먼저 쓰면 필요한 그림을 자동으로 찾습니다'; return false; }
@@ -548,7 +571,11 @@ async function autoImages(force) {
     if (!force && CUR.images[i]) continue;
     m.textContent = `그림 찾는 중 ${i + 1}/${needs.length}: ${needs[i].work}`;
     try {
-      const cands = await wikiFind(needs[i].search || needs[i].work);
+      let cands = [];
+      const pr = await wikiPrecise(needs[i].title_en, needs[i].artist_en); if (pr) cands.push(pr);
+      for (const q of [needs[i].search || needs[i].work, needs[i].title_en && needs[i].artist_en ? `${needs[i].artist_en} ${needs[i].title_en} Google Art Project` : null].filter(Boolean)) {
+        if (cands.length >= 6) break; try { for (const c of await wikiFind(q)) if (!cands.some(x => x.url === c.url)) cands.push(c); } catch (e) {}
+      }
       let got = null, ci = 0;
       for (; ci < Math.min(cands.length, 4) && !got; ci++) { try { const r = await fetchT(cands[ci].url, {}, 40); if (r.ok) got = await r.blob(); } catch (e) {} }
       if (!got) { ok = false; continue; }
