@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.32 · 2026-11-12</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.33 · 2026-11-12</p></header>
 <main>
 
 <!-- 일정 -->
@@ -1456,7 +1456,8 @@ async function importData(d) {
     else {
       for (const k of ['date', 'format', 'topic']) if (e[k]) ex[k] = e[k];
       if (e.scenes && e.scenes.length) {
-        for (const k of ['title', 'header', 'desc', 'clip', 'needs', 'music']) if (e[k] != null) ex[k] = e[k];
+        for (const k of ['title', 'header', 'desc', 'clip', 'needs', 'music', 'pin', 'reviewed']) if (e[k] != null) ex[k] = e[k];
+        ex.imgChecked = false; ex.audioOk = false;
         for (const sc of ex.scenes || []) if (sc.audioKey) await delBlob(sc.audioKey);
         ex.scenes = e.scenes.map(x => ({...x, audioKey: null, dur: 0}));
         if (e.resetImages) { for (const im of ex.images || []) await delBlob(im.key); ex.images = []; ex.videoKey && await delBlob(ex.videoKey); ex.videoKey = null; }
