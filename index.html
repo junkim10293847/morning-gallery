@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 / v1.25 영어판(K-Art): 언어 선택, 영어 정책서·채널 이름·목소리 / v1.26 검증 보완(음성 나누기 예비 방식, 동기화 순서) / v1.27 구글 서버 혼잡 시 기다렸다 재시도·다른 모델로 전환 / v1.28 그림 칸 번호 고정(못 찾아도 밀리지 않음), 칸별 📷 올리기·↻ 다시 찾기, 작품명 표시 / v1.29 자동 점검(그림 AI 확인·음성 길이), 음성 나누기 개선, 장면별 🔁 / v1.30 자동 수정: 틀린 그림은 AI가 후보 중 골라 교체·못 찾으면 대체, 어긋난 음성은 자동 재생성 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 / v1.25 영어판(K-Art): 언어 선택, 영어 정책서·채널 이름·목소리 / v1.26 검증 보완(음성 나누기 예비 방식, 동기화 순서) / v1.27 구글 서버 혼잡 시 기다렸다 재시도·다른 모델로 전환 / v1.28 그림 칸 번호 고정(못 찾아도 밀리지 않음), 칸별 📷 올리기·↻ 다시 찾기, 작품명 표시 / v1.29 자동 점검(그림 AI 확인·음성 길이), 음성 나누기 개선, 장면별 🔁 / v1.30 자동 수정: 틀린 그림은 AI가 후보 중 골라 교체·못 찾으면 대체, 어긋난 음성은 자동 재생성 / v1.31 원고 단계에서 그림 존재 미리 확인·없으면 다른 작품으로 교체 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.30 · 2026-11-12</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.31 · 2026-11-12</p></header>
 <main>
 
 <!-- 일정 -->
@@ -569,7 +569,29 @@ $('#btnDel').onclick = async () => {
 
 /* 원고 쓰기 */
 function promptEn() {
-  return `${S.policyEn}\n\n[Task] Following the policy above, write an English Shorts script for the channel "${S.brandEn}".\n- Format: ${CUR.format === '화가' ? 'Artist' : 'Painting'}\n- Topic: ${CUR.topic}\n- Images are fetched automatically from Wikimedia Commons. List the needed images in order (images) and give each scene an image number (image, from 1). Reuse images freely. Painting format: 1-3 images.\n- search: English words that find the original artwork file on Wikimedia Commons. title_en: the artwork's English Wikipedia/Wikidata title. artist_en: the artist's English name.\n[Output] JSON only:\n{"title":"","header":"Today's painter · Name  or  Today's masterpiece · Artist","description":"YouTube description with hashtags (use \\n)","clip":"TikTok / Instagram caption under 300 chars","music":"밝게|차분|어둡게","images":[{"work":"Title · year","search":"","title_en":"","artist_en":""}],"scenes":[{"image":1,"label":"Title · year","text":"narration","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 1.5-3 when the scene talks about a specific detail (face, hand, hidden thing), else 1. fx, fy: rough position 0-1 from top-left. Painting format: about half the scenes zoomed.\n- Before answering, check and fix: does scene 1 hook in 3 seconds? Is the answer saved for the end? Any boring date lists? Anything not factual?`;
+  return `${S.policyEn}\n\n[Task] Following the policy above, write an English Shorts script for the channel "${S.brandEn}".\n- Format: ${CUR.format === '화가' ? 'Artist' : 'Painting'}\n- Topic: ${CUR.topic}\n- Images are fetched automatically from Wikimedia Commons. List the needed images in order (images) and give each scene an image number (image, from 1). Reuse images freely. Painting format: 1-3 images.\n- search: English words that find the original artwork file on Wikimedia Commons. title_en: the artwork's English Wikipedia/Wikidata title. artist_en: the artist's English name.\n- Choose well-known works that have an original image on Wikimedia Commons and an English Wikipedia article; title_en must be that article title exactly. Avoid private collections and lost or stolen works.\n[Output] JSON only:\n{"title":"","header":"Today's painter · Name  or  Today's masterpiece · Artist","description":"YouTube description with hashtags (use \\n)","clip":"TikTok / Instagram caption under 300 chars","music":"밝게|차분|어둡게","images":[{"work":"Title · year","search":"","title_en":"","artist_en":""}],"scenes":[{"image":1,"label":"Title · year","text":"narration","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 1.5-3 when the scene talks about a specific detail (face, hand, hidden thing), else 1. fx, fy: rough position 0-1 from top-left. Painting format: about half the scenes zoomed.\n- Before answering, check and fix: does scene 1 hook in 3 seconds? Is the answer saved for the end? Any boring date lists? Anything not factual?`;
+}
+
+/* 원고 단계에서 그림이 실제로 있는지 미리 확인하고, 없으면 같은 화가의 다른 작품으로 바꿈 */
+async function needExists(n) {
+  if (await wikiPrecise(n.title_en, n.artist_en)) return true;
+  for (const q of [n.search, n.title_en && n.artist_en ? `${n.artist_en} ${n.title_en}` : null].filter(Boolean)) {
+    try { const c = await wikiFind(q); if (c.length) return true; } catch (e) {}
+  }
+  return false;
+}
+async function validateNeeds() {
+  const needs = CUR.needs || [], miss = [];
+  for (let i = 0; i < needs.length; i++) if (!await needExists(needs[i])) miss.push(i);
+  if (!miss.length || left('text') < 1) return;
+  const en = CUR.lang === 'en';
+  const prompt = `${en ? S.policyEn : S.policy}\n\n[Fix] In the script below, these artworks have no usable public-domain image on Wikimedia Commons: ${miss.map(i => `#${i + 1} ${needs[i].work} (${needs[i].title_en || ''})`).join(', ')}.\nReplace each with a famous work (same artist or same theme) that clearly has a Wikimedia Commons image and a Wikidata item, and minimally rewrite only the scenes that use it so the narration matches. Keep the language of the script.\nScript JSON: ${JSON.stringify({images: needs, scenes: CUR.scenes.map((s, k) => ({n: k + 1, image: s.img, label: s.label, text: s.text}))})}\nReturn JSON only: {"replace":[{"n":3,"work":"","search":"","title_en":"","artist_en":""}],"scenes":[{"n":5,"label":"","text":""}]}`;
+  try {
+    const j = await askAI(prompt);
+    for (const r of j.replace || []) { const i = r.n - 1; if (needs[i]) needs[i] = {...needs[i], ...r}; }
+    for (const sc of j.scenes || []) { const s = CUR.scenes[sc.n - 1]; if (s) { if (sc.text) s.text = sc.text; if (sc.label) s.label = sc.label; } }
+    CUR.needs = needs; CUR.needFix = (j.replace || []).map(r => `${r.n}번 → ${r.work}`);
+  } catch (e) {}
 }
 async function writeScript(auto) {
   if (!CUR.topic) { $('#writeMsg').textContent = '주제를 먼저 적으세요.'; return false; }
@@ -578,13 +600,15 @@ async function writeScript(auto) {
   const b = $('#btnWrite'); b.disabled = true; $('#writeMsg').textContent = '원고를 쓰는 중… (20초~1분)';
   try {
     const nx = nextEpOf(CUR);
-    const prompt = CUR.lang === 'en' ? promptEn() : `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: 주제를 밝히지 말고 마지막 앞 장면에 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧게. 다음 편 그림은 images에 넣지 말 것\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words","title_en":"영어 작품 제목 (위키백과 표제)","artist_en":"영어 화가 이름"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.\n- 다 쓴 뒤 스스로 점검하고 고쳐서 내라: 첫 장면이 3초 안에 궁금증을 만드는가? 답을 끝까지 아꼈는가? 연도 나열처럼 지루한 장면은 없는가? 사실이 아닌 내용은 없는가?`;
+    const prompt = CUR.lang === 'en' ? promptEn() : `${S.policy}\n\n[요청] 위 정책서를 지켜 모닝 갤러리 쇼츠 원고를 써라.\n- 형식: ${CUR.format} 편\n- 주제: ${CUR.topic}\n- 다음 편 예고: 주제를 밝히지 말고 마지막 앞 장면에 "내일도 좋은 명화 이야기로 찾아오겠습니다"처럼 짧게. 다음 편 그림은 images에 넣지 말 것\n- 그림은 위키미디어 공용에서 자동으로 찾는다. 필요한 그림 목록(images)을 순서대로 주고, 장면마다 몇 번 그림을 쓸지(image, 1부터) 지정하라. 같은 그림을 여러 장면에 써도 된다. 그림 편은 1~3장.\n- search는 위키미디어 공용에서 그 그림 파일이 바로 나오는 영어 검색어 (화가 영문 이름 + 작품 영문 제목, 예: "Leonardo da Vinci Mona Lisa"). 사진·전시장·복제품이 아닌 그림 원본이 나오게.\n- 작품은 위키미디어 공용에 원본 이미지가 있고 위키백과(영어)에 항목이 있는 잘 알려진 작품으로 고를 것. title_en은 영어 위키백과 항목 제목 그대로. 개인 소장·도난·소실된 작품은 피할 것.\n[출력] JSON만:\n{"title":"","header":"오늘의 화가 · 이름 또는 오늘의 명화 · 화가","description":"유튜브 설명(줄바꿈 \\n, 해시태그 포함)","clip":"네이버 클립 300자 이내","music":"밝게|차분|어둡게","images":[{"work":"작품명 · 연도","search":"English search words","title_en":"영어 작품 제목 (위키백과 표제)","artist_en":"영어 화가 이름"}],"scenes":[{"image":1,"label":"작품명 · 연도","text":"나레이션","zoom":1,"fx":0.5,"fy":0.5}]}\n- zoom: 그 장면이 그림의 특정 부분(얼굴·손·숨은 것)을 말하면 1.5~3, 아니면 1. fx·fy는 그 부분의 대략 위치(0~1, 왼쪽 위가 0). 그림 편은 장면의 절반 정도를 부분 확대로.\n- 다 쓴 뒤 스스로 점검하고 고쳐서 내라: 첫 장면이 3초 안에 궁금증을 만드는가? 답을 끝까지 아꼈는가? 연도 나열처럼 지루한 장면은 없는가? 사실이 아닌 내용은 없는가?`;
     const j = await askAI(prompt);
     CUR.title = j.title || ''; CUR.header = j.header || ''; CUR.desc = j.description || ''; CUR.clip = (j.clip || '').slice(0, 300);
     if (['밝게', '차분', '어둡게'].includes(j.music)) CUR.music = j.music;
     CUR.needs = j.images || [];
     for (const s of CUR.scenes) if (s.audioKey) await delBlob(s.audioKey);
     CUR.scenes = (j.scenes || []).map(s => ({img: +s.image || 1, label: s.label || '', text: s.text || '', audioKey: null, dur: 0, zoom: [1, 1.5, 2, 3].includes(+s.zoom) ? +s.zoom : 1, fx: Math.min(1, Math.max(0, +s.fx || .5)), fy: Math.min(1, Math.max(0, +s.fy || .5))}));
+    $('#writeMsg').textContent = '원고 완성. 필요한 그림이 위키미디어에 있는지 미리 확인 중…';
+    await validateNeeds();
     await putEp(CUR); openEp(CUR.id); syncSoon();
     $('#writeMsg').textContent = '원고 완성. 사실을 한 번 확인하고 고쳐 쓰세요.'; ok = true;
   } catch (err) { $('#writeMsg').textContent = '오류: ' + err.message; }
