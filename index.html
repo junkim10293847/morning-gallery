@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="ver" style="font-size:11px;color:#B0843A">v1.22 · 2026-11-11</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.23 · 2026-11-12</p></header>
 <main>
 
 <!-- 일정 -->
@@ -388,6 +388,25 @@ $('#btnSuggest').onclick = async () => {
   } catch (err) { msg.textContent = '오류: ' + err.message; }
 };
 
+
+/* ───────── 사용량 관리 (Gemini 무료 한도, 미국 태평양 시간 자정 = 한국 오후 5시 초기화) ───────── */
+function quotaDay() { try { return new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Los_Angeles'}).format(new Date()); } catch (e) { return new Date(Date.now() - 8 * 3600e3).toISOString().slice(0, 10); } }
+function U() { if (!S.usage || S.usage.day !== quotaDay()) { S.usage = {day: quotaDay(), text: 0, tts: 0, textOut: false, ttsOut: false, textLim: (S.usage && S.usage.textLim) || 20, ttsLim: (S.usage && S.usage.ttsLim) || 10}; saveS(); } return S.usage; }
+function resetText() { const now = new Date(), r = new Date(now); r.setHours(17, 0, 0, 0); if (now >= r) r.setDate(r.getDate() + 1); return `${r.getMonth() + 1}/${r.getDate()} 오후 5시`; }
+function useCount(kind) { const u = U(); u[kind]++; saveS(); showUsage(); }
+function markOut(kind, msg) { const u = U(); u[kind + 'Out'] = true; const m = /limit:\s*(\d+)/.exec(msg || ''); if (m) u[kind + 'Lim'] = +m[1]; saveS(); showUsage(); }
+function left(kind) { const u = U(); return u[kind + 'Out'] ? 0 : Math.max(0, u[kind + 'Lim'] - u[kind]); }
+function guard(kind, need = 1) {
+  if (S.engine !== 'gemini' && kind === 'text') return;
+  if (left(kind) < need) throw new Error(`오늘 ${kind === 'text' ? '원고' : '음성'} 무료 한도를 다 썼습니다. ${resetText()}에 다시 됩니다 (요청을 보내지 않았으니 한도는 더 줄지 않았습니다)`);
+}
+function showUsage() {
+  const u = U(), el = $('#usage'); if (!el) return;
+  const t = u.textOut ? '소진' : `${u.textLim - u.text}회 남음`, a = u.ttsOut ? '소진' : `${u.ttsLim - u.tts}회 남음`;
+  el.textContent = `오늘 남은 무료 사용: 원고 ${t} · 음성 ${a} · 초기화 ${resetText()}`;
+  el.style.color = (u.textOut || u.ttsOut || u.textLim - u.text < 3 || u.ttsLim - u.tts < 2) ? '#C0563B' : '';
+}
+
 /* ───────── AI ───────── */
 async function fetchT(url, opt, sec = 120) {
   const c = new AbortController(); const t = setTimeout(() => c.abort(), sec * 1000);
@@ -420,8 +439,10 @@ async function askAI(prompt) {
   } else {
     const cands = S.model ? [S.model] : await geminiModels();
     let r, j, lastErr = '';
+    guard('text');
     for (const m of cands.slice(0, 4)) {
       try {
+        useCount('text');
         r = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`, {
           method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': S.textKey},
           body: JSON.stringify({contents: [{parts: [{text: prompt}]}], generationConfig: {responseMimeType: 'application/json', temperature: 0.8}})
@@ -433,6 +454,7 @@ async function askAI(prompt) {
       } catch (e) { lastErr = e.message; }
       r = null;
     }
+    if ((!r || !r.ok) && /quota/i.test(lastErr) && /per ?day|PerDay/i.test(lastErr)) markOut('text', lastErr);
     if (!r || !r.ok) throw new Error(/quota/i.test(lastErr) ? '오늘 무료 한도를 다 썼습니다 (오후 5시쯤 초기화)' : lastErr.slice(0, 200));
     text = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
   }
@@ -654,8 +676,10 @@ async function geminiRaw(prompt, voice) {
   const key = S.engine === 'gemini' && S.textKey ? S.textKey : S.ttsKey;
   if (!key) throw new Error('정책서 탭에서 Gemini(AI Studio) 키를 넣으세요');
   let lastMsg = '';
+  guard('tts');
   for (const model of ['gemini-2.5-flash-preview-tts', 'gemini-2.5-pro-preview-tts']) {
     for (let tries = 0; tries < 2; tries++) {
+      useCount('tts');
       const r = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: 'POST', headers: {'content-type': 'application/json', 'x-goog-api-key': key},
         body: JSON.stringify({contents: [{parts: [{text: prompt}]}],
@@ -664,7 +688,7 @@ async function geminiRaw(prompt, voice) {
       const j = await r.json().catch(() => ({}));
       if (r.status === 429) {
         lastMsg = j.error?.message || '';
-        if (/per ?day|PerDay|daily/i.test(lastMsg)) break;           // 하루 한도 → 다음 모델
+        if (/per ?day|PerDay|daily/i.test(lastMsg)) { if (model.includes('pro')) markOut('tts', lastMsg); break; }
         const w = /retry in ([\d.]+)s/i.exec(lastMsg); await new Promise(res => setTimeout(res, Math.min(65, w ? +w[1] + 1 : 25) * 1000)); continue;
       }
       if (r.status === 404) break;
@@ -674,7 +698,7 @@ async function geminiRaw(prompt, voice) {
       const m = /rate=(\d+)/.exec(d.mimeType || ''); return {b64: d.data, rate: m ? +m[1] : 24000};
     }
   }
-  throw new Error('Gemini 음성 무료 한도를 다 썼습니다 (오후 5시쯤 초기화). 지금 급하면 장면별 🎤 녹음을 쓰세요');
+  markOut('tts', lastMsg); throw new Error(`음성 무료 한도를 다 썼습니다. ${resetText()}에 다시 됩니다. 급하면 장면별 🎤 녹음을 쓰세요`);
 }
 function gStyle() { const sp = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : ''; return `아침 교양 방송 나레이터처럼 ${sp}차분하고 따뜻하게 읽어 주세요`; }
 async function geminiTTS(text, voice) {
@@ -1067,7 +1091,10 @@ $('#btnAll').onclick = async () => {
   const b = $('#btnAll'), m = $('#allMsg'); b.disabled = true;
   const step = t => { m.textContent = t; };
   try {
-    if (!CUR.scenes.length || !CUR.scenes.some(s => s.text)) { step('1/4 원고 쓰는 중… (20초~1분)'); if (!await writeScript(true)) throw new Error($('#writeMsg').textContent); }
+    const needText = !CUR.scenes.length || !CUR.scenes.some(s => s.text);
+    const needTts = CUR.scenes.some(s => s.text && !(s.audioKey && s.audioText === s.text)) || needText;
+    if (needText) guard('text'); if (needTts && (CUR.voice || S.voice).startsWith('gemini:')) guard('tts');
+    if (needText) { step('1/4 원고 쓰는 중… (20초~1분)'); if (!await writeScript(true)) throw new Error($('#writeMsg').textContent); }
     if (CUR.images.length < (CUR.needs || []).length || !CUR.images.length) { step('2/4 그림 찾는 중…'); await autoImages(false); if (!CUR.images.length) throw new Error('그림을 찾지 못했습니다. 직접 올린 뒤 다시 누르세요'); }
     step('3/4 음성 만드는 중… (장면당 몇 초)'); if (!await makeVoices()) throw new Error($('#ttsMsg').textContent);
     step('4/4 영상 만드는 중…'); if (!await renderVideo(true)) throw new Error($('#renderMsg').textContent);
@@ -1092,8 +1119,9 @@ $('#btnShare').onclick = async () => {
 /* ───────── 정책서 · 설정 ───────── */
 const SF = {sGhToken: 'ghToken', sPolicy: 'policy', sEngine: 'engine', sTextKey: 'textKey', sModel: 'model', sTtsKey: 'ttsKey', sVoice: 'voice', sRate: 'rate', sPron: 'pron'};
 for (const [id, k] of Object.entries(SF)) { $('#' + id).value = S[k] ?? ''; $('#' + id).addEventListener('input', () => { const v = $('#' + id).value; S[k] = /Key$|Token$/.test(k) ? v.replace(/\s+/g, '') : v; if (!/Key$|Token$/.test(k)) S.setAt = Date.now(); saveS(); syncSoon(); }); }
-$('#btnEVoiceTest').onclick = async () => { const m = $('#ttsMsg'); m.textContent = '들어보기 만드는 중…'; try { const b = await tts('오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요.', CUR.voice); new Audio(URL.createObjectURL(b)).play(); m.textContent = '목소리를 바꿨다면 [전체 음성 만들기]를 다시 누르세요'; } catch (e) { m.textContent = '오류: ' + e.message; } };
-$('#btnVoiceTest').onclick = async () => { const m = $('#voiceMsg'); m.textContent = '만드는 중…'; try { const b = await tts('1990년 3월, 보스턴의 한 미술관에서 이 바다 그림이 사라졌습니다. 오늘 아침도, 명화 한 점으로 시작하세요.'); new Audio(URL.createObjectURL(b)).play(); m.textContent = ''; } catch (e) { m.textContent = '오류: ' + e.message; } };
+$('#btnEVoiceTest').onclick = async () => { const m = $('#ttsMsg'); m.textContent = '들어보기 준비 중…'; try { const b = await sampleVoice(CUR.voice || S.voice); new Audio(URL.createObjectURL(b)).play(); m.textContent = '목소리를 바꿨다면 [전체 음성 만들기]를 다시 누르세요'; } catch (e) { m.textContent = '오류: ' + e.message; } };
+async function sampleVoice(v) { const k = 'sample-' + v; let b = await getBlob(k); if (!b) { b = await tts('오늘 아침도, 명화 한 점으로 시작하세요. 좋은 아침 되세요.', v); await putBlob(k, b); } return b; }
+$('#btnVoiceTest').onclick = async () => { const m = $('#voiceMsg'); m.textContent = '준비 중… (목소리마다 처음 한 번만 사용량 1회)'; try { const b = await sampleVoice(S.voice); new Audio(URL.createObjectURL(b)).play(); m.textContent = ''; } catch (e) { m.textContent = '오류: ' + e.message; } };
 $('#btnKeyCheck').onclick = async () => {
   const m = $('#keyMsg'), b = $('#btnKeyCheck'); b.disabled = true; let out = [];
   let sec = 0; const tick = setInterval(() => { sec++; if (!out.length) m.textContent = `원고 키 확인 중… ${sec}초 (최대 2분)`; }, 1000);
@@ -1101,7 +1129,7 @@ $('#btnKeyCheck').onclick = async () => {
   catch (e) { out.push('❌ 원고 키: ' + e.message); }
   clearInterval(tick);
   m.textContent = out.join('\n') + '\n음성 키 확인 중…';
-  try { const a = await tts('좋은 아침입니다.', S.voice); new Audio(URL.createObjectURL(a)).play(); out.push('✅ 음성 정상 (지금 들리는 소리)'); }
+  try { if (S.voice.startsWith('gemini:')) { out.push(S.textKey ? '✅ 음성: 원고와 같은 키 사용 (확인에 사용량을 쓰지 않음)' : '❌ 음성: 키가 없습니다'); } else { const a = await sampleVoice(S.voice); new Audio(URL.createObjectURL(a)).play(); out.push('✅ 음성 정상'); } }
   catch (e) { out.push('❌ 음성: ' + e.message); }
   m.innerText = out.join('\n'); b.disabled = false;
 };
@@ -1165,6 +1193,7 @@ function mergeEp(loc, rem) {
   return out;
 }
 const SYNC_KEYS = ['policy', 'pron', 'voice', 'rate', 'engine', 'model'];
+function mergeUsage(ru) { const u = U(); if (!ru || ru.day !== u.day) return; for (const k of ['text', 'tts']) { u[k] = Math.max(u[k], ru[k] || 0); u[k + 'Out'] = u[k + 'Out'] || ru[k + 'Out']; u[k + 'Lim'] = Math.min(u[k + 'Lim'], ru[k + 'Lim'] || 99); } saveS(); showUsage(); }
 async function syncNow() {
   if (!S.ghToken || syncing) return; syncing = true; const m = $('#syncMsg');
   try {
@@ -1180,6 +1209,7 @@ async function syncNow() {
     }
     const deleted = [...new Set([...(S.deleted || []), ...(remote.deleted || [])])];
     // 설정
+    if (remote.settings) mergeUsage(remote.settings.usage);
     if (remote.settings && (remote.settings.setAt || 0) > (S.setAt || 0)) {
       for (const k of SYNC_KEYS) if (k in remote.settings) S[k] = remote.settings[k];
       S.setAt = remote.settings.setAt;
@@ -1196,7 +1226,7 @@ async function syncNow() {
     EPS = [...byId.values()];
     if (CUR) { const c = byId.get(CUR.id); if (!c) { CUR = null; $('#editor').style.display = 'none'; $('#noEp').style.display = 'block'; } else if (c !== CUR) { const busyEdit = document.activeElement && $('#editor').contains(document.activeElement); CUR = c; if (!busyEdit) openEp(c.id, true); } }
     // 올리기
-    const settings = {setAt: S.setAt || 0}; for (const k of SYNC_KEYS) settings[k] = S[k];
+    const settings = {setAt: S.setAt || 0, usage: U()}; for (const k of SYNC_KEYS) settings[k] = S[k];
     const body = JSON.stringify({files: {[GIST_FILE]: {content: JSON.stringify({v: 1, savedAt: Date.now(), settings, deleted, eps: EPS.map(strip)})}}});
     if (S.gistId) await gh('/gists/' + S.gistId, {method: 'PATCH', body});
     else { const g = await gh('/gists', {method: 'POST', body: JSON.stringify({description: GIST_DESC, public: false, files: JSON.parse(body).files})}); S.gistId = g.id; }
@@ -1212,6 +1242,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 /* ───────── 시작 ───────── */
 (async () => {
   migratePolicy(); try { $('#sPolicy').value = S.policy; } catch (e) {}
+  showUsage(); setInterval(showUsage, 60000);
   try { DB = await openDB(); EPS = await tx('eps', 'readonly', s => s.getAll()) || []; }
   catch (e) { $('#planMsg').textContent = '이 브라우저에서는 저장이 안 됩니다. 크롬이나 사파리로 여세요.'; }
   renderPlan(); syncNow();
