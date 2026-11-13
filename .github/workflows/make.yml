@@ -1,0 +1,45 @@
+name: 서버에서 영상 만들기
+on:
+  schedule:
+    - cron: '10 8 * * *'   # 매일 08:10 UTC = 한국 오후 5시 10분 (구글 무료 한도 초기화 직후)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: make-videos
+  cancel-in-progress: false
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: 브라우저 준비
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.48.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+      - name: 다음 편 만들기 (앱을 서버 브라우저에서 그대로 실행)
+        env:
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node server/run.mjs
+      - name: 완성 영상 올리기 (릴리스)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -f out/tag.txt ] && ls out/*.mp4 >/dev/null 2>&1; then
+            TAG=$(cat out/tag.txt)
+            gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" -t "영상 $TAG" -n "서버에서 자동으로 만든 영상" --latest=false
+            gh release upload "$TAG" out/*.mp4 --clobber
+          else
+            echo "올릴 영상 없음"
+          fi
+      - name: 결과 요약
+        if: always()
+        run: cat out/report.txt 2>/dev/null || true
