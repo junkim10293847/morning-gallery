@@ -23,13 +23,27 @@ await page.waitForFunction(() => typeof EPS !== 'undefined' && document.getEleme
 await page.waitForTimeout(8000);                       // 동기화(정책서·일정·원고 받기) + 보낸 일정 반영
 await page.evaluate(() => syncNow && syncNow());
 await page.waitForTimeout(4000);
-const list = await page.evaluate(today => {
-  const pick = lang => EPS.filter(e => (e.lang || 'ko') === lang && e.date > today && !e.videoUrl && !e.yt).sort((a, b) => a.date < b.date ? -1 : 1).slice(0, 2);
+// 올릴 시각(한글 06:00, 영문 20:00 KST)이 30분 이상 남은 편 중 영상이 없는 것
+const list = await page.evaluate(now => {
+  const slot = e => new Date(`${e.date}T${(e.lang || 'ko') === 'en' ? '20:00' : '06:00'}:00+09:00`).getTime();
+  const pick = lang => EPS.filter(e => (e.lang || 'ko') === lang && slot(e) > now + 30 * 60e3 && !e.videoUrl && !e.yt).sort((a, b) => a.date < b.date ? -1 : 1).slice(0, 2);
   return [...pick('ko'), ...pick('en')].map(e => ({id: e.id, date: e.date, lang: e.lang || 'ko', topic: (e.topic || '').split(' — ')[0]}));
-}, today);
+}, Date.now());
+// 진행 상황을 Gist(server.json)에 올려 휴대폰 앱에서 보이게 함
+const gistId = await page.evaluate(() => S.gistId);
+const ST = {running: true, startAt: Date.now(), at: Date.now(), total: list.length, idx: 0, cur: '', step: '준비 중', done: [], run: process.env.RUN_URL || ''};
+let lastPush = 0, lastStep = '';
+async function push(force) {
+  if (!gistId) return; ST.at = Date.now();
+  if (!force && Date.now() - lastPush < 15000) return; lastPush = Date.now();
+  try { await fetch('https://api.github.com/gists/' + gistId, {method: 'PATCH', headers: {Authorization: 'Bearer ' + TOKEN, Accept: 'application/vnd.github+json', 'content-type': 'application/json'}, body: JSON.stringify({files: {'server.json': {content: JSON.stringify(ST)}}})}); } catch (e) { console.log('진행 상황 올리기 실패', e.message); }
+}
+await push(true);
+const watch = setInterval(async () => { try { const t = await page.evaluate(() => document.getElementById('allMsg').textContent); if (t && t.split(' · ')[0] !== lastStep) { lastStep = t.split(' · ')[0]; ST.step = lastStep; await push(); } else await push(); } catch (e) {} }, 15000);
 log(`[${today}] 만들 편 ${list.length}개: ` + list.map(e => `${e.date.slice(5)} ${e.lang === 'en' ? 'EN' : '한글'} ${e.topic}`).join(', '));
-for (const e of list) {
+for (const [i, e] of list.entries()) {
   const t0 = Date.now();
+  ST.idx = i + 1; ST.cur = `${e.date.slice(5).replace('-', '/')} ${e.lang === 'en' ? 'EN' : '한글'} ${e.topic}`; ST.curId = e.id; ST.step = '시작'; lastStep = ''; await push(true);
   await page.evaluate(id => openEp(id), e.id);
   const ok = await page.evaluate(() => makeAll());
   const msg = await page.evaluate(() => document.getElementById('allMsg').textContent);
@@ -40,10 +54,13 @@ for (const e of list) {
     fs.writeFileSync('out/' + file, Buffer.from(b64, 'base64'));
     const url = `https://github.com/${REPO}/releases/download/${tag}/${file}`;
     await page.evaluate(([id, url, qa]) => { const ep = EPS.find(x => x.id === id); ep.videoUrl = url; ep.serverAt = Date.now(); ep.serverMsg = qa; return putEp(ep); }, [e.id, url, qa.slice(0, 600)]);
+    ST.done.push({t: ST.cur, ok: true, sec: Math.round((Date.now() - t0) / 1000)});
     log(`✅ ${e.date.slice(5)} ${e.lang === 'en' ? 'EN' : '한글'} ${e.topic} (${Math.round((Date.now() - t0) / 1000)}초) ${qa.replace(/\n/g, ' / ').slice(0, 200)}`);
-  } else { log(`⚠ ${e.date.slice(5)} ${e.lang === 'en' ? 'EN' : '한글'} ${e.topic}: ${msg.slice(0, 160)}`); await page.evaluate(([id, m]) => { const ep = EPS.find(x => x.id === id); ep.serverMsg = '⚠ 서버: ' + m; ep.serverAt = Date.now(); return putEp(ep); }, [e.id, msg.slice(0, 300)]); }
+  } else { ST.done.push({t: ST.cur, ok: false, msg: msg.slice(0, 120)}); log(`⚠ ${e.date.slice(5)} ${e.lang === 'en' ? 'EN' : '한글'} ${e.topic}: ${msg.slice(0, 160)}`); await page.evaluate(([id, m]) => { const ep = EPS.find(x => x.id === id); ep.serverMsg = '⚠ 서버: ' + m; ep.serverAt = Date.now(); return putEp(ep); }, [e.id, msg.slice(0, 300)]); }
 }
+clearInterval(watch);
 await page.evaluate(() => syncNow());
 await page.waitForTimeout(6000);
+ST.running = false; ST.endAt = Date.now(); ST.step = '끝'; ST.cur = ''; ST.curId = ''; await push(true);
 fs.writeFileSync('out/report.txt', report.join('\n'));
 await browser.close();

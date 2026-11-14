@@ -27,6 +27,7 @@ jobs:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
           REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: node server/run.mjs
       - name: 완성 영상 올리기 (릴리스)
         if: always()
