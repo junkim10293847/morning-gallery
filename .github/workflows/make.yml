@@ -3,6 +3,8 @@ on:
   schedule:
     - cron: '10 8 * * *'   # 매일 08:10 UTC = 한국 오후 5시 10분 (구글 무료 한도 초기화 직후)
   workflow_dispatch: {}
+  push:
+    paths: ['server/go.txt']   # 이 파일이 바뀌면 바로 실행 (대신 눌러 주기용)
 permissions:
   contents: write
 concurrency:
