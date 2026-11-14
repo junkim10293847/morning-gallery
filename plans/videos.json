@@ -18,5 +18,20 @@
   "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-14/2026-11-18_ko_plan20261116.mp4",
   "serverAt": 1794650000000,
   "serverMsg": "✅ 서버에서 완성 (11/14)"
+ },
+ "en20261117": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-15/2026-11-16_en_en20261117.mp4",
+  "serverAt": 1794674251685,
+  "serverMsg": "🔧 자동 점검·수정 (완성)\n사실 수정 · 장면 1: \"Did you know a female artist from 500 years ago, features on Korea's highest banknote?\" → \"Why is a 16th-century female artist on Korea's highest banknote?\"\n사실 수정 · 장면 10: \"In an era when women remained hidden, her creative brilliant mind could not be dimmed.\" → \"In an era when women stayed quiet at home, her brilliant talent could not be hidden.\"\n원고 다듬기 · Shortened title to under 60 characters to fit policy.\n원고 다듬기 · Fixed grammatical phrasing in Scene 1 to create a stronger 3-second hook question.\n원고 다듬기 · Added a mid-video tease in Scene 7 to maintain the cur"
+ },
+ "plan20261115": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-15/2026-11-17_ko_plan20261115.mp4",
+  "serverAt": 1794674350299,
+  "serverMsg": "✅ 자동 점검 (완성): 이상 없음"
+ },
+ "plan20261117": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-15/2026-11-19_ko_plan20261117.mp4",
+  "serverAt": 1794674485909,
+  "serverMsg": "✅ 자동 점검 (완성): 이상 없음"
  }
 }
