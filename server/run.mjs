@@ -45,7 +45,13 @@ for (const [i, e] of list.entries()) {
   const t0 = Date.now();
   ST.idx = i + 1; ST.cur = `${e.date.slice(5).replace('-', '/')} ${e.lang === 'en' ? 'EN' : '한글'} ${e.topic}`; ST.curId = e.id; ST.step = '시작'; lastStep = ''; await push(true);
   await page.evaluate(id => openEp(id), e.id);
-  const ok = await page.evaluate(() => makeAll());
+  let ok = await page.evaluate(() => makeAll());
+  for (let k = 0; !ok && k < 2; k++) {                  // 구글 분당 제한·혼잡이면 기다렸다 이어서 (하루 한도면 그만)
+    const m0 = await page.evaluate(() => document.getElementById('allMsg').textContent);
+    if (/하루|한도가 끝났/.test(m0) || !/잠시|붐빕|분당|응답/.test(m0)) break;
+    ST.step = '구글이 잠시 막음 · 90초 뒤 이어서'; await push(true); await page.waitForTimeout(90000);
+    ok = await page.evaluate(() => makeAll());
+  }
   const msg = await page.evaluate(() => document.getElementById('allMsg').textContent);
   const qa = await page.evaluate(() => document.getElementById('qaBox').innerText || '');
   if (ok) {
