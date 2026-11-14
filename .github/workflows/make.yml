@@ -43,6 +43,12 @@ jobs:
           else
             echo "올릴 영상 없음"
           fi
+      - name: 완성 기록 저장 (plans/videos.json)
+        if: always()
+        run: |
+          git config user.name "morning-gallery-server"; git config user.email "server@users.noreply.github.com"
+          git add plans/videos.json 2>/dev/null || true
+          git diff --cached --quiet || { git commit -m "서버 완성 기록 $(date -u +%F)"; for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done; }
       - name: 결과 요약
         if: always()
         run: cat out/report.txt 2>/dev/null || true

@@ -5,6 +5,9 @@ const KEY = process.env.GEMINI_KEY, TOKEN = process.env.GIST_TOKEN, REPO = proce
 const BASE = process.env.BASE_URL || `https://${REPO.split('/')[0]}.github.io/${REPO.split('/')[1]}/`;
 fs.mkdirSync('out', {recursive: true});
 const report = [];
+const VJ = 'plans/videos.json';
+const VID = fs.existsSync(VJ) ? JSON.parse(fs.readFileSync(VJ, 'utf8')) : {};
+const saveVid = () => fs.writeFileSync(VJ, JSON.stringify(VID, null, 1));
 const log = s => { console.log(s); report.push(s); };
 if (!KEY || !TOKEN) { log('❌ 비밀값(GEMINI_KEY, GIST_TOKEN)이 없습니다. 저장소 Settings → Secrets → Actions 에 등록하세요.'); fs.writeFileSync('out/report.txt', report.join('\n')); process.exit(1); }
 const kst = new Date(Date.now() + 9 * 3600e3), today = kst.toISOString().slice(0, 10);
@@ -25,6 +28,7 @@ await page.waitForTimeout(8000);                       // 동기화(정책서·�
 await page.evaluate(() => syncNow && syncNow());
 await page.waitForTimeout(4000);
 // 올릴 시각(한글 06:00, 영문 20:00 KST)이 30분 이상 남은 편 중 영상이 없는 것
+await page.evaluate(vid => { for (const e of EPS) { const v = vid[e.id]; if (v && v.videoUrl && !e.videoUrl) { Object.assign(e, v); putEp(e); } } }, VID);
 const list = await page.evaluate(now => {
   const slot = e => new Date(`${e.date}T${(e.lang || 'ko') === 'en' ? '20:00' : '06:00'}:00+09:00`).getTime();
   const pick = lang => EPS.filter(e => (e.lang || 'ko') === lang && slot(e) > now + 30 * 60e3 && !e.videoUrl && !e.yt).sort((a, b) => a.date < b.date ? -1 : 1).slice(0, 2);
@@ -60,6 +64,7 @@ for (const [i, e] of list.entries()) {
     const file = `${e.date}_${e.lang}_${e.id}.mp4`;
     fs.writeFileSync('out/' + file, Buffer.from(b64, 'base64'));
     const url = `https://github.com/${REPO}/releases/download/${tag}/${file}`;
+    VID[e.id] = {videoUrl: url, serverAt: Date.now(), serverMsg: qa.slice(0, 600)}; saveVid();
     await page.evaluate(([id, url, qa]) => { const ep = EPS.find(x => x.id === id); ep.videoUrl = url; ep.serverAt = Date.now(); ep.serverMsg = qa; return putEp(ep); }, [e.id, url, qa.slice(0, 600)]);
     ST.done.push({t: ST.cur, ok: true, sec: Math.round((Date.now() - t0) / 1000)});
     log(`✅ ${e.date.slice(5)} ${e.lang === 'en' ? 'EN' : '한글'} ${e.topic} (${Math.round((Date.now() - t0) / 1000)}초) ${qa.replace(/\n/g, ' / ').slice(0, 200)}`);

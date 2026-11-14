@@ -1,0 +1,22 @@
+{
+ "en20261116": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-14/2026-11-15_en_en20261116.mp4",
+  "serverAt": 1794650000000,
+  "serverMsg": "✅ 서버에서 완성 (11/14)"
+ },
+ "plan20261113": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-14/2026-11-15_ko_plan20261113.mp4",
+  "serverAt": 1794650000000,
+  "serverMsg": "✅ 서버에서 완성 (11/14)"
+ },
+ "plan20261112": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-14/2026-11-16_ko_plan20261112.mp4",
+  "serverAt": 1794650000000,
+  "serverMsg": "✅ 서버에서 완성 (11/14)"
+ },
+ "plan20261116": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-14/2026-11-18_ko_plan20261116.mp4",
+  "serverAt": 1794650000000,
+  "serverMsg": "✅ 서버에서 완성 (11/14)"
+ }
+}
