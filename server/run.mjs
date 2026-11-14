@@ -10,10 +10,11 @@ if (!KEY || !TOKEN) { log('❌ 비밀값(GEMINI_KEY, GIST_TOKEN)이 없습니다
 const kst = new Date(Date.now() + 9 * 3600e3), today = kst.toISOString().slice(0, 10);
 const tag = 'v-' + today; fs.writeFileSync('out/tag.txt', tag);
 const browser = await chromium.launch({args: ['--autoplay-policy=no-user-gesture-required']});
-const ctx = await browser.newContext({viewport: {width: 390, height: 844}});
+const ctx = await browser.newContext({timezoneId: 'Asia/Seoul', locale: 'ko-KR', viewport: {width: 390, height: 844}});
 if (process.env.MOCK_SETUP) { const m = await import(process.env.MOCK_SETUP); await m.default(ctx); }   // 로컬 시험용
 const page = await ctx.newPage();
 page.on('pageerror', e => console.log('page error:', e.message));
+page.on('console', m => { const t = m.text(); if (t.startsWith('[MG]')) console.log(t.slice(0, 1500)); });
 page.on('dialog', d => d.accept());
 await page.addInitScript(([k, t]) => {
   try { const s = JSON.parse(localStorage.getItem('mg-settings') || '{}'); Object.assign(s, {engine: 'gemini', textKey: k, ghToken: t, model: ''}); localStorage.setItem('mg-settings', JSON.stringify(s)); } catch (e) {}
