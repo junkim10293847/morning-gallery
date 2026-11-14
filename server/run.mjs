@@ -27,7 +27,7 @@ await page.waitForTimeout(4000);
 const list = await page.evaluate(now => {
   const slot = e => new Date(`${e.date}T${(e.lang || 'ko') === 'en' ? '20:00' : '06:00'}:00+09:00`).getTime();
   const pick = lang => EPS.filter(e => (e.lang || 'ko') === lang && slot(e) > now + 30 * 60e3 && !e.videoUrl && !e.yt).sort((a, b) => a.date < b.date ? -1 : 1).slice(0, 2);
-  return [...pick('ko'), ...pick('en')].map(e => ({id: e.id, date: e.date, lang: e.lang || 'ko', topic: (e.topic || '').split(' — ')[0]}));
+  return [...pick('ko'), ...pick('en')].sort((a, b) => slot(a) - slot(b)).map(e => ({id: e.id, date: e.date, lang: e.lang || 'ko', topic: (e.topic || '').split(' — ')[0]}));
 }, Date.now());
 // 진행 상황을 Gist(server.json)에 올려 휴대폰 앱에서 보이게 함
 const gistId = await page.evaluate(() => S.gistId);
