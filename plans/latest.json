@@ -1,258 +1,78 @@
 {
- "rev": 1794536266,
- "note": "일정을 하루씩 미뤘습니다: 한글은 11/14 아침 6시 아르침볼도, 영문은 11/14 저녁 8시 「씨름」부터. 너무 유명한 그림 3편은 숨은 이야기가 있는 작품으로 바꿨습니다.",
+ "rev": 1794633342,
+ "note": "토요일(11/14) 편을 못 올려 일정을 하루씩 미뤘습니다: 한글은 11/15(일) 아침 6시 아르침볼도, 영문은 11/15(일) 저녁 8시 「씨름」부터. 만들어 둔 원고·사진·음성은 그대로 둡니다.",
  "eps": [
   {
    "id": "plan20261113",
-   "date": "2026-11-14",
-   "format": "화가",
-   "topic": "주세페 아르침볼도 — 황제를 채소로 그린 화가 (뒤집으면 바뀌는 그림, 스웨덴으로 간 그림)",
-   "music": "밝게"
+   "date": "2026-11-15"
   },
   {
    "id": "plan20261112",
-   "date": "2026-11-15",
-   "format": "그림",
-   "topic": "한스 홀바인 「대사들」 — 두 남자 발밑의 이상한 얼룩, 비스듬히 보면 나타나는 해골 (숨은 것 찾기)",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "needs": [],
-   "images": [],
-   "scenes": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-16"
   },
   {
    "id": "plan20261115",
-   "date": "2026-11-16",
-   "format": "화가",
-   "topic": "겸재 정선 — 직접 걸어서 그린 조선의 산 (인왕제색도·금강전도, 이미지 공공누리 확인)"
+   "date": "2026-11-17"
   },
   {
    "id": "plan20261116",
-   "date": "2026-11-17",
-   "format": "그림",
-   "topic": "안견 「몽유도원도」 — 하룻밤 꿈을 사흘 만에 그린 그림, 지금은 왜 일본에 있을까"
+   "date": "2026-11-18"
   },
   {
    "id": "plan20261117",
-   "date": "2026-11-18",
-   "format": "화가",
-   "topic": "엘리자베트 비제 르브룅 — 마리 앙투아네트의 화가, 혁명을 피해 유럽을 떠돈 여성 화가"
+   "date": "2026-11-19"
   },
   {
    "id": "plan20261114",
-   "date": "2026-11-19",
-   "format": "그림",
-   "topic": "피터르 브뤼헐 「네덜란드 속담」 — 한 그림에 숨은 속담 100여 개, 몇 개나 찾을 수 있을까 (숨은 것 찾기)",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "needs": [],
-   "images": [],
-   "scenes": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-20"
   },
   {
    "id": "plan20261118s",
-   "date": "2026-11-20",
-   "format": "화가",
-   "topic": "신사임당 — 오만 원 지폐 속 그 얼굴, 실제로는 어떤 그림을 그렸을까 (초충도, 이미지 공공누리 확인)"
+   "date": "2026-11-21"
   },
   {
    "id": "plan20261118",
-   "date": "2026-11-21",
-   "format": "그림",
-   "topic": "얀 반 에이크 「아르놀피니 부부의 초상」 — 벽의 작은 거울 속에 숨은 두 사람은 누구일까 (거울 확대)",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "needs": [],
-   "images": [],
-   "scenes": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-22"
   },
   {
    "id": "en20261116",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-14",
-   "format": "그림",
-   "topic": "Kim Hong-do 「Ssireum (Wrestling)」 — Can you spot the mistake in this 200-year-old painting? (swapped hands, who will win)",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-15"
   },
   {
    "id": "en20261117",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-15",
-   "format": "화가",
-   "topic": "Sin Saimdang — The woman on Korea's 50,000-won bill was a painter (insects and flowers, mother of Yulgok)",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-16"
   },
   {
    "id": "en20261118",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-16",
-   "format": "그림",
-   "topic": "An Gyeon 「Dream Journey to the Peach Blossom Land」 — A prince's dream painted in 3 days, now in Japan",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-17"
   },
   {
    "id": "en20261119",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-17",
-   "format": "화가",
-   "topic": "Jeong Seon — The painter who walked the mountains to paint Korea as it really looked (true-view landscape)",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-18"
   },
   {
    "id": "en20261120",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-18",
-   "format": "그림",
-   "topic": "Chaekgeori (Korean bookshelf paintings) — Why a Joseon king put books behind his throne",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-19"
   },
   {
    "id": "en20261124",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-19",
-   "format": "화가",
-   "topic": "Jang Seung-eop — Joseon's last wild genius painter who simply vanished",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-20"
   },
   {
    "id": "en20261123",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-20",
-   "format": "그림",
-   "topic": "Irworobongdo (Sun, Moon and Five Peaks) — The painting behind every Joseon king",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-21"
   },
   {
    "id": "en20261126",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-21",
-   "format": "화가",
-   "topic": "Sin Yun-bok — The rival of Kim Hong-do, the painter a TV drama claimed was a woman (use clothed works like Portrait of a Beauty)",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-22"
   },
   {
    "id": "en20261125",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-22",
-   "format": "화가",
-   "topic": "Kim Jeong-hui (Chusa) — Calligraphy genius exiled for 9 years; his Sehando was rescued from Tokyo during WWII air raids",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-23"
   },
   {
    "id": "en20261127",
-   "lang": "en",
-   "voice": "gemini:Charon",
-   "date": "2026-11-23",
-   "format": "그림",
-   "topic": "Magpie and Tiger (Kkachi Horangi) folk painting — Why does this tiger look so silly?",
-   "title": "",
-   "header": "",
-   "desc": "",
-   "clip": "",
-   "images": [],
-   "music": "차분",
-   "yt": false,
-   "nv": false,
-   "link": ""
+   "date": "2026-11-24"
   }
  ]
 }

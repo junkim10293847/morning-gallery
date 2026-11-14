@@ -1571,7 +1571,7 @@ function mergeEp(loc, rem) {
   out.scenes = (rem.scenes || []).map((s, i) => { const l = loc && loc.scenes[i]; const same = l && l.text === s.text; return {...s, audioKey: same ? l.audioKey : null, dur: same ? l.dur : 0}; });
   return out;
 }
-const SYNC_KEYS = ['policyEn', 'brandEn', 'voiceEn', 'policy', 'pron', 'voice', 'rate', 'engine', 'model'];
+const SYNC_KEYS = ['policyEn', 'brandEn', 'voiceEn', 'policy', 'pron', 'voice', 'rate', 'engine', 'model', 'planRev'];
 function mergeUsage(ru) { const u = U(); if (!ru || ru.day !== u.day) return; for (const k of ['text', 'tts']) { u[k] = Math.max(u[k], ru[k] || 0); u[k + 'Lim'] = Math.min(u[k + 'Lim'], ru[k + 'Lim'] || 99); } saveS(); showUsage(); }
 let syncAgain = false;
 async function syncNow() {
