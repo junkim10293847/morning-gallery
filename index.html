@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#F6EFE3">
 <title>모닝 갤러리</title>
-<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 / v1.25 영어판(K-Art): 언어 선택, 영어 정책서·채널 이름·목소리 / v1.26 검증 보완(음성 나누기 예비 방식, 동기화 순서) / v1.27 구글 서버 혼잡 시 기다렸다 재시도·다른 모델로 전환 / v1.28 그림 칸 번호 고정(못 찾아도 밀리지 않음), 칸별 📷 올리기·↻ 다시 찾기, 작품명 표시 / v1.29 자동 점검(그림 AI 확인·음성 길이), 음성 나누기 개선, 장면별 🔁 / v1.30 자동 수정: 틀린 그림은 AI가 후보 중 골라 교체·못 찾으면 대체, 어긋난 음성은 자동 재생성 / v1.31 원고 단계에서 그림 존재 미리 확인·없으면 다른 작품으로 교체 / v1.32 원고 검수(사실 확인·후킹·호기심 고리·반전) + 고정 댓글 / v1.34 장면 그림 뒤집기(rot 180), 다빈치→아르침볼도 교체 / v1.35 사용량 세기 정확히(서버 오류는 안 셈), 구글이 한도 소진을 알릴 때만 차단 / v1.36 음성 점검 기준 강화(오탐 줄여 한도 절약) / v1.37 화면 단순화(세부는 접기), 다음 편 모두 만들기 / v1.38 ☁ 서버에서 만들기(깃허브 액션, 창 닫아도 됨·매일 17:10 자동), 진행 초 표시 / v1.39 일정 화면에 서버 진행 상황(몇 번째 편·단계·완료 목록), 오늘 저녁 영문판도 서버가 만듦 / v1.40 '한도 소진' 오판 수정: 분당 제한은 기다렸다 재시도, 구글이 하루 한도라고 할 때만 소진, 구글 원문 표시 / v1.41 예전에 잘못 찍힌 '소진' 표시 지움 / v1.42 그림 못 찾으면 넓혀 찾기, 서버 기록에 구글 원문 / v1.43 그림 목록 없는 원고는 다시 씀 / v1.44 서버 완성 기록(plans/videos.json)으로 ☁ 영상 되살리기 -->
+<!-- 버전 기록: v1.0 첫 버전 / v1.1 Chirp3 HD 목소리·목소리 들어보기 / v1.2 키 공백 제거·오류 안내 / v1.3 Gemini 음성 / v1.4 버전 표시 / v1.5 편마다 목소리 선택 / v1.6 키 확인 버튼 / v1.7 새 형식 Gemini 키(AQ.) 지원 / v1.8 원고 모델 gemini-3.8-flash, 모델 중단 시 자동 전환 / v1.9 응답 대기 시간 표시·2분 제한 / v1.10 키 확인은 한도 안 씀, 한도 차면 다른 Gemini 모델로 자동 전환 / v1.11 휴대폰↔PC 동기화(깃허브 Gist) / v1.12 장면별 부분 확대(눌러서 위치, 1.5·2·3배) / v1.13 가져오기 후 바로 동기화 / v1.14 가져오기로 기존 편의 날짜·형식 변경(원고 유지) / v1.15 [받은 일정 넣기] 버튼 / v1.16 빠른 영상 만들기(오프라인 인코딩), 음성 이어 만들기 / v1.17 한 번에 만들기, 그림 자동 찾기(위키미디어) / v1.18 예고 장면에 다음 편 그림 안 넣음 / v1.19 예고는 주제 없이 짧은 인사로(정책서 자동 수정) / v1.20 받은 원고·정책서 넣기 / v1.21 보낸 수정 사항 자동 반영 / v1.22 Gemini 음성 한 번에 만들어 장면별로 나누기(요청 1회) / v1.23 사용량 관리: 남은 횟수 표시·한도 차면 요청 차단·들어보기 저장·기기 간 합산 / v1.24 그림 정확히 찾기(위키데이터), 원고 끌림 장치·자기 점검 / v1.25 영어판(K-Art): 언어 선택, 영어 정책서·채널 이름·목소리 / v1.26 검증 보완(음성 나누기 예비 방식, 동기화 순서) / v1.27 구글 서버 혼잡 시 기다렸다 재시도·다른 모델로 전환 / v1.28 그림 칸 번호 고정(못 찾아도 밀리지 않음), 칸별 📷 올리기·↻ 다시 찾기, 작품명 표시 / v1.29 자동 점검(그림 AI 확인·음성 길이), 음성 나누기 개선, 장면별 🔁 / v1.30 자동 수정: 틀린 그림은 AI가 후보 중 골라 교체·못 찾으면 대체, 어긋난 음성은 자동 재생성 / v1.31 원고 단계에서 그림 존재 미리 확인·없으면 다른 작품으로 교체 / v1.32 원고 검수(사실 확인·후킹·호기심 고리·반전) + 고정 댓글 / v1.34 장면 그림 뒤집기(rot 180), 다빈치→아르침볼도 교체 / v1.35 사용량 세기 정확히(서버 오류는 안 셈), 구글이 한도 소진을 알릴 때만 차단 / v1.36 음성 점검 기준 강화(오탐 줄여 한도 절약) / v1.37 화면 단순화(세부는 접기), 다음 편 모두 만들기 / v1.38 ☁ 서버에서 만들기(깃허브 액션, 창 닫아도 됨·매일 17:10 자동), 진행 초 표시 / v1.39 일정 화면에 서버 진행 상황(몇 번째 편·단계·완료 목록), 오늘 저녁 영문판도 서버가 만듦 / v1.40 '한도 소진' 오판 수정: 분당 제한은 기다렸다 재시도, 구글이 하루 한도라고 할 때만 소진, 구글 원문 표시 / v1.41 예전에 잘못 찍힌 '소진' 표시 지움 / v1.42 그림 못 찾으면 넓혀 찾기, 서버 기록에 구글 원문 / v1.43 그림 목록 없는 원고는 다시 씀 / v1.44 서버 완성 기록(plans/videos.json)으로 ☁ 영상 되살리기 / v1.45 화면·목소리 개편: 흐린 그림 배경+꽉 찬 그림+큰 흰 자막+진행 막대, 쉼 단축·1.1배 빠르게·생동감 있는 말투 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#F6EFE3;--card:#FFFDF8;--ink:#362A1C;--sub:#8C7452;--gold:#B0843A;--line:#E6DCCB;--ok:#5E8B4E;--warn:#C0563B}
 *{box-sizing:border-box}
@@ -80,7 +80,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
-<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.44 · 2026-11-14</p></header>
+<header><h1>☀ Morning Gallery</h1><p>정책서 · 원고 · 음성 · 사진 · 영상 · 일정</p><p id="usage" style="font-size:11px;color:#8C7452;margin-top:2px"></p><p id="ver" style="font-size:11px;color:#B0843A">v1.45 · 2026-11-14</p></header>
 <main>
 
 <!-- 일정 -->
@@ -915,7 +915,7 @@ async function geminiRaw(prompt, voice) {
   throw new Error(`구글이 음성을 잠시 막았습니다 (하루 한도는 남아 있을 수 있음). 2~3분 뒤 다시 누르면 남은 장면부터 이어서 합니다 [구글: ${(lastMsg || '응답 없음').slice(0, 120)}]`);
 }
 function gStyle() {
-  if (CUR && CUR.lang === 'en') { const sp = +S.rate > 1 ? 'a little faster, ' : +S.rate < 1 ? 'a little slower, ' : ''; return `Read like a warm, calm documentary narrator, ${sp}in natural American English`; } const sp = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : ''; return `아침 교양 방송 나레이터처럼 ${sp}차분하고 따뜻하게 읽어 주세요`; }
+  if (CUR && CUR.lang === 'en') { const sp = +S.rate > 1 ? 'a little faster, ' : +S.rate < 1 ? 'a little slower, ' : ''; return `Read like an engaging, energetic YouTube Shorts storyteller: brisk pace, ${sp}lively and curious tone, short natural pauses, crisp emphasis on surprising words, in natural American English`; } const sp = +S.rate > 1 ? '조금 빠르게, ' : +S.rate < 1 ? '조금 느리게, ' : ''; return `흥미로운 이야기를 들려주는 쇼츠 이야기꾼처럼 ${sp}또렷하고 생기 있게, 빠른 템포로 읽어 주세요. 문장 사이 쉼은 짧게, 놀라운 대목은 힘주어`; }
 async function geminiTTS(text, voice) {
   const o = await geminiRaw(`${gStyle()}: ${applyPron(text)}`, voice); return pcmToWav(o.b64, o.rate);
 }
@@ -1008,8 +1008,8 @@ async function makeVoices() {
 $('#btnTTS').onclick = () => makeVoices();
 
 /* ───────── 화면 그리기 ───────── */
-const W = 1080, H = 1920, BOX = [60, 290, 1020, 1330], LABEL_Y = 1388, SUB_Y = [1470, 1546];
-const FADE = .5, LEAD = .3, TAIL = .7, ZOOM = .05;
+const W = 1080, H = 1920, BOX = [0, 200, 1080, 1430], SUB_MID = 1650, SUB_LH = 80;
+const FADE = .35, LEAD = .08, TAIL = .3, ZOOM = .1;   // v1.45: 쉼 줄이고 움직임 키움
 const INK = '#362A1C', GOLD = '#B0843A', SUBINK = '#8C7452';
 const SANS = '"Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif', SERIF = '"Noto Serif KR", "Nanum Myeongjo", serif';
 
@@ -1051,43 +1051,102 @@ function wrapLines(x, text, maxw = 940) {
   if (cur) lines.push(cur);
   const out = []; for (let i = 0; i < lines.length; i += 2) out.push(lines.slice(i, i + 2)); return out;
 }
-function prepScene(s, img, bgBase) {
+function blurBg(img, head, brand) {   // 같은 그림을 흐리고 어둡게 깔아 화면을 꽉 채움
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const t = document.createElement('canvas'); t.width = 27; t.height = 48; const tx = t.getContext('2d');
+  const k = Math.max(27 / img.width, 48 / img.height); tx.drawImage(img, (27 - img.width * k) / 2, (48 - img.height * k) / 2, img.width * k, img.height * k);
+  x.imageSmoothingQuality = 'high'; x.drawImage(t, -40, -40, W + 80, H + 80);
+  x.fillStyle = 'rgba(18,12,6,.62)'; x.fillRect(0, 0, W, H);
+  const g = x.createRadialGradient(W / 2, H * .45, H * .25, W / 2, H * .45, H * .8); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.55)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  const cx = W / 2, cy = 74, r = 15; x.strokeStyle = x.fillStyle = '#E2B86A'; x.lineWidth = 2.5;
+  for (let i = 1; i < 8; i++) { const a = Math.PI + i * Math.PI / 8; x.beginPath(); x.moveTo(cx + (r + 4) * Math.cos(a), cy + (r + 4) * Math.sin(a)); x.lineTo(cx + (r + 11) * Math.cos(a), cy + (r + 11) * Math.sin(a)); x.stroke(); }
+  x.beginPath(); x.arc(cx, cy, r, Math.PI, 2 * Math.PI); x.fill();
+  x.fillStyle = '#F5EBDD'; x.font = `600 40px ${SERIF}`; x.fillText(brand, W / 2, 118);
+  if (head) { x.fillStyle = 'rgba(245,235,221,.72)'; x.font = `400 26px ${SANS}`; x.fillText(head, W / 2, 162); }
+  return c;
+}
+function chunkText(x, text, maxw = 960, maxL = 3) {   // 문장·쉼표 단위로, 한 화면 최대 3줄 (중간에서 끊긴 한 줄짜리 자막 없게)
+  const fits = t => x.measureText(t).width <= maxw;
+  const wrap = t => { const ws = t.split(' '); let ls = [], cur = ''; for (const w of ws) { const tt = (cur + ' ' + w).trim(); if (fits(tt)) cur = tt; else { if (cur) ls.push(cur); cur = w; } } if (cur) ls.push(cur);
+    if (ls.length > 1) { const n = ls.length, total = x.measureText(t).width, target = total / n * 1.08; const bal = []; cur = ''; for (const w of ws) { const tt = (cur + ' ' + w).trim(); if (x.measureText(tt).width <= Math.min(maxw, target) || !cur) cur = tt; else { bal.push(cur); cur = w; } } if (cur) bal.push(cur); if (bal.length === n) ls = bal; }
+    return ls; };
+  const sents = (text.match(/[^.?!。]+[.?!。]*[」”"']?\s*/g) || [text]).map(t => t.trim()).filter(Boolean);
+  const out = [];
+  for (const sn of sents) {
+    const ls = wrap(sn);
+    if (ls.length <= maxL) { const last = out[out.length - 1]; if (last && last.length + ls.length <= 2 && ls.length === 1 && last.length === 1) last.push(...ls); else out.push(ls); continue; }
+    let cur = [];   // 너무 긴 문장은 쉼표에서 나눔
+    for (const cl of (sn.match(/[^,，]+[,，]?\s*/g) || [sn]).map(t => t.trim()).filter(Boolean)) { const cl2 = wrap(cl);
+      if (cur.length && cur.length + cl2.length > maxL) { out.push(cur); cur = []; }
+      for (let i = 0; i < cl2.length; i += maxL) { const part = cl2.slice(i, i + maxL); if (cur.length + part.length > maxL) { out.push(cur); cur = []; } cur.push(...part); } }
+    if (cur.length) out.push(cur);
+  }
+  return out;
+}
+function prepScene(s, img, head, brand, idx) {
   const bw = BOX[2] - BOX[0], bh = BOX[3] - BOX[1];
   const r = Math.min(bw / img.width, bh / img.height) / (1 + ZOOM);
   const fw = img.width * r, fh = img.height * r, cx = (BOX[0] + BOX[2]) / 2, cy = (BOX[1] + BOX[3]) / 2;
-  const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
-  x.drawImage(bgBase, 0, 0);
-  x.save(); x.shadowColor = 'rgba(60,40,20,.42)'; x.shadowBlur = 48; x.shadowOffsetY = 16; x.fillStyle = '#5a4630';
-  x.fillRect(cx - fw / 2, cy - fh / 2, fw, fh); x.restore();
+  const c = blurBg(img, head, brand), x = c.getContext('2d');
+  x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 60; x.fillStyle = '#000'; x.fillRect(cx - fw / 2, cy - fh / 2, fw, fh); x.restore();
   x.textAlign = 'center'; x.textBaseline = 'middle';
-  if (s.label) { x.fillStyle = GOLD; x.font = `500 32px ${SANS}`; x.fillText(s.label, W / 2, LABEL_Y); }
-  x.font = `700 50px ${SANS}`;
-  const sents = (s.text.match(/[^.?!。]+[.?!。]*[」”"]?/g) || []).map(t => t.trim()).filter(Boolean);
-  let chunks = []; for (const t of sents) chunks = chunks.concat(wrapLines(x, t));
+  if (s.label) { x.fillStyle = '#E2B86A'; x.font = `500 30px ${SANS}`; x.fillText(s.label, W / 2, Math.min(1495, cy + fh * (1 + ZOOM) / 2 + 42)); }
+  const big = idx === 0; x.font = `800 ${big ? 70 : 62}px ${SANS}`;
+  const chunks = chunkText(x, s.text || '', big ? 980 : 960);
   const wts = chunks.map(c => c.join('').length); const tot = wts.reduce((a, b) => a + b, 0) || 1;
-  return {s, img, bg: c, fw, fh, cx, cy, chunks, wts: wts.map(v => v / tot)};
+  return {s, img, bg: c, fw, fh, cx, cy, chunks, big, dir: idx % 2 ? 1 : -1, wts: wts.map(v => v / tot)};
 }
 function drawScene(x, P, t) {
-  const d = P.s._dur; const z = 1 + ZOOM * Math.min(1, Math.max(0, t / d));
+  const d = P.s._dur, q = Math.min(1, Math.max(0, t / d)), z = 1 + ZOOM * q, pan = P.dir * 18 * (q - .5);
   x.drawImage(P.bg, 0, 0);
   const zz = +P.s.zoom || 1;
+  x.save(); x.beginPath(); x.rect(BOX[0], BOX[1] - 10, BOX[2] - BOX[0], BOX[3] - BOX[1] + 20); x.clip();
   if (zz > 1) {
     const iw = P.img.width, ih = P.img.height, k = zz * z, sw = iw / k, sh = ih / k;
     const sx = Math.min(iw - sw, Math.max(0, (P.s.fx ?? .5) * iw - sw / 2)), sy = Math.min(ih - sh, Math.max(0, (P.s.fy ?? .4) * ih - sh / 2));
-    const w = P.fw * (1 + ZOOM), h = P.fh * (1 + ZOOM); x.save(); x.translate(P.cx, P.cy); if (+P.s.rot === 180) x.rotate(Math.PI); x.drawImage(P.img, sx, sy, sw, sh, -w / 2, -h / 2, w, h); x.restore();
-  } else { const w = P.fw * z, h = P.fh * z; x.save(); x.translate(P.cx, P.cy); if (+P.s.rot === 180) x.rotate(Math.PI); x.drawImage(P.img, -w / 2, -h / 2, w, h); x.restore(); }
+    const w = P.fw * (1 + ZOOM), h = P.fh * (1 + ZOOM); x.translate(P.cx, P.cy); if (+P.s.rot === 180) x.rotate(Math.PI); x.drawImage(P.img, sx, sy, sw, sh, -w / 2, -h / 2, w, h);
+  } else { const w = P.fw * z, h = P.fh * z; x.translate(P.cx + pan, P.cy); if (+P.s.rot === 180) x.rotate(Math.PI); x.drawImage(P.img, -w / 2, -h / 2, w, h); }
+  x.restore();
   if (P.chunks.length) {
     const p = P.s._narr > 0 ? (t - LEAD) / P.s._narr : 0; let acc = 0, idx = P.chunks.length - 1;
     for (let i = 0; i < P.wts.length; i++) { acc += P.wts[i]; if (p < acc) { idx = i; break; } }
-    x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = INK; x.font = `700 50px ${SANS}`;
-    P.chunks[idx].forEach((ln, i) => x.fillText(ln, W / 2, SUB_Y[i]));
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `800 ${P.big ? 70 : 62}px ${SANS}`; x.lineJoin = 'round';
+    const n = P.chunks[idx].length, lh = P.big ? 88 : SUB_LH, ys = P.chunks[idx].map((_, i) => SUB_MID + (i - (n - 1) / 2) * lh);
+    P.chunks[idx].forEach((ln, i) => { x.strokeStyle = 'rgba(0,0,0,.85)'; x.lineWidth = 12; x.strokeText(ln, W / 2, ys[i]); x.fillStyle = P.big ? '#FFE3A3' : '#FFFFFF'; x.fillText(ln, W / 2, ys[i]); });
   }
+}
+function tighten(buf, tempo) {   // 앞뒤 무음 자르기 + 음높이 그대로 빠르게 (WSOLA)
+  const sr = buf.sampleRate; let a = buf.getChannelData(0);
+  let i0 = 0, i1 = a.length - 1; const th = .012;
+  while (i0 < a.length && Math.abs(a[i0]) < th) i0++; while (i1 > i0 && Math.abs(a[i1]) < th) i1--;
+  a = a.subarray(Math.max(0, i0 - Math.round(sr * .04)), Math.min(a.length, i1 + Math.round(sr * .08)));
+  let y = a;
+  if (tempo > 1.01 && a.length > sr * .3) {
+    const N = Math.round(sr * .04) & ~1, Hs = N / 2, Ha = Hs * tempo, tol = Math.round(sr * .01);
+    const win = new Float32Array(N).map((_, k) => .5 - .5 * Math.cos(2 * Math.PI * k / N));
+    const outLen = Math.ceil(a.length / tempo) + N; y = new Float32Array(outLen); const ws = new Float32Array(outLen);
+    let prev = 0;
+    for (let k = 0, op = 0; op + N < outLen; k++, op += Hs) {
+      let ip = Math.round(k * Ha);
+      if (k > 0) { const nat = prev + Hs; let best = 0, bv = -Infinity;
+        for (let dlt = -tol; dlt <= tol; dlt += 2) { const c0 = ip + dlt; if (c0 < 0 || c0 + N >= a.length) continue; let v = 0; for (let j = 0; j < Hs; j += 4) v += a[nat + j] * a[c0 + j]; if (v > bv) { bv = v; best = dlt; } }
+        ip += best; }
+      if (ip + N >= a.length) break;
+      for (let j = 0; j < N; j++) { y[op + j] += a[ip + j] * win[j]; ws[op + j] += win[j]; }
+      prev = ip;
+    }
+    let end = y.length; while (end > 0 && ws[end - 1] < 1e-3) end--;
+    for (let j = 0; j < end; j++) if (ws[j] > 1e-3) y[j] /= ws[j];
+    y = y.subarray(0, end);
+  }
+  const out = AC().createBuffer(1, y.length, sr); out.getChannelData(0).set(y); return out;
 }
 function plan(scenes) {
   let t = 0;
   for (const s of scenes) {
     s._narr = s._buf ? s._buf.duration : (s.text ? Math.max(1.5, s.text.replace(/\s/g, '').length * .16) : 0);
-    s._dur = Math.max(3.5, LEAD + s._narr + TAIL + FADE); s._start = t; t += s._dur - FADE;
+    s._dur = Math.max(2.4, LEAD + s._narr + TAIL + FADE); s._start = t; t += s._dur - FADE;
   }
   return t + FADE;
 }
@@ -1099,17 +1158,17 @@ async function loadImages() {
 async function prepareAll(withAudio) {
   if (!CUR.scenes.length) throw new Error('장면이 없습니다');
   if (!CUR.images.some(x => x && x.key)) throw new Error('사진을 올리세요');
-  await document.fonts.load(`700 50px "Noto Sans KR"`).catch(() => {}); await document.fonts.load(`600 46px "Noto Serif KR"`).catch(() => {});
+  await document.fonts.load(`800 62px "Noto Sans KR"`).catch(() => {}); await document.fonts.load(`600 46px "Noto Serif KR"`).catch(() => {});
   const imgs = await loadImages();
   const sc = CUR.scenes.map(s => ({...s}));
-  if (withAudio) for (const s of sc) { s._buf = null; if (s.audioKey) { const b = await getBlob(s.audioKey); if (b) try { s._buf = await AC().decodeAudioData(await b.arrayBuffer()); } catch (e) {} } }
+  if (withAudio) for (const s of sc) { s._buf = null; if (s.audioKey) { const b = await getBlob(s.audioKey); if (b) try { s._buf = tighten(await AC().decodeAudioData(await b.arrayBuffer()), +S.tempo || 1.1); } catch (e) {} } }
   const total = plan(sc);
   const anyImg = imgs.find(Boolean); if (!anyImg) throw new Error('사진을 올리세요');
   const missing = [...new Set(sc.map(s => s.img || 1).filter(n => !imgs[n - 1]))];
   if (missing.length) $('#renderMsg').textContent = `⚠ ${missing.join(', ')}번 그림이 없어 다른 그림으로 대신합니다`;
   const firstImg = imgs[(sc[0].img || 1) - 1] || anyImg;
-  const bgBase = wall(tintOf(firstImg), CUR.header, CUR.lang === 'en' ? (S.brandEn || 'K-Art Stories') : 'Morning Gallery');
-  const P = sc.map(s => prepScene(s, imgs[(s.img || 1) - 1] || anyImg, bgBase));
+  const brand = CUR.lang === 'en' ? (S.brandEn || 'K-Art Stories') : 'Morning Gallery';
+  const P = sc.map((s, i) => prepScene(s, imgs[(s.img || 1) - 1] || anyImg, CUR.header, brand, i));
   return {sc, P, total};
 }
 const cv = $('#cv'), cx = cv.getContext('2d'); const tmp = document.createElement('canvas'); tmp.width = W; tmp.height = H; const tx2 = tmp.getContext('2d');
@@ -1118,6 +1177,7 @@ function frameAt(D, t) {
   const a = live.length ? live[0] : D.sc.length - 1;
   drawScene(cx, D.P[a], t - D.sc[a]._start);
   if (live.length > 1) { const b = live[1]; drawScene(tx2, D.P[b], t - D.sc[b]._start); cx.globalAlpha = Math.min(1, (t - D.sc[b]._start) / FADE); cx.drawImage(tmp, 0, 0); cx.globalAlpha = 1; }
+  cx.fillStyle = 'rgba(255,255,255,.18)'; cx.fillRect(0, H - 8, W, 8); cx.fillStyle = '#E2B86A'; cx.fillRect(0, H - 8, W * Math.min(1, t / (D.total || 1)), 8);
 }
 let pvIdx = 0;
 $('#btnPreview').onclick = async () => {
