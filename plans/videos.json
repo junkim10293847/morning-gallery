@@ -33,5 +33,15 @@
   "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-15/2026-11-19_ko_plan20261117.mp4",
   "serverAt": 1794674485909,
   "serverMsg": "✅ 자동 점검 (완성): 이상 없음"
+ },
+ "en20261118": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-16/2026-11-17_en_en20261118.mp4",
+  "serverAt": 1794757181186,
+  "serverMsg": "🔧 자동 점검·수정 (완성)\n원고 검수를 건너뜀 (구글이 오늘 원고 한도가 끝났다고 합니다. 11/16 오후 5시에 다시 )"
+ },
+ "en20261119": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-16/2026-11-18_en_en20261119.mp4",
+  "serverAt": 1794757295845,
+  "serverMsg": "✅ 자동 점검 (완성): 이상 없음"
  }
 }
