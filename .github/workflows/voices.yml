@@ -17,10 +17,10 @@ jobs:
         env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
         run: node server/voices.mjs
-      - name: mp3로 바꿔 올리기
+      - name: 견본 올리기
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cd out; for f in *.wav; do ffmpeg -v error -y -i "$f" -b:a 128k "${f%.wav}.mp3"; done; ls
+          cd out; ls
           gh release view voice-samples >/dev/null 2>&1 || gh release create voice-samples -t "목소리 견본" -n "고급 연출 목소리 비교"
-          gh release upload voice-samples *.mp3 --clobber
+          gh release upload voice-samples *.wav --clobber
