@@ -68,5 +68,15 @@
   "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-18/2026-11-22_ko_plan20261118.mp4",
   "serverAt": 1794938727811,
   "serverMsg": "🔧 자동 점검·수정 (완성)\n사실 수정 · 장면 10: \"이들은 바로 이 서약의 증인으로 참석한, 화가 본인과 그의 친구입니다.\" → \"이들은 서약의 증인으로 참석한, 화가 본인과 그의 동행인으로 알려져 있습니다.\"\n원고 다듬기 · 장면 1의 훅 문장을 시각적 호기심이 즉각 유발되도록 강화했습니다.\n원고 다듬기 · 장면 8에 중반부 호기심 유지 장치(그런데 더 놀라운 건 따로 있죠)를 추가했습니다.\n원고 다듬기 · 장면 10의 단정적 표현을 미술사적 통설에 맞추어 채널 정책('~로 알려져 있습니다')에 따라 완화 수정했습니다.\n첫 장면 끌림 점수 6 → 9 (10점 만점)\n장면 3: 음성을 따로 다시 만들어 맞춤\n장면 12: 음성을 따로 다시 만들어 맞춤"
+ },
+ "en20261123": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-20/2026-11-21_en_en20261123.mp4",
+  "serverAt": 1795109916448,
+  "serverMsg": "🔧 자동 점검·수정 (완성)\n사실 수정 · 장면 8: \"When a king passed away, a version of this screen was even buried alongside him.\" → \"According to royal records, a version of this screen was even placed inside his tomb.\"\n원고 다듬기 · Trimmed title to under 60 characters for maximum CTR while keeping the core curiosity question.\n원고 다듬기 · Softened claim in scene 8 by attributing to royal records for historical accuracy.\n원고 다듬기 · Included native Korean term 'eum and yang' in scene 4 per channel policy on Korean concepts.\n첫 장면 끌림 점수 7 → 9 (10점 만점)\n장면 1: 1번 그림을 찾지 못해 2번 그림으로 대체\n장면 2: 1번 그림을 찾지 못해 2번 그림으로 대체\n장면 3: 1번 그림"
+ },
+ "en20261126": {
+  "videoUrl": "https://github.com/junkim10293847/morning-gallery/releases/download/v-2026-11-20/2026-11-22_en_en20261126.mp4",
+  "serverAt": 1795110965340,
+  "serverMsg": "🔧 자동 점검·수정 (완성)\n사실 수정 · 장면 3: \"alongside his famous rival, Kim Hong-do\" → \"alongside the senior master, Kim Hong-do\"\n사실 수정 · 장면 10: \"a popular TV drama claimed Sin was secretly female\" → \"a popular novel claimed Sin was secretly female\"\n원고 다듬기 · Shortened title to under 60 characters.\n원고 다듬기 · Sharpened Scene 1 hook to increase 3-second viewer retention.\n원고 다듬기 · Corrected relationship between Sin Yun-bok and Kim Hong-do (senior colleague, not confirmed personal rival).\n원고 다듬기 · Added mid-video mystery tease in Scene 7 to maintain watch time.\n원고 다듬기 · Clarified origin of female rumor (2007 no"
  }
 }
