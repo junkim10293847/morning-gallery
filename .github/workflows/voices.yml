@@ -1,0 +1,26 @@
+name: 목소리 견본 만들기
+on:
+  workflow_dispatch: {}
+  push:
+    paths: ['server/voices-go.txt']
+permissions:
+  contents: write
+jobs:
+  voices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 20}
+      - name: 목소리 견본 만들기
+        env:
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
+        run: node server/voices.mjs
+      - name: mp3로 바꿔 올리기
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out; for f in *.wav; do ffmpeg -v error -y -i "$f" -b:a 128k "${f%.wav}.mp3"; done; ls
+          gh release view voice-samples >/dev/null 2>&1 || gh release create voice-samples -t "목소리 견본" -n "고급 연출 목소리 비교"
+          gh release upload voice-samples *.mp3 --clobber
